@@ -15,10 +15,10 @@ import org.apache.jena.rdf.model.ModelFactory;
 
  
 
-public class KnowledgeManagement {
+public class KnowledgeManagement implements IExtract{
 	private Model modelData;
 	String urlKB;
-	public KnowledgeManagement(String url)
+ 	public KnowledgeManagement(String url)
 	{    this.urlKB=url;
 		this.modelData = ModelFactory.createDefaultModel();
         this.modelData.read(this.urlKB);
@@ -148,7 +148,7 @@ public class KnowledgeManagement {
 		}
  
 
-		public ArrayList<Goal> ExtractGoals(){ 
+		public ArrayList<Goal> ExtractGoals(ArrayList<String> InteretsTasksList){ 
 			ArrayList<Goal> goalsList=new ArrayList<Goal>();
 			String queryString = 
 		    	    "PREFIX avataront: <http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#>\n"+
@@ -170,7 +170,7 @@ public class KnowledgeManagement {
 		    	    	System.out.print(name);
 		    	    	//We create an instance of goal
 		    	    	Goal newGoal = new Goal(name);
-		    	    	ExtractTasks(newGoal);
+		    	    	ExtractTasks(newGoal,InteretsTasksList);
 		    	    	goalsList.add(newGoal);
 		    	    }
 			return goalsList;	
@@ -237,7 +237,7 @@ public class KnowledgeManagement {
 			    qexec.close() ;   
 				return b;	
 			}
-		public String ExtractInterestTask(String task){ 
+		public String ExtractInterestTask(String task,ArrayList<String> InteretsTasksList ){ 
 			String name2=null;
 			String queryString =  
 		    		"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>"+
@@ -255,9 +255,9 @@ public class KnowledgeManagement {
 		    	    	name2=binding.get("interest").toString();	
 		    	    	//System.out.println("[EXTRACTINTERESTTASK: ]"+name+": "+task+" has the interest: "+name2);
 		    	    	//We add this interest to the InterestsTasks List if it's not already in 
-		    	    	/*if(!InteretsTasksList.contains(name2)){
+		    	    	if(!InteretsTasksList.contains(name2)){
 		    	    		InteretsTasksList.add(name2);
-		    	    	}*/
+		    	    	}
 		    	    }
 		    return name2;
 		}
@@ -299,7 +299,7 @@ public class KnowledgeManagement {
 		    qexec.close() ;
 		    return b;	
 		}
-		public void ExtractGroupedTask(Task groupedTask){ 
+		public void ExtractGroupedTask(Task groupedTask,ArrayList<String> InteretsTasksList){ 
 			String queryString =  
 		    		"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>"+
 		    	    "PREFIX avataront: <http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#>\n"+
@@ -323,14 +323,14 @@ public class KnowledgeManagement {
 		    	    	name2=binding.get("task").toString();	
 		    	        	    	
 		    	    	//We create a new Task
-		    	    	String interest=ExtractInterestTask(name2);
+		    	    	String interest=ExtractInterestTask(name2,InteretsTasksList);
 		    	    	String label=ExtractLabelTask(name2);
 			    	    Task newTask = new Task(name2,false,IsAbleTask(name2),interest, label);
 		    	    	tasksList.add(newTask);
 		    	    }
 		    	    groupedTask.majTasksList(tasksList);	
 		}
-		public void ExtractTasks(Goal goal){ 
+		public void ExtractTasks(Goal goal,ArrayList<String> InteretsTasksList){ 
 			//System.out.println("We extract the tasks of "+goal.getName());
 			String queryString = 
 		    		"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>"+
@@ -352,14 +352,14 @@ public class KnowledgeManagement {
 		    	    	QuerySolution binding = results.nextSolution(); 
 		    	    	name2=binding.get("task").toString();	
 		    	    			   	
-		    	    	String interest=ExtractInterestTask(name2);
+		    	    	String interest=ExtractInterestTask(name2,InteretsTasksList);
 		    	    	String label=ExtractLabelTask(name2);
 		    	    	
 		    	    	//Check if it's a composed task
 		    	    	if(IsGroupedTask(name2)){
 			   				 //System.out.println(name2+" :Composed");		
 				    	     Task newTask = new Task(name2,true,IsAbleTask(name2),interest,label);
-			   				 ExtractGroupedTask(newTask);
+			   				 ExtractGroupedTask(newTask, InteretsTasksList);
 					    	 goal.addTask(newTask);  
 			   			 }
 			    	    else{
@@ -368,6 +368,52 @@ public class KnowledgeManagement {
 					    	 goal.addTask(newTask);  
 			    	    }    	
 		    	    }
+		}
+		//Check if he can realize a task for a friend <=> If he has a service with a similar label than the label asked for
+		public boolean IsAbleTaskFriend(String taskLabel){
+			String queryString = 
+		    		"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>"+
+		    		"PREFIX iserve: <http://iserve.kmi.open.ac.uk/ns/msm#>"+
+		    	    "PREFIX avataront: <http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#>\n"+
+					" ASK {"+
+						"?service avataront:hasLabel \""+taskLabel+"\" ."+
+						"?service rdf:type iserve:Service ."+
+						"}";
+
+			Query query = QueryFactory.create(queryString) ;
+		    QueryExecution qexec = QueryExecutionFactory.create(query, modelData) ;
+		    boolean b = qexec.execAsk();
+		    //ResultSetFormatter.out(System.out, b);
+		    qexec.close() ;
+		    return b;	
+		}
+		//Get the service (its name, Label and QoS) with a certain label
+		public String ExtractServiceFromLabel(String labelService){ 
+			String name2="ExtractServiceERROR"; String name3="ExtractServiceERROR"; String name4="ExtractServiceERROR";
+			String queryString =
+		    		"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>"+
+		    	    "PREFIX avataront: <http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#>\n"+
+		    		"PREFIX iserve: <http://iserve.kmi.open.ac.uk/ns/msm#>"+
+		    	        "SELECT  ?service ?label ?qos "+
+		    	        "WHERE {?service avataront:hasLabel \""+labelService+"\" ."+
+		    	        "?service avataront:hasLabel ?label ."+
+		    	        "?service <http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#hasQoS> ?qos ."+
+						"?service rdf:type iserve:Service ."+
+		    	        "}";
+			   
+		    	    Query query = QueryFactory.create(queryString);
+		    	    QueryExecution qe = QueryExecutionFactory.create(query, modelData);
+		    	    ResultSet results =  qe.execSelect();
+		    	    //ResultSetFormatter.out(System.out, results);
+		    	    
+		    	    while(results.hasNext()){ 
+		    	    	QuerySolution binding = results.nextSolution(); 
+		    	    	name2=binding.get("service").toString();
+		    	    	name3=binding.get("label").toString();	
+		    	    	name4=binding.get("qos").toString();	
+		    	    	//System.out.println("[EXTRACT SERVICE : ]"+name+": "+labelService+"  "+binding.get("qos").toString());	
+		    	    }
+		    return name2+"&"+name3+"&"+name4;
 		}
 
 }

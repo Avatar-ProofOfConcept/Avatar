@@ -46,6 +46,40 @@
     <type>pom</type>
     <version>3.13.1</version>
   </dependency>
+  <dependency>
+			<groupId>fr.laas.mooc.om2m</groupId>
+			<artifactId>mooc-ipe-helper</artifactId>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/libs/mooc-ipe-helper-1.0.0.jar</systemPath>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.om2m</groupId>
+			<artifactId>org.eclipse.om2m.commons</artifactId>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/libs/om2m-commons.jar</systemPath>
+			<version>1.0.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+<groupId>org.eclipse.om2m</groupId>
+<artifactId>org.eclipse.om2m.datamapping.jaxb</artifactId>
+<scope>system</scope>
+<systemPath>${project.basedir}/libs/om2m-jaxb.jar</systemPath>
+<version>1.0.0-SNAPSHOT</version>
+</dependency>
+<dependency>
+<groupId>org.eclipse.om2m</groupId>
+<artifactId>org.eclipse.om2m.datamapping.service</artifactId>
+<scope>system</scope>
+<systemPath>${project.basedir}/libs/om2m-datamapping.jar</systemPath>
+<version>1.0.0-SNAPSHOT</version>
+</dependency>
+<dependency>
+<groupId>org.eclipse.persistence</groupId>
+<artifactId>eclipselink</artifactId>
+<version>2.4.2</version>
+<scope>compile</scope>
+</dependency>
 	</dependencies>
 
 	<dependencyManagement>
