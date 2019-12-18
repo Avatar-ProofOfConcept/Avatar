@@ -8,7 +8,9 @@ public class Goal {
 	//Attributs
 		private String name;
 		private boolean achieved = false;	
-		private ArrayList <Task> tasksList = new ArrayList <Task>();		
+		private ArrayList <Task> tasksList = new ArrayList <Task>();
+		public ArrayList <String>InterestNotAble = new ArrayList <String>();		
+
 
 		//Constructor
 		public Goal(String name){
@@ -28,6 +30,17 @@ public class Goal {
 		
 		public ArrayList <Task> getTasksList(){
 			return tasksList;
+		}
+		public void computeTaskNotAble ()
+		{
+			for (int i=0;i< tasksList.size();i++)
+			{
+				if (!tasksList.get(i).getIsAble())
+				{
+				 if(InterestNotAble.contains(tasksList.get(i).getInterest())) InterestNotAble.add(tasksList.get(i).getInterest());
+				}
+			}
+			
 		}
 		
 		public boolean setActorTask(String avatar, String task,ArrayList <Task> ListTasks ){

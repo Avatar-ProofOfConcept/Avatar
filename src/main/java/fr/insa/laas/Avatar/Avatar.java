@@ -1,16 +1,22 @@
 package fr.insa.laas.Avatar;
 
+
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+ 
+
+ 
+
 public class Avatar {
 	
 	 
 
-   
+    private int id;
     private String name;
     private String owner;
  	private double latitude=99;
@@ -29,6 +35,7 @@ public class Avatar {
   	private ServicesManager sm ;
   	DelegationsManager dm;
   	private String URL;
+  	private FuzzyClustering cmean ;
     
 
   
@@ -38,17 +45,25 @@ public class Avatar {
  		this.kb=new KnowledgeManagement("src/main/resources/OntologyFiles/Avatar"+port+".owl");
  		cm=new CommunicationManagement(port,this.kb);
 		this.name=kb.ExtractName();
+		this.id=Integer.parseInt(name.split("Avatar")[1]);
+		System.out.println("My id is "+id);
 		URL="http://localhost:"+port+"/"+name+"/";
         this.owner=kb.ExtractOwner();
 		this.latitude=kb.ExtractLatitude();
 		this.longitude=kb.ExtractLongitude();
 		this.interestsList=kb.ExtractInterests();
+		System.out.println("interests "+interestsList);
 		this.goalList=kb.ExtractGoals(InteretsTasksList);
+ 		System.out.println("interests tasks "+InteretsTasksList.toString());
+
+ 
  		this.servicesList=kb.ExtractServices(this.name);
 		dm=new DelegationsManager(this.name);
 		sm = new ServicesManager(this.name);
+		cmean = new FuzzyClustering();
+		any ();
 		try {TimeUnit.SECONDS.sleep(5);} catch (InterruptedException e) {e.printStackTrace();}
-        FriendsResearch();
+        /*FriendsResearch();
 		sm.UpdateSN(socialNetwork);
 		if (port==3001)
 		{
@@ -60,7 +75,7 @@ public class Avatar {
 			}
 		}
 		}
-		else System.out.println("je suis fournisseur");
+		else System.out.println("je suis fournisseur");*/
 		 
 	}
 
@@ -166,6 +181,61 @@ public class Avatar {
 	public String getOwner() {
         return owner;
     }
+	public void any ()
+	{ 
+		/************INIT DATA****/
+		ArrayList<MetaAvatar> metaAvatars =new ArrayList<MetaAvatar>();
+	    ArrayList<Interest> il=new ArrayList<Interest>();
+	    il.add(new Interest("InterestA",0.5 ));
+	    il.add(new Interest("InterestM", 0.7));
+	    il.add(new Interest("InterestL", 0.6));
+	    il.add(new Interest("InterestB",0.8 ));
+	    il.add(new Interest("InterestN",0.35 ));
+    metaAvatars.add(new MetaAvatar("Avatar2", "in", 555, 555, new HashMap<String,Double>(), il, 555, "jjj"));
+    il=new ArrayList<Interest>();
+    il.add(new Interest("InterestA",0.7 ));
+    il.add(new Interest("InterestN", 0.6));
+    il.add(new Interest("InterestB", 0.5));
+    il.add(new Interest("InterestM",0.1 ));
+    metaAvatars.add(new MetaAvatar("Avatar3", "in", 555, 555, new HashMap<String,Double>(), il, 555, "jjj"));
+    il=new ArrayList<Interest>();
+    il.add(new Interest("InterestF",0.9 ));
+    il.add(new Interest("InterestY", 0.7));
+    metaAvatars.add(new MetaAvatar("Avatar4", "in", 555, 555, new HashMap<String,Double>(), il, 555, "jjj"));
+    il=new ArrayList<Interest>();
+    il.add(new Interest("InterestF",0.5 ));
+    metaAvatars.add(new MetaAvatar("Avatar5", "in", 555, 555, new HashMap<String,Double>(), il, 555, "jjj"));
+
+    il=new ArrayList<Interest>();
+    il.add(new Interest("InterestM",0.95 ));
+    metaAvatars.add(new MetaAvatar("Avatar6", "in", 555, 555, new HashMap<String,Double>(), il, 555, "jjj"));
+    /******Build clustering matrix**********/
+    for (int i=0;i< metaAvatars.size();i++)
+    {
+    	System.out.println(" meta size "+metaAvatars.size());
+
+        ArrayList<Float> tmp = new ArrayList<>();
+    	for (int k=0;k<InteretsTasksList.size();k++)
+    	{     	System.out.println(" it size "+InteretsTasksList.size());
+
+    		Interest it=metaAvatars.get(i).getInterest(InteretsTasksList.get(k));
+    		if (it==null)
+    			tmp.add(0f);
+    		else
+    			tmp.add((float)it.getLevel());
+    	}
+    	System.out.println(" tmppp "+tmp.toString());
+    	cmean.data.add(tmp);
+    }
+
+    this.cmean.setdimension(4);
+    this.cmean.run(4, 100);
+
+    
+    
+		 
+		
+	}
 	public void FriendsResearch(){
 		
 		//Create its metaAvatar to use it to calculate the Social Distance

@@ -167,8 +167,7 @@ public class KnowledgeManagement implements IExtract{
 		    	    while(results.hasNext()){ 
 		    	    	QuerySolution binding = results.nextSolution(); 
 		    	    	name=binding.get("goal").toString();
-		    	    	System.out.print(name);
-		    	    	//We create an instance of goal
+ 		    	    	//We create an instance of goal
 		    	    	Goal newGoal = new Goal(name);
 		    	    	ExtractTasks(newGoal,InteretsTasksList);
 		    	    	goalsList.add(newGoal);

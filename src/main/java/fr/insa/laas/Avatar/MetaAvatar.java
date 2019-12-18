@@ -44,7 +44,16 @@ public class MetaAvatar {
 			}
 			return res;
 		}
-		
+		public Interest getInterest(String interest){
+			Interest res=null;
+			for (int i=0; i<interestsList.size(); i++){
+				if (interestsList.get(i).getName().equals(interest)){
+					res=interestsList.get(i);
+					break;
+				}
+			}
+			return res;
+		}
 		//Getters & Setters
 		public String getName(){
 			return name ;

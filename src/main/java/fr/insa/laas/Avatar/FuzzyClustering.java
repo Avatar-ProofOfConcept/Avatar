@@ -27,11 +27,14 @@ public class FuzzyClustering {
         fuzziness = 2;
         epsilon = 0.01;
     }
-
-    public void run(int clusterNumber, int iter, ArrayList<ArrayList<Float>> data){
+   public void setdimension(int d)
+   {
+	   this.dimension=d;
+   }
+    public void run(int clusterNumber, int iter){
         this.clusterCount = clusterNumber;
         this.iteration = iter;
-        this.data = data;
+        //this.data = data;
 
         //start algorithm
         //1 assign initial membership values
@@ -51,7 +54,7 @@ public class FuzzyClustering {
         }
         showU ();
         getAvatarCluster();
-        showAvatars(4);
+        showAvatars(data.size());
     }
     public void initData (int numberOfData,int dimension)
     {
