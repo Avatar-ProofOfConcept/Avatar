@@ -2,6 +2,8 @@ package fr.insa.laas.Avatar;
 
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,9 +20,13 @@ import org.xml.sax.InputSource;
 public class SocialNetwork {
 	//Attributs
 		private String avatarName;
+		
 		private MetaAvatar metaAvatar;
 		//Social Network
+		private int k; // SN size
 		private ArrayList <MetaAvatar> socialNetwork = new ArrayList <MetaAvatar>() ; 
+		ArrayList <MetaAvatar> socialNetwork2 = new ArrayList <MetaAvatar>() ; 
+
 		private ArrayList <String> InteretsTasksList = new ArrayList <String>();			 //The interets of the tasks to do, we need a delegate for each one
 		private ArrayList <Interest> interestsList = new ArrayList <Interest> () ;			 //Used to iterate and to get the level interest easily for each task
 		private ArrayList <String> interestsDelegates =  new ArrayList <String>(); 			 //Contains triples "InterestX/AvatarX/SocialDist"
@@ -34,7 +40,43 @@ public class SocialNetwork {
 			InteretsTasksList=iTL;
 			interestsList=metaAvatar.getInterestsList();
 		}
+		public SocialNetwork() {
+			// TODO Auto-generated constructor stub
+		}
+		public void socialNetworkConstruction(MetaAvatar metaAvatar,int k)
+		{
+			this.k=k;
+			fr.insa.laas.Avatar.Element [] SDs=new fr.insa.laas.Avatar.Element[socialNetwork.size()];
+			for (int i=0;i<this.socialNetwork.size();i++)
+			{
+				SDs[i]=new fr.insa.laas.Avatar.Element(i,(float)(socialDistance.SocialDistance(metaAvatar,socialNetwork.get(i))));
+				 
+				System.out.println(""+SDs[i].getW()+" "+SDs[i].getId());
+			}
+			Arrays.sort(SDs,Collections.reverseOrder());
+ 
+			for(int j=0;j<3;j++)
+			{
+				socialNetwork2.add(socialNetwork.get(SDs[j].getId()));
+				System.out.println(socialNetwork.get(SDs[j].getId()).getName());
+				
+				
+			}
 		
+		}
+		public void setAvatars(ArrayList<MetaAvatar> metaAvatars)
+		{
+			this.socialNetwork=metaAvatars;
+		}
+		public ArrayList <MetaAvatar> getAvatars()
+		{
+			return this.socialNetwork;
+		}
+		
+		
+		
+		
+		/***************************************Amine 's code********************/
 		//Update of the Social Network from an Xml response from a request to a certain Repository
 		public void SocialNetworkUpdate(String xml, MetaAvatar metaAvatar, ArrayList <String> iTL){
 
@@ -78,11 +120,11 @@ public class SocialNetwork {
 						}
 
 						//Social Distance calcul
-						double socialDistanceRes = socialDistance.SocialDistance(metaAvatar, interestsV,Double.parseDouble(latitude), Double.parseDouble(longitude), owner);
+						//double socialDistanceRes = socialDistance.SocialDistance(metaAvatar, interestsV,Double.parseDouble(latitude), Double.parseDouble(longitude), owner);
 						//System.out.println("[SD from "+avatarName+"]: "+name+"= "+socialDistance);
 						
 						//Creation of a friend Meta Avatar
-						MetaAvatar friend = new MetaAvatar(name, owner, Double.parseDouble(latitude), Double.parseDouble(longitude), interestsV, interestsL, socialDistanceRes, url);
+						MetaAvatar friend = new MetaAvatar(name, owner, Double.parseDouble(latitude), Double.parseDouble(longitude), interestsV, interestsL, 0.5, url);
 						addAvatar(friend);
 						System.out.println("[ADDING A FRIEND]: "+avatarName+" add "+name);
 						}
@@ -157,7 +199,7 @@ public class SocialNetwork {
 		
 							/****				Getters & Setters				******/
 		
-		public void addAvatar (MetaAvatar avatar){
+	public void addAvatar (MetaAvatar avatar){
 			socialNetwork.add(avatar) ;
 		}
 		public  ArrayList <MetaAvatar> getSocialNetwork (){

@@ -16,6 +16,7 @@ public class FuzzyClustering {
     private int iteration;
     private int dimension;
     private int fuzziness;
+    private int p;
     private double epsilon;
     public double finalError;
     private ArrayList<Element[]> avatars;
@@ -26,10 +27,19 @@ public class FuzzyClustering {
         avatars=new ArrayList();
         fuzziness = 2;
         epsilon = 0.01;
+        p=3;
     }
+   public int getClusterNumber()
+   {
+	   return clusterCount;
+	   
+   } 
    public void setdimension(int d)
    {
 	   this.dimension=d;
+   }public ArrayList<Element[]> getAvatarsList()
+   {
+	   return this.avatars;
    }
     public void run(int clusterNumber, int iter){
         this.clusterCount = clusterNumber;
@@ -39,6 +49,8 @@ public class FuzzyClustering {
         //start algorithm
         //1 assign initial membership values
         assignInitialMembership();
+        showU ();
+
 
         for (int i = 0; i < iteration; i++) {
             //2 calculate cluster centers
@@ -52,9 +64,8 @@ public class FuzzyClustering {
             if(finalError <= epsilon)
                 break;
         }
-        showU ();
-        getAvatarCluster();
-        showAvatars(data.size());
+        getAvatarCluster(p);
+        showAvatars(p);
     }
     public void initData (int numberOfData,int dimension)
     {
@@ -80,7 +91,7 @@ public class FuzzyClustering {
      {
     	 for (int k=0;k<clusterCount;k++)
     	 {
-    		 System.out.print(u[i][k]+"  ");
+    		 System.out.print(data.get(i).get(k)+"  ");
     	 }
     	 System.out.println();
      }
@@ -175,11 +186,13 @@ public class FuzzyClustering {
         }
     }
     
-    public void getAvatarCluster ()
+    public void getAvatarCluster (int p)
     {
     	for (int i=0;i<clusterCount;i++)
     	{
     		Element [] tmp=new Element[data.size()];
+    		Element [] tmpP=new Element[p];
+
     		for (int j=0;j<data.size();j++)
     		{
     			tmp[j]=new Element(j,u[j][i]);
@@ -187,7 +200,13 @@ public class FuzzyClustering {
     			
     		}
     		Arrays.sort(tmp,Collections.reverseOrder());
-    		avatars.add(tmp);
+    		for(int k=0;k<p;k++)
+    		{
+    			tmpP[k]=new Element(tmp[k].getId(),tmp[k].getW());
+
+    		}
+    		
+    		avatars.add(tmpP);
     	}
     	
     }

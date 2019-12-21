@@ -113,14 +113,14 @@ public class SocialNetworkCalculs {
 	/*																																	*/
 	/*	-----------------------------------------------------------------------------------------------------------------------------	*/
 	   
-  public static double SocialDistance(MetaAvatar metaAvatar, Map<String, Double> InterestsVectorB,double LatB, double LongB, String userB) {
+  public static double SocialDistance(MetaAvatar metaAvatar, MetaAvatar b) {
   
 	  	//System.out.println("Vect of A1: "+metaAvatar.getInterestsVector().toString()+", and its friend's: "+InterestsVectorB.toString());
-        double coWorkDistance=CoWorkSimilarity(InterestsVectorB,metaAvatar.getInterestsVector());
-        int ownerDistance=OwnershipSimilarity(userB, metaAvatar.getOwner());
-        double coLocDistance=CoLocSimilarity(metaAvatar.getLatitude(),metaAvatar.getLongitude(),LatB,LongB);
+        double coWorkDistance=CoWorkSimilarity(b.getInterestsVector(),metaAvatar.getInterestsVector());
+        int ownerDistance=OwnershipSimilarity(b.getOwner(), metaAvatar.getOwner());
+        double coLocDistance=CoLocSimilarity(metaAvatar.getLatitude(),metaAvatar.getLongitude(),b.getLatitude(),b.getLongitude());
         double socialDistance = 0.4*coWorkDistance+ 0.4*(1/coLocDistance)+ 0.2*ownerDistance;
-        //System.out.println("[SocialDist]From "+metaAvatar.getName()+" CWD= "+coWorkDistance+", OD= "+ownerDistance+", CLD= "+(1/coLocDistance)+" ==> SD= "+socialDistance);
+        System.out.println("[SocialDist]From "+metaAvatar.getName()+" CWD= "+coWorkDistance+", OD= "+ownerDistance+", CLD= "+(1/coLocDistance)+" ==> SD= "+socialDistance);
         return socialDistance;
   }
   
