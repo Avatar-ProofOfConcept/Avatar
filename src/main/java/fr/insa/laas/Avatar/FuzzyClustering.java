@@ -295,6 +295,16 @@ public class FuzzyClustering {
         }
         printWriter.close();
     }
+	public ArrayList<String> getClusterMembers(int i,ArrayList<MetaAvatar> ls) {
+		Element [] tmp=avatars.get(i);
+		ArrayList<String> tmpls=new ArrayList<String>();
+		for (int j=0;j<p;j++)
+		{
+			tmpls.add(ls.get(tmp[j].getId()).getURL());
+			
+		}
+ 		return tmpls;
+	}
 
 }
 

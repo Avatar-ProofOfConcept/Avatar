@@ -12,14 +12,14 @@ public class Task {
 		private String label;
 		private String actor = "noSupplier" ;
 		private boolean grouped;	//Grouped Task
-		private String interest;
+		private String function;
 		private ArrayList <Task> tasksList = new ArrayList <Task>() ;	//If it's a groupedTask
 		
 		public Task(String content, boolean gr, boolean isAble, String i, String lab){
 			this.content=content;
 			this.grouped=gr;
 			this.isAble=isAble;
-			interest=i;
+			function=i;
 			this.label=lab;
 		}
 		
@@ -42,8 +42,8 @@ public class Task {
 		public String getContent(){
 			return content;
 		}
-		public String getInterest(){
-			return interest;
+		public String getFunction(){
+			return function;
 		}
 		
 		public String getLabel(){

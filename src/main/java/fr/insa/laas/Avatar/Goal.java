@@ -37,7 +37,7 @@ public class Goal {
 			{
 				if (!tasksList.get(i).getIsAble())
 				{
-				 if(InterestNotAble.contains(tasksList.get(i).getInterest())) InterestNotAble.add(tasksList.get(i).getInterest());
+				 if(InterestNotAble.contains(tasksList.get(i).getFunction())) InterestNotAble.add(tasksList.get(i).getFunction());
 				}
 			}
 			

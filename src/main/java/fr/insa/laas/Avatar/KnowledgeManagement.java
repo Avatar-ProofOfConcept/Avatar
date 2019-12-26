@@ -242,7 +242,7 @@ public class KnowledgeManagement implements IExtract{
 		    		"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>"+
 		    	    "PREFIX avataront: <http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#>\n"+
 		    	        "SELECT ?interest "+
-		    	        "WHERE {<"+ task + "> avataront:hasInterest ?interest ."+
+		    	        "WHERE {<"+ task + "> avataront:hasFunction ?interest ."+
 		    	        "}";
 		    	    Query query = QueryFactory.create(queryString);
 		    	    QueryExecution qe = QueryExecutionFactory.create(query, modelData);

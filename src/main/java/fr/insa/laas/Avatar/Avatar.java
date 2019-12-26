@@ -27,7 +27,7 @@ public class Avatar {
 	private ArrayList <Goal> goalList = new ArrayList <Goal> ();
 	private CommunicationManagement cm;
     private IExtract kb;
-    private ArrayList<String> InteretsTasksList=new ArrayList<String>();
+    private ArrayList<String> FunctionTasksList=new ArrayList<String>();
   	private SocialNetwork socialNetwork=new SocialNetwork() ;
   	private MetaAvatar metaAvatar = null ; 		 
   	private final String ORIGINATOR = "admin:admin";
@@ -37,7 +37,7 @@ public class Avatar {
   	private String URL;
   	private FuzzyClustering cmean ;
     
-
+  	ArrayList<MetaAvatar> metaAvatars =new ArrayList<MetaAvatar>();
   
 	public Avatar(int port) {
 		
@@ -46,49 +46,54 @@ public class Avatar {
  		cm=new CommunicationManagement(port,this.kb);
 		this.name=kb.ExtractName();
 		this.id=Integer.parseInt(name.split("Avatar")[1]);
- 		URL="http://localhost:"+port+"/"+name+"/";
+ 		URL="http://localhost:"+port+"/";
         this.owner=kb.ExtractOwner();
 		this.latitude=kb.ExtractLatitude();
 		this.longitude=kb.ExtractLongitude();
 		this.interestsList=kb.ExtractInterests();
- 		this.goalList=kb.ExtractGoals(InteretsTasksList);
- 		System.out.println("interssssst"+InteretsTasksList.toString());
+ 		this.goalList=kb.ExtractGoals(FunctionTasksList);
+ 		System.out.println("interssssst"+FunctionTasksList.toString());
         this.servicesList=kb.ExtractServices(this.name);
 		dm=new DelegationsManager(this.name);
 		sm = new ServicesManager(this.name);
 		cmean = new FuzzyClustering();
 		/**********************************/
-		ArrayList<MetaAvatar> metaAvatars =new ArrayList<MetaAvatar>();
+		
 	    ArrayList<Interest> il=new ArrayList<Interest>();
 	    il.add(new Interest("InterestA",0.5 ));
 	    il.add(new Interest("InterestM", 0.7));
 	    il.add(new Interest("InterestL", 0.6));
 	    il.add(new Interest("InterestB",0.8 ));
 	    il.add(new Interest("InterestN",0.35 ));
-    metaAvatars.add(new MetaAvatar("Avatar2", "in", 555, 555, new HashMap<String,Double>(), il, 555, "jjj"));
+    metaAvatars.add(new MetaAvatar("Avatar2", "in", 555, 555, new HashMap<String,Double>(), il, 555, "http://localhost:3002/"));
     il=new ArrayList<Interest>();
     il.add(new Interest("InterestA",0.7 ));
     il.add(new Interest("InterestN", 0.6));
     il.add(new Interest("InterestB", 0.5));
     il.add(new Interest("InterestM",0.1 ));
-    metaAvatars.add(new MetaAvatar("Avatar3", "in", 555, 555, new HashMap<String,Double>(), il, 555, "jjj"));
+    metaAvatars.add(new MetaAvatar("Avatar3", "in", 555, 555, new HashMap<String,Double>(), il, 555, "http://localhost:3003/"));
     il=new ArrayList<Interest>();
     il.add(new Interest("InterestF",0.9 ));
     il.add(new Interest("InterestY", 0.7));
-    metaAvatars.add(new MetaAvatar("Avatar4", "in", 555, 555, new HashMap<String,Double>(), il, 555, "jjj"));
+    metaAvatars.add(new MetaAvatar("Avatar4", "in", 555, 555, new HashMap<String,Double>(), il, 555, "http://localhost:3004/"));
     il=new ArrayList<Interest>();
     il.add(new Interest("InterestF",0.5 ));
-    metaAvatars.add(new MetaAvatar("Avatar5", "in", 555, 555, new HashMap<String,Double>(), il, 555, "jjj"));
+    metaAvatars.add(new MetaAvatar("Avatar5", "in", 555, 555, new HashMap<String,Double>(), il, 555, "http://localhost:3005/"));
 
     il=new ArrayList<Interest>();
     il.add(new Interest("InterestM",0.95 ));
-    metaAvatars.add(new MetaAvatar("Avatar6", "in", 555, 555, new HashMap<String,Double>(), il, 555, "jjj"));
+    metaAvatars.add(new MetaAvatar("Avatar6", "in", 555, 555, new HashMap<String,Double>(), il, 555, "http://localhost:3006/"));
     this.socialNetwork.setAvatars(metaAvatars);
 	metaAvatar = new MetaAvatar(name, owner, latitude, longitude, interestsVector, interestsList, -99.0, URL);	//-99: It is a symolic value, as the Avatar don't have to calculate the SD with itself
 
     this.socialNetwork.socialNetworkConstruction(metaAvatar,3);
-		cluster();
-		discovery();
+		
+		if (port==3001){
+			//cluster();
+			//discovery();
+		 
+		}
+		else { System.out.println("je suis le 3002");}
 		try {TimeUnit.SECONDS.sleep(5);} catch (InterruptedException e) {e.printStackTrace();}
         /*FriendsResearch();
 		sm.UpdateSN(socialNetwork);
@@ -210,42 +215,17 @@ public class Avatar {
     }
 	public void cluster ()
 	{ 
-		/************INIT DATA****/
-		ArrayList<MetaAvatar> metaAvatars =new ArrayList<MetaAvatar>();
-	    ArrayList<Interest> il=new ArrayList<Interest>();
-	    il.add(new Interest("InterestA",0.5 ));
-	    il.add(new Interest("InterestM", 0.7));
-	    il.add(new Interest("InterestL", 0.6));
-	    il.add(new Interest("InterestB",0.8 ));
-	    il.add(new Interest("InterestN",0.35 ));
-    metaAvatars.add(new MetaAvatar("Avatar2", "in", 555, 555, new HashMap<String,Double>(), il, 555, "jjj"));
-    il=new ArrayList<Interest>();
-    il.add(new Interest("InterestA",0.7 ));
-    il.add(new Interest("InterestN", 0.6));
-    il.add(new Interest("InterestB", 0.5));
-    il.add(new Interest("InterestM",0.1 ));
-    metaAvatars.add(new MetaAvatar("Avatar3", "in", 555, 555, new HashMap<String,Double>(), il, 555, "jjj"));
-    il=new ArrayList<Interest>();
-    il.add(new Interest("InterestF",0.9 ));
-    il.add(new Interest("InterestY", 0.7));
-    metaAvatars.add(new MetaAvatar("Avatar4", "in", 555, 555, new HashMap<String,Double>(), il, 555, "jjj"));
-    il=new ArrayList<Interest>();
-    il.add(new Interest("InterestF",0.5 ));
-    metaAvatars.add(new MetaAvatar("Avatar5", "in", 555, 555, new HashMap<String,Double>(), il, 555, "jjj"));
-
-    il=new ArrayList<Interest>();
-    il.add(new Interest("InterestM",0.95 ));
-    metaAvatars.add(new MetaAvatar("Avatar6", "in", 555, 555, new HashMap<String,Double>(), il, 555, "jjj"));
+		 
     /******Build clustering matrix**********/
     for (int i=0;i< metaAvatars.size();i++)
     {
     	System.out.println(" meta size "+metaAvatars.size());
 
         ArrayList<Float> tmp = new ArrayList<>();
-    	for (int k=0;k<InteretsTasksList.size();k++)
-    	{     	System.out.println(" it size "+InteretsTasksList.size());
+    	for (int k=0;k<FunctionTasksList.size();k++)
+    	{     	System.out.println(" it size "+FunctionTasksList.size());
 
-    		Interest it=metaAvatars.get(i).getInterest(InteretsTasksList.get(k));
+    		Interest it=metaAvatars.get(i).getInterest(FunctionTasksList.get(k));
     		if (it==null)
     			tmp.add(0f);
     		else
@@ -266,17 +246,43 @@ public class Avatar {
 	public void discovery()
 	{
 		//1 design an elected
-		String [][]  ClusteringTable=new String[this.cmean.getClusterNumber()][2];
+		HashMap<String, String> ClusteringTable=new HashMap<String, String>();
 		for(int i=0 ;i<cmean.getClusterNumber();i++)
 		{
-			ClusteringTable[i][0]=InteretsTasksList.get(i);
-			System.out.println("Interst "+ClusteringTable[i][0]);
-			ClusteringTable[i][1]=socialNetwork.getAvatars().get(cmean.getAvatarsList().get(i)[0].getId()).getName();
-			System.out.println("elected "+ClusteringTable[i][1]);
+			ClusteringTable.put(FunctionTasksList.get(i),socialNetwork.getAvatars().get(cmean.getAvatarsList().get(i)[0].getId()).getURL());
+ 
+  			
+			try {
+				this.cm.sendClusterMember(ClusteringTable.get(FunctionTasksList.get(i)),this.cmean.getClusterMembers(i,metaAvatars), this.client);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			//System.out.println("elected "+ClusteringTable[i][1]);
 
 		}
 		//2 send cluster membership to the elected
 		//3 build clustering table
+		//System.out.println("[BROWSE TASKS]"+name+": "+goalsList.get(0).getName());
+				for (int s=0; s<goalList.get(0).getTasksList().size();s++){
+					//Able
+					if(goalList.get(0).getTasksList().get(s).getIsAble()){
+						System.out.println("["+name+"] "+goalList.get(0).getTasksList().get(s).getContent()+": Able");
+						//cptTasks++;
+						System.out.println("	[CAN DO TASK ITSELF]"+name+": "+goalList.get(0).getTasksList().get(s).getContent());
+						goalList.get(0).getTasksList().get(s).setActor(name);
+
+					}
+					//Non Able ==> Check if grouped
+					else {
+						System.out.println("["+name+"] "+goalList.get(0).getTasksList().get(s).getContent()+": not Able");
+ 						System.out.println("	[CAN NOT DO TASK ITSELF]"+name+": "+goalList.get(0).getTasksList().get(s).getContent());
+ 						String interest =goalList.get(0).getTasksList().get(s).getFunction();
+ 						System.out.println(ClusteringTable.get(interest));
+ 						cm.askDeleguate(goalList.get(0).getTasksList().get(s).getContent()+"&"+goalList.get(0).getTasksList().get(s).getLabel()+"&"+goalList.get(0).getTasksList().get(s).getFunction(),URL,ClusteringTable.get(interest), client);
+
+					}
+				}
 		
 	}
 	/*public void FriendsResearch(){

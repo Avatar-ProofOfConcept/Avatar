@@ -1,7 +1,7 @@
 package fr.insa.laas.Avatar;
 
 import java.io.IOException;
-
+import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.error.ErrorController;
@@ -31,6 +31,13 @@ public class AvatarController implements ErrorController  {
        avatar=new Avatar(port);
 
         return "init";
+    }
+	@RequestMapping(value="/receiveMembers/") 
+	public String getClusterMembers(@RequestBody String request) {
+		if(avatar==null) avatar=new Avatar(port);
+       avatar.getComManager().getMemberList(request);
+         System.out.println("Cluster membrers "+avatar.getComManager().ls.toString());
+        return "Cluster Member recieved";
     }
 	//GET Services Requests
 	@RequestMapping(value="/Services/{serviceX}", method=RequestMethod.GET)
@@ -64,7 +71,7 @@ public class AvatarController implements ErrorController  {
       public String TreatHTTPRequests (@RequestBody String request, @RequestParam("type") String type) throws IOException{
   	
   		String sender = u.getXmlElement(request, "sender");
-  		avatar.getComManager().IncrNbRequest();
+  		//avatar.getComManager().IncrNbRequest();
   		System.out.println("[CONTROLLER of "+avatar.getName()+"] Received a "+type+" Request from "+sender+" total requests="+avatar.getComManager().getNbRequest());		
   		String res=null;	
   		switch (type){
@@ -112,7 +119,59 @@ public class AvatarController implements ErrorController  {
   		return res;
   	}
 
-  	
+  	@RequestMapping(value="/askmembers/")
+    public String TreatHTTPRequests1 (@RequestBody String request, @RequestParam("type") String type) throws IOException{
+		if(avatar==null) avatar=new Avatar(port);
+
+		String sender = u.getXmlElement(request, "sender");
+		//avatar.getComManager().IncrNbRequest();
+		System.out.println("[CONTROLLER of "+avatar.getName()+"] Received a "+type+" Request from "+sender+" total requests="+avatar.getComManager().getNbRequest());		
+		String res=null;	
+		switch (type){
+		
+		//Ask Request (about a certain Task)
+		case "ask":
+			//System.out.println("			RECEIVED ASK REQUEST");		
+			//res="OK REQ";
+			res=avatar.getComManager().AskMembers(request,avatar.getName());
+			break;
+			
+		//Accept Request (about a Service proposition received)
+		case "accept":
+			res=avatar.getComManager().AcceptRequest(request,avatar.getName());
+			break;	
+			
+		//Failure Request (When a delegate failed)
+		case "failure":
+			res=avatar.getComManager().FailureRequest(request,avatar.getSocialNetwork(),avatar.getMetaAvatar(),avatar.getDm(),avatar.getName(),avatar.getClient());
+			break;	
+	
+		//Failure Request (because of TimeOut)
+		case "failuretimeout":
+			String conversationIdTO = u.getXmlElement(request,"conversationId");
+			res="<type>okfailureTO</type><content>okFTO</content><sender>"+avatar.getName()+"</sender><conversationId>"+conversationIdTO+"</conversationId><date>date</date>";
+			//res=avatar.FailureTimeOutRequest(request);
+			break;
+			
+		//Failure Request (because of TimeOut)
+		case "propagate":
+			res=avatar.getComManager().PropagateRequest(request,avatar.getName(),avatar.getSocialNetwork(),avatar.getDm(),avatar.getClient(),avatar.getMetaAvatar());
+			break;
+			
+		default:
+			System.out.println("DEBUG NOTYPE ERROR, type= "+type);		
+    		res = u.addXmlElement(res,"type","NoType");
+			res = u.addXmlElement(res,"conversationId","NoConv");
+			res = u.addXmlElement(res,"date","Nodate");
+			res = u.addXmlElement(res,"sender",avatar.getName());
+			res = u.addXmlElement(res,"content","noContent");
+
+			break;
+		}	
+
+		return res;
+	}
+
   
   	@Override
   	public String getErrorPath() {
