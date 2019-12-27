@@ -113,27 +113,18 @@ public class SocialNetworkCalculs {
 	/*																																	*/
 	/*	-----------------------------------------------------------------------------------------------------------------------------	*/
 	   
-  public static double SocialDistance(MetaAvatar metaAvatar, MetaAvatar b) {
+  public static double SocialDistance(MetaAvatar metaAvatar, MetaAvatar b,float alpha,float beta,float gama) {
   
 	  	//System.out.println("Vect of A1: "+metaAvatar.getInterestsVector().toString()+", and its friend's: "+InterestsVectorB.toString());
         double coWorkDistance=CoWorkSimilarity(b.getInterestsVector(),metaAvatar.getInterestsVector());
         int ownerDistance=OwnershipSimilarity(b.getOwner(), metaAvatar.getOwner());
         double coLocDistance=CoLocSimilarity(metaAvatar.getLatitude(),metaAvatar.getLongitude(),b.getLatitude(),b.getLongitude());
-        double socialDistance = 0.4*coWorkDistance+ 0.4*(1/coLocDistance)+ 0.2*ownerDistance;
-        System.out.println("[SocialDist]From "+metaAvatar.getName()+" CWD= "+coWorkDistance+", OD= "+ownerDistance+", CLD= "+(1/coLocDistance)+" ==> SD= "+socialDistance);
+        double socialDistance = alpha*coWorkDistance+ beta*(1/(coLocDistance+1))+ gama*ownerDistance;
+        System.out.println("[SocialDist]From "+metaAvatar.getName()+" CWD= "+coWorkDistance+", OD= "+ownerDistance+", CLD= "+(1/(coLocDistance+1))+" ==> SD= "+socialDistance);
         return socialDistance;
   }
   
-  //Social Distance relative to a interest, the same as the normal one, but concerning the Cowork Distance, we just use the level of interest (which is also between 0 and 1) 
-  public static double SocialDistanceInterest(MetaAvatar metaAvatar, MetaAvatar metaFriend, double interestLevel) {
-	  
-	  //System.out.println("Vect of A1: "+metaAvatar.getInterestsVector().toString()+", and its friend's: "+InterestsVectorB.toString());
-      int ownerDistance=OwnershipSimilarity(metaFriend.getOwner(), metaAvatar.getOwner());
-      double coLocDistance=CoLocSimilarity(metaAvatar.getLatitude(),metaAvatar.getLongitude(),metaFriend.getLatitude(),metaFriend.getLongitude());
-      double socialDistance = 0.4*interestLevel+ 0.4*(1/coLocDistance)+ 0.2*ownerDistance;
-      //System.out.println("[SocialDistINTEREST]"+metaAvatar.getName()+" CWD= "+interestLevel+", OD= "+ownerDistance+", CLD= "+(1/coLocDistance)+" ==> SD= "+socialDistance);
-      return socialDistance;
-}
+ 
 
 
 }

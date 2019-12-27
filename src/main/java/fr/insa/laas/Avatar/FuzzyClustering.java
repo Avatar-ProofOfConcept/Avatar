@@ -8,7 +8,7 @@ import java.util.Collections;
 import java.util.Random;
 
 public class FuzzyClustering {
-    public ArrayList<ArrayList<Float>> data;
+    public ArrayList<ArrayList<Integer>> data;
     public ArrayList<ArrayList<Float>> clusterCenters;
     private float u[][];
     private float u_pre[][];
@@ -72,11 +72,11 @@ public class FuzzyClustering {
         this.dimension=dimension;
     	for(int i=0;i<numberOfData;i++)
     	{
-            ArrayList<Float> tmp = new ArrayList<>();
+            ArrayList<Integer> tmp = new ArrayList<>();
 
     		for(int k=0;k<dimension;k++)
     		{
-    			tmp.add((float) Math.random());
+    			tmp.add((int)Math.random());
     			System.out.print(tmp.get(k)+" ");
 
     		}
@@ -103,7 +103,7 @@ public class FuzzyClustering {
      * @param minRange
      * @param maxRange
      */
-    public void createRandomData(int numberOfData, int dimension, int minRange, int maxRange, int clusterCount){
+   /* public void createRandomData(int numberOfData, int dimension, int minRange, int maxRange, int clusterCount){
         this.dimension = dimension;
         ArrayList<ArrayList<Integer>> centroids = new ArrayList<>();
         centroids.add(new ArrayList<Integer>());
@@ -205,7 +205,12 @@ public class FuzzyClustering {
     			tmpP[k]=new Element(tmp[k].getId(),tmp[k].getW());
 
     		}
-    		
+    		/*For testing to remove later*/
+    		if (i==0)
+    		{
+    			tmpP[0].setId(1);
+    			tmpP[1].setId(0);
+    		}
     		avatars.add(tmpP);
     	}
     	
@@ -251,7 +256,7 @@ public class FuzzyClustering {
      * @param p2
      * @return
      */
-    private float Distance(ArrayList<Float> p1, ArrayList<Float> p2){
+    private float Distance(ArrayList<Integer> p1, ArrayList<Float> p2){
         float sum = 0;
         for (int i = 0; i < p1.size(); i++) {
             sum += Math.pow(p1.get(i) - p2.get(i), 2);

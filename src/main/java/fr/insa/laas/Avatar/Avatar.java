@@ -28,22 +28,17 @@ public class Avatar {
 	private CommunicationManagement cm;
     private IExtract kb;
     private ArrayList<String> FunctionTasksList=new ArrayList<String>();
-  	private SocialNetwork socialNetwork=new SocialNetwork() ;
   	private MetaAvatar metaAvatar = null ; 		 
   	private final String ORIGINATOR = "admin:admin";
-  	private ClientInterface client=new Client();
-  	private ServicesManager sm ;
-  	DelegationsManager dm;
-  	private String URL;
+   	private ServicesManager sm ;
+   	private String URL;
   	private FuzzyClustering cmean ;
     
-  	ArrayList<MetaAvatar> metaAvatars =new ArrayList<MetaAvatar>();
-  
+   
 	public Avatar(int port) {
 		
 		
  		this.kb=new KnowledgeManagement("src/main/resources/OntologyFiles/Avatar"+port+".owl");
- 		cm=new CommunicationManagement(port,this.kb);
 		this.name=kb.ExtractName();
 		this.id=Integer.parseInt(name.split("Avatar")[1]);
  		URL="http://localhost:"+port+"/";
@@ -53,44 +48,20 @@ public class Avatar {
 		this.interestsList=kb.ExtractInterests();
  		this.goalList=kb.ExtractGoals(FunctionTasksList);
  		System.out.println("interssssst"+FunctionTasksList.toString());
+ 		cm=new CommunicationManagement(port,this.kb,new MetaAvatar(name, owner, latitude, longitude, interestsVector, interestsList,FunctionTasksList,2,URL));
+
         this.servicesList=kb.ExtractServices(this.name);
-		dm=new DelegationsManager(this.name);
-		sm = new ServicesManager(this.name);
+ 		sm = new ServicesManager(this.name);
 		cmean = new FuzzyClustering();
 		/**********************************/
 		
-	    ArrayList<Interest> il=new ArrayList<Interest>();
-	    il.add(new Interest("InterestA",0.5 ));
-	    il.add(new Interest("InterestM", 0.7));
-	    il.add(new Interest("InterestL", 0.6));
-	    il.add(new Interest("InterestB",0.8 ));
-	    il.add(new Interest("InterestN",0.35 ));
-    metaAvatars.add(new MetaAvatar("Avatar2", "in", 555, 555, new HashMap<String,Double>(), il, 555, "http://localhost:3002/"));
-    il=new ArrayList<Interest>();
-    il.add(new Interest("InterestA",0.7 ));
-    il.add(new Interest("InterestN", 0.6));
-    il.add(new Interest("InterestB", 0.5));
-    il.add(new Interest("InterestM",0.1 ));
-    metaAvatars.add(new MetaAvatar("Avatar3", "in", 555, 555, new HashMap<String,Double>(), il, 555, "http://localhost:3003/"));
-    il=new ArrayList<Interest>();
-    il.add(new Interest("InterestF",0.9 ));
-    il.add(new Interest("InterestY", 0.7));
-    metaAvatars.add(new MetaAvatar("Avatar4", "in", 555, 555, new HashMap<String,Double>(), il, 555, "http://localhost:3004/"));
-    il=new ArrayList<Interest>();
-    il.add(new Interest("InterestF",0.5 ));
-    metaAvatars.add(new MetaAvatar("Avatar5", "in", 555, 555, new HashMap<String,Double>(), il, 555, "http://localhost:3005/"));
-
-    il=new ArrayList<Interest>();
-    il.add(new Interest("InterestM",0.95 ));
-    metaAvatars.add(new MetaAvatar("Avatar6", "in", 555, 555, new HashMap<String,Double>(), il, 555, "http://localhost:3006/"));
-    this.socialNetwork.setAvatars(metaAvatars);
-	metaAvatar = new MetaAvatar(name, owner, latitude, longitude, interestsVector, interestsList, -99.0, URL);	//-99: It is a symolic value, as the Avatar don't have to calculate the SD with itself
-
-    this.socialNetwork.socialNetworkConstruction(metaAvatar,3);
+		
+	     
+    //this.socialNetwork.socialNetworkConstruction(metaAvatar,3);
 		
 		if (port==3001){
-			//cluster();
-			//discovery();
+			cluster();
+			discovery();
 		 
 		}
 		else { System.out.println("je suis le 3002");}
@@ -110,16 +81,7 @@ public class Avatar {
 		else System.out.println("je suis fournisseur");*/
 		 
 	}
-
-	public SocialNetwork getSocialNetwork() {
-		return socialNetwork;
-	}
-
-
-
-	public void setSocialNetwork(SocialNetwork socialNetwork) {
-		this.socialNetwork = socialNetwork;
-	}
+ 
 
 
 
@@ -134,32 +96,11 @@ public class Avatar {
 	}
 
 
-
-	public ClientInterface getClient() {
-		return client;
-	}
+ 
 
 
 
-	public void setClient(ClientInterface client) {
-		this.client = client;
-	}
 
-
-
-	public DelegationsManager getDm() {
-		return dm;
-	}
-	public ServicesManager getSm()
-	{
-		return sm;
-	}
-
-
-
-	public void setDm(DelegationsManager dm) {
-		this.dm = dm;
-	}
 
 
 	public double getLatitude() {
@@ -217,19 +158,19 @@ public class Avatar {
 	{ 
 		 
     /******Build clustering matrix**********/
-    for (int i=0;i< metaAvatars.size();i++)
+    for (int i=0;i< cm.getSocialNetwork().metaAvatars.size();i++)
     {
-    	System.out.println(" meta size "+metaAvatars.size());
+    	System.out.println(" meta size "+cm.getSocialNetwork().metaAvatars.size());
 
-        ArrayList<Float> tmp = new ArrayList<>();
+        ArrayList<Integer> tmp = new ArrayList<>();
     	for (int k=0;k<FunctionTasksList.size();k++)
     	{     	System.out.println(" it size "+FunctionTasksList.size());
 
-    		Interest it=metaAvatars.get(i).getInterest(FunctionTasksList.get(k));
+    		String it=cm.getSocialNetwork().metaAvatars.get(i).getFunction(FunctionTasksList.get(k));
     		if (it==null)
-    			tmp.add(0f);
+    			tmp.add(0);
     		else
-    			tmp.add((float)it.getLevel());
+    			tmp.add(1);
     	}
     	System.out.println(" tmppp "+tmp.toString());
     	cmean.data.add(tmp);
@@ -249,11 +190,11 @@ public class Avatar {
 		HashMap<String, String> ClusteringTable=new HashMap<String, String>();
 		for(int i=0 ;i<cmean.getClusterNumber();i++)
 		{
-			ClusteringTable.put(FunctionTasksList.get(i),socialNetwork.getAvatars().get(cmean.getAvatarsList().get(i)[0].getId()).getURL());
+			ClusteringTable.put(FunctionTasksList.get(i),this.cm.getSocialNetwork().getAvatars().get(cmean.getAvatarsList().get(i)[0].getId()).getURL());
  
   			
 			try {
-				this.cm.sendClusterMember(ClusteringTable.get(FunctionTasksList.get(i)),this.cmean.getClusterMembers(i,metaAvatars), this.client);
+				this.cm.sendClusterMember(ClusteringTable.get(FunctionTasksList.get(i)),this.cmean.getClusterMembers(i,cm.getSocialNetwork().metaAvatars));
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -277,33 +218,15 @@ public class Avatar {
 					else {
 						System.out.println("["+name+"] "+goalList.get(0).getTasksList().get(s).getContent()+": not Able");
  						System.out.println("	[CAN NOT DO TASK ITSELF]"+name+": "+goalList.get(0).getTasksList().get(s).getContent());
- 						String interest =goalList.get(0).getTasksList().get(s).getFunction();
- 						System.out.println(ClusteringTable.get(interest));
- 						cm.askDeleguate(goalList.get(0).getTasksList().get(s).getContent()+"&"+goalList.get(0).getTasksList().get(s).getLabel()+"&"+goalList.get(0).getTasksList().get(s).getFunction(),URL,ClusteringTable.get(interest), client);
+ 						String function =goalList.get(0).getTasksList().get(s).getFunction();
+ 						System.out.println("Function "+function+" value "+ClusteringTable.get(function));
+ 						cm.ask(goalList.get(0).getTasksList().get(s).getContent()+"&"+goalList.get(0).getTasksList().get(s).getLabel()+"&"+goalList.get(0).getTasksList().get(s).getFunction(),URL,ClusteringTable.get(function));
 
 					}
 				}
 		
 	}
-	/*public void FriendsResearch(){
-		
-		//Create its metaAvatar to use it to calculate the Social Distance
-		metaAvatar = new MetaAvatar(name, owner, latitude, longitude, interestsVector, interestsList, -99.0, URL);	//-99: It is a symolic value, as the Avatar don't have to calculate the SD with itself
-		socialNetwork = new SocialNetwork(metaAvatar,InteretsTasksList);
-
- 			try {
-				Response resp = client.retrieve("http://localhost:8080/~/mn-cse/mn-name/Repository04/Repository04_DATA?rcn=4", ORIGINATOR);
-				System.out.println("RESP: "+resp.getRepresentation());
-				socialNetwork.SocialNetworkUpdate(resp.getRepresentation(), metaAvatar,InteretsTasksList);
-			} catch (IOException e) {
-				e.printStackTrace();
-				System.out.println("FriendsRes ERROR!");
-			}
-		 
-		
-		
-	}	//TBD: RS Update !!!
-	*/
+ 
 	//Browse the tasks to deal with the tasks he can't execute
 /*	public void BrowseTasks(ArrayList <Task> tasksList) throws IOException{
 		//System.out.println("[BROWSE TASKS]"+name+": "+goalsList.get(0).getName());

@@ -24,7 +24,7 @@ public class ServicesManager {
 		//socialNetwork=sn;
 	}
 	
-	//When we discover a new Friend
+/*	//When we discover a new Friend
 	public void UpdateSN(SocialNetwork sn){
 		socialNetwork=sn;
 		socialNetworkList = sn.getSocialNetwork();
@@ -150,5 +150,5 @@ public class ServicesManager {
 			}	break;
 		}
 		return res;
-	}
+	}*/
 }
