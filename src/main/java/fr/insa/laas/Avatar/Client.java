@@ -145,7 +145,7 @@ public class Client implements ClientInterface {
 			// send request
 			//CloseableHttpResponse reqResp = client.execute(get);
 			HttpResponse reqResp = client.execute(req);
-			System.out.println(reqResp.toString());
+			//System.out.println(reqResp.toString());
 
 			//reqResp.
 			response.setStatusCode(reqResp.getStatusLine().getStatusCode());

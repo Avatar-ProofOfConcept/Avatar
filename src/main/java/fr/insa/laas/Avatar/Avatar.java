@@ -60,8 +60,9 @@ public class Avatar {
     //this.socialNetwork.socialNetworkConstruction(metaAvatar,3);
 		
 		if (port==3001){
-			cluster();
-			discovery();
+			cm.getSocialNetwork().socialNetworkConstruction(4);
+			//cluster();
+			//discovery();
 		 
 		}
 		else { System.out.println("je suis le 3002");}
@@ -158,21 +159,21 @@ public class Avatar {
 	{ 
 		 
     /******Build clustering matrix**********/
-    for (int i=0;i< cm.getSocialNetwork().metaAvatars.size();i++)
+    for (int i=0;i< cm.getSocialNetwork().getSocialNetwork().size();i++)
     {
-    	System.out.println(" meta size "+cm.getSocialNetwork().metaAvatars.size());
+    	//System.out.println(" meta size "+cm.getSocialNetwork().getSocialNetwork().size());
 
         ArrayList<Integer> tmp = new ArrayList<>();
     	for (int k=0;k<FunctionTasksList.size();k++)
     	{     	System.out.println(" it size "+FunctionTasksList.size());
 
-    		String it=cm.getSocialNetwork().metaAvatars.get(i).getFunction(FunctionTasksList.get(k));
+    		String it=cm.getSocialNetwork().getSocialNetwork().get(i).getFunction(FunctionTasksList.get(k));
     		if (it==null)
     			tmp.add(0);
     		else
     			tmp.add(1);
     	}
-    	System.out.println(" tmppp "+tmp.toString());
+    	//System.out.println(" tmppp "+tmp.toString());
     	cmean.data.add(tmp);
     }
 
@@ -220,11 +221,19 @@ public class Avatar {
  						System.out.println("	[CAN NOT DO TASK ITSELF]"+name+": "+goalList.get(0).getTasksList().get(s).getContent());
  						String function =goalList.get(0).getTasksList().get(s).getFunction();
  						System.out.println("Function "+function+" value "+ClusteringTable.get(function));
- 						cm.ask(goalList.get(0).getTasksList().get(s).getContent()+"&"+goalList.get(0).getTasksList().get(s).getLabel()+"&"+goalList.get(0).getTasksList().get(s).getFunction(),URL,ClusteringTable.get(function));
-
+ 						Response resp=cm.ask(goalList.get(0).getTasksList().get(s).getContent()+"&"+goalList.get(0).getTasksList().get(s).getLabel()+"&"+goalList.get(0).getTasksList().get(s).getFunction(),URL,ClusteringTable.get(function)+"delegu/");
+ 						if (resp.getRepresentation().isEmpty()==false)
+ 						{
+ 						cm.savePropositions(resp.getRepresentation(),goalList.get(0).getTasksList().get(s).getLabel());
+ 						}
 					}
 				}
+				cm.showPropositions();
 		
+	}
+	public void receivePropo(String response)
+	{
+		this.cm.savePropositions(response);
 	}
  
 	//Browse the tasks to deal with the tasks he can't execute

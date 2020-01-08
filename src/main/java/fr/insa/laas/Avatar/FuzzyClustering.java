@@ -27,7 +27,7 @@ public class FuzzyClustering {
         avatars=new ArrayList();
         fuzziness = 2;
         epsilon = 0.01;
-        p=3;
+        p=2;
     }
    public int getClusterNumber()
    {
@@ -209,7 +209,7 @@ public class FuzzyClustering {
     		if (i==0)
     		{
     			tmpP[0].setId(1);
-    			tmpP[1].setId(0);
+    			tmpP[1].setId(2);
     		}
     		avatars.add(tmpP);
     	}

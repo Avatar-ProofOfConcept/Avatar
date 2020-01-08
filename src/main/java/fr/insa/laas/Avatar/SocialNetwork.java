@@ -19,7 +19,7 @@ public class SocialNetwork {
  		//Social Distance Calculs
 		private SocialNetworkCalculs socialDistance = new SocialNetworkCalculs();
 		//set of data for test
-		 ArrayList<MetaAvatar> metaAvatars;
+		 ArrayList<MetaAvatar> metaAvatars=new ArrayList<MetaAvatar>();
 		
 	
 		public void setSocialNetwork(ArrayList <MetaAvatar> sn)
@@ -56,9 +56,40 @@ public class SocialNetwork {
 	    friendFromRepo=metaAvatars;
 
  		}
-		public void socialNetworkConstruction(int k,ArrayList<String> exclus)
+		public SocialNetwork() {
+			 
+			ArrayList<String> il=new ArrayList<String>();
+		    il.add(new String("FunctionA"));
+		    il.add(new String("FunctionM"));
+		    il.add(new String("FunctionL"));
+		    il.add(new String("FunctionB"));
+		    il.add(new String("FunctionN"));
+	   
+		metaAvatars.add(new MetaAvatar("Avatar2", "in", 555, 555, new HashMap<String,Double>(),new ArrayList<Interest>(), il, 555, "http://localhost:3002/"));
+	    il=new ArrayList<String>();
+	    il.add(new String("FunctionA"));
+	    il.add(new String("FunctionN"));
+	    il.add(new String("FunctionB"));
+	    il.add(new String("FunctionM"));
+	    metaAvatars.add(new MetaAvatar("Avatar3", "in", 555, 555, new HashMap<String,Double>(),new ArrayList<Interest>(), il, 555, "http://localhost:3003/"));
+	    il=new ArrayList<String>();
+	    il.add(new String("FunctionF"));
+	    il.add(new String("FunctionY"));
+	    metaAvatars.add(new MetaAvatar("Avatar4", "in", 555, 555, new HashMap<String,Double>(),new ArrayList<Interest>(), il, 555, "http://localhost:3004/"));
+	    il=new ArrayList<String>();
+	    il.add(new String("FunctionF"));
+	    metaAvatars.add(new MetaAvatar("Avatar5", "in", 555, 555, new HashMap<String,Double>(), new ArrayList<Interest>(), il, 555, "http://localhost:3005/"));
+
+	    il=new ArrayList<String>();
+	    il.add(new String("FunctionM"));
+	    metaAvatars.add(new MetaAvatar("Avatar6", "in", 555, 555, new HashMap<String,Double>(), new ArrayList<Interest>(), il, 555, "http://localhost:3006/"));
+	    friendFromRepo=metaAvatars;
+
+ 		}
+		public ArrayList<String> socialNetworkConstruction(int k,ArrayList<String> exclus)
 		{
 			this.size=k;
+			ArrayList<String> ls=new ArrayList<String>();
 			fr.insa.laas.Avatar.Element [] SDs=new fr.insa.laas.Avatar.Element[friendFromRepo.size()];
 			for (int i=0;i<this.friendFromRepo.size();i++)
 			{
@@ -68,18 +99,27 @@ public class SocialNetwork {
 			}
 			Arrays.sort(SDs,Collections.reverseOrder());
 			int cpt=0;
-			while(cpt < Math.min(size, friendFromRepo.size()))
+			int nb=0;
+			while(cpt < friendFromRepo.size())
 			{
 				if(!exclus.contains(friendFromRepo.get(cpt).getURL()))
 				{
 				socialNetwork.add(friendFromRepo.get(SDs[cpt].getId()));
+				ls.add(friendFromRepo.get(SDs[cpt].getId()).getURL());
 				System.out.println(friendFromRepo.get(SDs[cpt].getId()).getName());
-				cpt++;
+				nb++;
+				if(nb==size) break;
 				}
 				
-				
+				cpt++;
 			}
+			return ls;
 		
+		}
+		public String getChosen()
+		{
+			if (socialNetwork.size()>0) return this.socialNetwork.get(0).getURL();
+			else return "";
 		}
 		public void socialNetworkConstruction(int k)
 		{
