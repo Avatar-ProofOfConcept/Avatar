@@ -27,7 +27,9 @@ public class Avatar {
 	private ArrayList <Goal> goalList = new ArrayList <Goal> ();
 	private CommunicationManagement cm;
     private IExtract kb;
-    private ArrayList<String> FunctionTasksList=new ArrayList<String>();
+    private ArrayList<String> FunctionTasksListAble=new ArrayList<String>();
+    private ArrayList<String> FunctionTasksListNotAble=new ArrayList<String>();
+
   	private MetaAvatar metaAvatar = null ; 		 
   	private final String ORIGINATOR = "admin:admin";
    	private ServicesManager sm ;
@@ -39,6 +41,9 @@ public class Avatar {
 		
 		
  		this.kb=new KnowledgeManagement("src/main/resources/OntologyFiles/Avatar"+port+".owl");
+ 		 long startTime = System.nanoTime();
+		 
+		
 		this.name=kb.ExtractName();
 		this.id=Integer.parseInt(name.split("Avatar")[1]);
  		URL="http://localhost:"+port+"/";
@@ -46,11 +51,15 @@ public class Avatar {
 		this.latitude=kb.ExtractLatitude();
 		this.longitude=kb.ExtractLongitude();
 		this.interestsList=kb.ExtractInterests();
- 		this.goalList=kb.ExtractGoals(FunctionTasksList);
- 		System.out.println("interssssst"+FunctionTasksList.toString());
- 		cm=new CommunicationManagement(port,this.kb,new MetaAvatar(name, owner, latitude, longitude, interestsVector, interestsList,FunctionTasksList,2,URL));
+ 		this.goalList=kb.ExtractGoals(FunctionTasksListAble,FunctionTasksListNotAble);
+ 		//System.out.println("interssssst"+FunctionTasksListAble.toString()+"   "+FunctionTasksListNotAble.toString());
 
         this.servicesList=kb.ExtractServices(this.name);
+ 		long elapsedTime = System.nanoTime() - startTime;
+	     
+        System.out.println("Total execution time in millis: "+ elapsedTime/1000000f);
+ 		cm=new CommunicationManagement(port,this.kb,new MetaAvatar(name, owner, latitude, longitude, interestsVector, interestsList,FunctionTasksListAble,FunctionTasksListNotAble,2,URL));
+
  		sm = new ServicesManager(this.name);
 		cmean = new FuzzyClustering();
 		/**********************************/
@@ -60,7 +69,13 @@ public class Avatar {
     //this.socialNetwork.socialNetworkConstruction(metaAvatar,3);
 		
 		if (port==3001){
-			cm.getSocialNetwork().socialNetworkConstruction(4);
+			 startTime = System.nanoTime();
+			cm.getSocialNetwork().socialNetworkConstruction(400);
+			 elapsedTime = System.nanoTime() - startTime;
+		     
+	        System.out.println("Total execution time in millis: "+ elapsedTime/1000000f);
+
+ 
 			//cluster();
 			//discovery();
 		 
@@ -161,13 +176,13 @@ public class Avatar {
     /******Build clustering matrix**********/
     for (int i=0;i< cm.getSocialNetwork().getSocialNetwork().size();i++)
     {
-    	//System.out.println(" meta size "+cm.getSocialNetwork().getSocialNetwork().size());
+    	System.out.println("Avatar"+cm.getSocialNetwork().getSocialNetwork().get(i).getName()+" Function list "+cm.getSocialNetwork().getSocialNetwork().get(i).getFunctions().toString());
 
         ArrayList<Integer> tmp = new ArrayList<>();
-    	for (int k=0;k<FunctionTasksList.size();k++)
-    	{     	System.out.println(" it size "+FunctionTasksList.size());
+    	for (int k=0;k<FunctionTasksListNotAble.size();k++)
+    	{     	 
 
-    		String it=cm.getSocialNetwork().getSocialNetwork().get(i).getFunction(FunctionTasksList.get(k));
+    		String it=cm.getSocialNetwork().getSocialNetwork().get(i).getFunction(FunctionTasksListNotAble.get(k));
     		if (it==null)
     			tmp.add(0);
     		else
@@ -177,8 +192,8 @@ public class Avatar {
     	cmean.data.add(tmp);
     }
 
-    this.cmean.setdimension(4);
-    this.cmean.run(4, 100);
+     
+    cmean.run(FunctionTasksListNotAble.size(),cmean.data,1,1.5f,0.1,3);
 
     
     
@@ -191,11 +206,11 @@ public class Avatar {
 		HashMap<String, String> ClusteringTable=new HashMap<String, String>();
 		for(int i=0 ;i<cmean.getClusterNumber();i++)
 		{
-			ClusteringTable.put(FunctionTasksList.get(i),this.cm.getSocialNetwork().getAvatars().get(cmean.getAvatarsList().get(i)[0].getId()).getURL());
+			ClusteringTable.put(FunctionTasksListNotAble.get(i),this.cm.getSocialNetwork().getAvatars().get(cmean.getAvatarsList().get(i).getElements()[0].getId()).getURL());
  
   			
 			try {
-				this.cm.sendClusterMember(ClusteringTable.get(FunctionTasksList.get(i)),this.cmean.getClusterMembers(i,cm.getSocialNetwork().metaAvatars));
+				this.cm.sendClusterMember(ClusteringTable.get(FunctionTasksListNotAble.get(i)),this.cmean.getClusterMembers(i,cm.getSocialNetwork().metaAvatars));
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

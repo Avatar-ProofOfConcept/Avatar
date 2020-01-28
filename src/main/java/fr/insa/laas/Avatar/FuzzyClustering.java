@@ -5,9 +5,11 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Random;
+import java.util.Set;
 
-public class FuzzyClustering {
+  public class FuzzyClustering {
     public ArrayList<ArrayList<Integer>> data;
     public ArrayList<ArrayList<Float>> clusterCenters;
     private float u[][];
@@ -15,74 +17,134 @@ public class FuzzyClustering {
     private int clusterCount;
     private int iteration;
     private int dimension;
-    private int fuzziness;
-    private int p;
+    private float fuzziness;
     private double epsilon;
     public double finalError;
-    private ArrayList<Element[]> avatars;
-
+    private ArrayList<Cluster> avatars;
+	private int numberOfData;
+	private int idDistance;
+	
+	 
     public FuzzyClustering(){
         data = new ArrayList<>();
         clusterCenters = new ArrayList<>();
         avatars=new ArrayList();
         fuzziness = 2;
-        epsilon = 0.01;
-        p=2;
+        epsilon = 0.1;
     }
-   public int getClusterNumber()
-   {
-	   return clusterCount;
-	   
-   } 
-   public void setdimension(int d)
-   {
-	   this.dimension=d;
-   }public ArrayList<Element[]> getAvatarsList()
-   {
-	   return this.avatars;
-   }
-    public void run(int clusterNumber, int iter){
+    public void setDimension(int d)
+    {
+    	this.dimension=d;
+    }
+    public int getClusterNumber()
+    {
+    	return this.clusterCount;
+    }
+    public ArrayList<Cluster> getAvatarsList()
+    {
+    	return this.avatars;
+    }
+    public ArrayList<String> getClusterMembers(int i,ArrayList<MetaAvatar> ls) {
+		Element [] tmp=avatars.get(i).getElements();
+		ArrayList<String> tmpls=new ArrayList<String>();
+		for (int j=0;j<tmp.length;j++)
+		{
+			tmpls.add(ls.get(tmp[j].getId()).getURL());
+			
+		}
+ 		return tmpls;
+	}
+    public void run(int clusterNumber, ArrayList<ArrayList<Integer>> data,int idD,float m,double e,int p){
         this.clusterCount = clusterNumber;
-        this.iteration = iter;
-        //this.data = data;
-
-        //start algorithm
-        //1 assign initial membership values
+        this.fuzziness=m;
+        this.idDistance=idD;
+        this.data = data;
+        this.epsilon=e;
+        this.dimension=clusterNumber;
+        showData();
+        float lStartTime = System.nanoTime();
         assignInitialMembership();
-        showU ();
-
-
-        for (int i = 0; i < iteration; i++) {
-            //2 calculate cluster centers
-            calculateClusterCenters();
-
+       //System.out.println("initialisation des centres");
+        int iter=0;
+     
+        while(true) {
+        	iter++;
+        	 
+        	 calculateClusterCenters();
+             
             //3
-            updateMembershipValues();
-
+           // showC();
+            //2 calculate cluster centers
+        	updateMembershipValues();
+        	//  showU ();
+        	
+ 
             //4
+          
             finalError = checkConvergence();
             if(finalError <= epsilon)
                 break;
         }
-        getAvatarCluster(p);
-        showAvatars(p);
-    }
-    public void initData (int numberOfData,int dimension)
-    {
-        this.dimension=dimension;
-    	for(int i=0;i<numberOfData;i++)
-    	{
-            ArrayList<Integer> tmp = new ArrayList<>();
+      //end
+        float lEndTime = System.nanoTime();
 
-    		for(int k=0;k<dimension;k++)
+		//time elapsed
+       float output = lEndTime - lStartTime;
+/*
+        System.out.println("Elapsed time in milliseconds: " + output / 1000000f);
+        System.out.println("BPC  "+ValidationIndices.bezdekPartitionCoefficient(u));
+        System.out.println("XB  "+ValidationIndices.compactnessAndSeparationMetric(data, u, clusterCenters, fuzziness));
+        System.out.println("PE    "+ValidationIndices.partitionEntropyIndex(u));
+        System.out.println("ITER    "+iter);*/
+        //showU ();
+        getAvatarCluster(p);
+        frequency();
+        showAvatars();
+        
+    }
+    public void showData ()
+    {
+        
+        System.out.println("Data matrix");
+
+    	for(int i=0;i<this.data.size();i++)
+    	{
+           
+    		ArrayList<Integer> tmp = new ArrayList<>();
+    		tmp=data.get(i);
+ 
+            
+    		for(int k=0;k<this.clusterCount;k++)
     		{
-    			tmp.add((int)Math.random());
+    			//tmp.add(random.nextInt(2));
     			System.out.print(tmp.get(k)+" ");
 
     		}
     		System.out.println();
-    		this.data.add(tmp);
+     	}
+    	
+    }
+    public void assignInitialcenters()
+    {
+    	  u = new float[data.size()][clusterCount];
+          u_pre = new float[data.size()][clusterCount];
+     	for(int i=0;i<this.dimension;i++)
+    	{
+            ArrayList<Float> tmp = new ArrayList<>();
+            Random random = new Random();
+
+            
+    		for(int k=0;k<dimension;k++)
+    		{
+    			tmp.add((float)random.nextInt(2));
+    			System.out.print(tmp.get(k)+" ");
+
+    		}
+    		System.out.println();
+    		this.clusterCenters.add(tmp);
     	}
+     	
+       
     	
     }
     public void showU ()
@@ -91,7 +153,19 @@ public class FuzzyClustering {
      {
     	 for (int k=0;k<clusterCount;k++)
     	 {
-    		 System.out.print(data.get(i).get(k)+"  ");
+    		 System.out.print(u[i][k]+"  ");
+    	 }
+    	 System.out.println();
+     }
+    }
+    public void showC ()
+    {
+    	System.out.println(clusterCenters.size()+"  "+clusterCenters.get(0).size());
+     for (int i=0;i<clusterCount;i++)
+     {
+    	 for (int k=0;k<clusterCount;k++)
+    	 {
+    		 System.out.print(clusterCenters.get(i).get(k)+"  ");
     	 }
     	 System.out.println();
      }
@@ -103,7 +177,7 @@ public class FuzzyClustering {
      * @param minRange
      * @param maxRange
      */
-   /* public void createRandomData(int numberOfData, int dimension, int minRange, int maxRange, int clusterCount){
+  /*  public void createRandomData(int numberOfData, int dimension, int minRange, int maxRange, int clusterCount){
         this.dimension = dimension;
         ArrayList<ArrayList<Integer>> centroids = new ArrayList<>();
         centroids.add(new ArrayList<Integer>());
@@ -134,20 +208,20 @@ public class FuzzyClustering {
         Random fRandom = new Random();
         for (int i = 0; i < clusterCount; i++) {
             for (int j = 0; j < numberOfDataInEachArea[i]; j++) {
-                ArrayList<Float> tmp = new ArrayList<>();
+                ArrayList<F> tmp = new ArrayList<>();
                 for (int k = 0; k < dimension; k++) {
                     tmp.add((float)(centroids.get(k).get(i) + fRandom.nextGaussian() * variance));
                 }
                 data.add(tmp);
             }
         }
-    }
+    }*/
 
     /**
      * this function generate membership value for each data
      */
     private void assignInitialMembership(){
-    	System.out.println(data.size());
+    	//System.out.println(data.size());
         u = new float[data.size()][clusterCount];
         u_pre = new float[data.size()][clusterCount];
         Random r = new Random();
@@ -167,7 +241,7 @@ public class FuzzyClustering {
      * in this function we calculate value of each cluster
      */
     private void calculateClusterCenters(){
-        clusterCenters.clear();
+    	clusterCenters.clear();
         for (int i = 0; i < clusterCount; i++) {
             ArrayList<Float> tmp = new ArrayList<>();
             for (int j = 0; j < dimension; j++) {
@@ -188,11 +262,11 @@ public class FuzzyClustering {
     
     public void getAvatarCluster (int p)
     {
+    	Cluster c=new Cluster();
     	for (int i=0;i<clusterCount;i++)
     	{
     		Element [] tmp=new Element[data.size()];
     		Element [] tmpP=new Element[p];
-
     		for (int j=0;j<data.size();j++)
     		{
     			tmp[j]=new Element(j,u[j][i]);
@@ -205,31 +279,89 @@ public class FuzzyClustering {
     			tmpP[k]=new Element(tmp[k].getId(),tmp[k].getW());
 
     		}
-    		/*For testing to remove later*/
-    		if (i==0)
-    		{
-    			tmpP[0].setId(1);
-    			tmpP[1].setId(2);
-    		}
-    		avatars.add(tmpP);
+    		c=new Cluster();
+    		c.setElements(tmpP);
+    		avatars.add(c);
     	}
     	
     }
-    public void showAvatars(int p)
+    public void showAvatars()
     {
+        
+
     	for (int i=0;i<clusterCount;i++)
     	{
-    		Element [] tmp=avatars.get(i);
-    		for (int j=0;j<p;j++)
+    		System.out.println(" feature ="+avatars.get(i).getFeature());
+    		Element [] tmp=avatars.get(i).getElements();
+    		for (int j=0;j<tmp.length;j++)
     		{
+    		 
     			System.out.print (" id= "+tmp[j].getId());
     			System.out .print(" W="+tmp[j].getW());
     			
     		}
+    		 
     		System.out.println();
     		 
     	}
     	
+    }
+    public void frequency()
+    {
+        int frequency[][]=new int[clusterCount][clusterCount];
+
+    	for (int i=0;i<clusterCount;i++)
+    	{
+    		for (int k=0;k<clusterCount;k++)
+    		{
+    			frequency[i][k]=0;
+    		Element [] tmp=avatars.get(i).getElements();
+    		for (int j=0;j<tmp.length;j++)
+    		{
+    			if(data.get(tmp[j].getId()).get(k)==1) frequency[i][k]++;
+    			
+    		}
+    		System.out.print(frequency[i][k]+" ");
+    		}
+    		System.out.println();
+    		 
+    	}
+    	ArrayList<Integer> exclus=new ArrayList<Integer>();
+    	int indice=0;
+    	for (int i=0;i<clusterCount;i++)
+    	{
+    		indice =maxTab(frequency[i],exclus);
+    		avatars.get(i).setFeature(indice);
+    		
+    		
+    	}
+    	 
+    	 
+    	
+    }
+    public int maxTab (int tab [],ArrayList<Integer> exclus)
+    {
+    	int results =0;
+        int max=tab[0];
+        boolean ok=false;
+        int k=0;
+        while(!ok)
+        {
+        	if(!exclus.contains(k)) {ok=true;max=tab[k];}
+        	else k++;
+        }
+        System.out.println("i0= "+max);
+    	for(int i=0;i<tab.length;i++)
+    	{
+    		if (max < tab[i] && !exclus.contains(i))
+    			{max=tab[i];
+    			results=i;
+    			}
+    	}
+    	exclus.add(results);
+    	
+
+    	return results;
     }
 
     /**
@@ -240,9 +372,9 @@ public class FuzzyClustering {
             for (int j = 0; j < clusterCount; j++) {
                 u_pre[i][j] = u[i][j];
                 float sum = 0;
-                float upper = Distance(data.get(i), clusterCenters.get(j));
+                float upper = Distances.select(idDistance,data.get(i), clusterCenters.get(j));
                 for (int k = 0; k < clusterCount; k++) {
-                    float lower = Distance(data.get(i), clusterCenters.get(k));
+                    float lower = Distances.select(idDistance,data.get(i), clusterCenters.get(k));
                     sum += Math.pow((upper/lower), 2/(fuzziness -1));
                 }
                 u[i][j] = 1/sum;
@@ -256,15 +388,7 @@ public class FuzzyClustering {
      * @param p2
      * @return
      */
-    private float Distance(ArrayList<Integer> p1, ArrayList<Float> p2){
-        float sum = 0;
-        for (int i = 0; i < p1.size(); i++) {
-            sum += Math.pow(p1.get(i) - p2.get(i), 2);
-        }
-        sum = (float) Math.sqrt(sum);
-        return sum;
-    }
-
+   
     /**
      * we calculate norm 2 of ||U - U_pre||
      * @return
@@ -283,7 +407,7 @@ public class FuzzyClustering {
      * write random generated data to file for visualizing
      * @throws IOException
      */
-    public void writeDataToFile(ArrayList<ArrayList<Float>> inpData, String fileName) throws IOException {
+    public void writeDataToFile(ArrayList<ArrayList<Integer>> inpData, String fileName) throws IOException {
 
         FileWriter fileWriter = new FileWriter("./" + fileName + ".csv");
         PrintWriter printWriter = new PrintWriter(fileWriter);
@@ -300,16 +424,5 @@ public class FuzzyClustering {
         }
         printWriter.close();
     }
-	public ArrayList<String> getClusterMembers(int i,ArrayList<MetaAvatar> ls) {
-		Element [] tmp=avatars.get(i);
-		ArrayList<String> tmpls=new ArrayList<String>();
-		for (int j=0;j<p;j++)
-		{
-			tmpls.add(ls.get(tmp[j].getId()).getURL());
-			
-		}
- 		return tmpls;
-	}
 
 }
-

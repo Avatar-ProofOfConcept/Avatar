@@ -15,7 +15,8 @@ public class MetaAvatar {
 		//Interests
 		private Map<String,Double> interestsVector = new HashMap<String, Double>();			//Used to calculate the Social Distance using its vector shape
 		private ArrayList <Interest> interestsList = new ArrayList <Interest> () ;
-		private ArrayList<String> functions= new ArrayList<String>();
+		private ArrayList<String> functionsAble= new ArrayList<String>();
+		private ArrayList<String> functionsNotAble= new ArrayList<String>();
 		//Used to iterate and to get Level interest easily for each task
 		//Social Distance with this metaAvatar
 		private double socialDistance ;  
@@ -24,7 +25,7 @@ public class MetaAvatar {
 		private String URL;
 		
 		//Constructor
-		public MetaAvatar(String n, String o, double la, double lo, Map<String,Double> iv,ArrayList <Interest> il,ArrayList<String> lf, double sd, String u){
+		public MetaAvatar(String n, String o, double la, double lo, Map<String,Double> iv,ArrayList <Interest> il,ArrayList<String> lf,ArrayList<String> lfn, double sd, String u){
 			name=n;
 			owner=o;
 			latitude=la;
@@ -32,7 +33,8 @@ public class MetaAvatar {
 			interestsVector=iv;
 			interestsList=il;
 			socialDistance=sd;
-			functions=lf;
+			functionsAble=lf;
+			functionsNotAble=lfn;
 			URL=u;
 		}
 		
@@ -47,6 +49,10 @@ public class MetaAvatar {
 			}
 			return res;
 		}
+		public ArrayList<String> getFunctions()
+		{
+			return this.functionsAble;
+		}
 		public Interest getInterest(String interest){
 			Interest res=null;
 			for (int i=0; i<interestsList.size(); i++){
@@ -59,9 +65,9 @@ public class MetaAvatar {
 		}
 		public String getFunction(String Function){
 			String res=null;
-			for (int i=0; i<functions.size(); i++){
-				if (functions.get(i).equals(Function)){
-					res=functions.get(i);
+			for (int i=0; i<functionsAble.size(); i++){
+				if (functionsAble.get(i).equals(Function)){
+					res=functionsAble.get(i);
 					break;
 				}
 			}

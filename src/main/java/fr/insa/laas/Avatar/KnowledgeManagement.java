@@ -148,7 +148,7 @@ public class KnowledgeManagement implements IExtract{
 		}
  
 
-		public ArrayList<Goal> ExtractGoals(ArrayList<String> InteretsTasksList){ 
+		public ArrayList<Goal> ExtractGoals(ArrayList<String> FunctionsAbleList,ArrayList<String> FunctionsNotAbleList){ 
 			ArrayList<Goal> goalsList=new ArrayList<Goal>();
 			String queryString = 
 		    	    "PREFIX avataront: <http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#>\n"+
@@ -169,7 +169,7 @@ public class KnowledgeManagement implements IExtract{
 		    	    	name=binding.get("goal").toString();
  		    	    	//We create an instance of goal
 		    	    	Goal newGoal = new Goal(name);
-		    	    	ExtractTasks(newGoal,InteretsTasksList);
+		    	    	ExtractTasks(newGoal,FunctionsAbleList,FunctionsNotAbleList);
 		    	    	goalsList.add(newGoal);
 		    	    }
 			return goalsList;	
@@ -236,7 +236,7 @@ public class KnowledgeManagement implements IExtract{
 			    qexec.close() ;   
 				return b;	
 			}
-		public String ExtractInterestTask(String task,ArrayList<String> InteretsTasksList ){ 
+		public String ExtractInterestTask(String task,ArrayList<String> FunctionsAble,ArrayList<String> FunctionsNotAble ){ 
 			String name2=null;
 			String queryString =  
 		    		"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>"+
@@ -254,8 +254,12 @@ public class KnowledgeManagement implements IExtract{
 		    	    	name2=binding.get("interest").toString();	
 		    	    	//System.out.println("[EXTRACTINTERESTTASK: ]"+name+": "+task+" has the interest: "+name2);
 		    	    	//We add this interest to the InterestsTasks List if it's not already in 
-		    	    	if(!InteretsTasksList.contains(name2)){
-		    	    		InteretsTasksList.add(name2);
+		    	    	System.out.println ("IsAble :"+IsAbleTask(task));
+		    	    	if(!FunctionsAble.contains(name2) && IsAbleTask(task)){
+		    	    		FunctionsAble.add(name2);
+		    	    	}
+		    	    	if(!FunctionsNotAble.contains(name2) && !IsAbleTask(task)){
+		    	    		FunctionsNotAble.add(name2);
 		    	    	}
 		    	    }
 		    return name2;
@@ -298,7 +302,7 @@ public class KnowledgeManagement implements IExtract{
 		    qexec.close() ;
 		    return b;	
 		}
-		public void ExtractGroupedTask(Task groupedTask,ArrayList<String> InteretsTasksList){ 
+		public void ExtractGroupedTask(Task groupedTask,ArrayList<String> FunctionsAbleList,ArrayList<String> FunctionsNotAbleList){ 
 			String queryString =  
 		    		"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>"+
 		    	    "PREFIX avataront: <http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#>\n"+
@@ -322,14 +326,14 @@ public class KnowledgeManagement implements IExtract{
 		    	    	name2=binding.get("task").toString();	
 		    	        	    	
 		    	    	//We create a new Task
-		    	    	String interest=ExtractInterestTask(name2,InteretsTasksList);
+		    	    	String interest=ExtractInterestTask(name2,FunctionsAbleList,FunctionsNotAbleList);
 		    	    	String label=ExtractLabelTask(name2);
 			    	    Task newTask = new Task(name2,false,IsAbleTask(name2),interest, label);
 		    	    	tasksList.add(newTask);
 		    	    }
 		    	    groupedTask.majTasksList(tasksList);	
 		}
-		public void ExtractTasks(Goal goal,ArrayList<String> InteretsTasksList){ 
+		public void ExtractTasks(Goal goal,ArrayList<String> FunctionsAbleList,ArrayList<String> FunctionsNotAbleList){ 
 			//System.out.println("We extract the tasks of "+goal.getName());
 			String queryString = 
 		    		"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>"+
@@ -351,14 +355,14 @@ public class KnowledgeManagement implements IExtract{
 		    	    	QuerySolution binding = results.nextSolution(); 
 		    	    	name2=binding.get("task").toString();	
 		    	    			   	
-		    	    	String interest=ExtractInterestTask(name2,InteretsTasksList);
+		    	    	String interest=ExtractInterestTask(name2,FunctionsAbleList,FunctionsNotAbleList);
 		    	    	String label=ExtractLabelTask(name2);
 		    	    	
 		    	    	//Check if it's a composed task
 		    	    	if(IsGroupedTask(name2)){
 			   				 //System.out.println(name2+" :Composed");		
 				    	     Task newTask = new Task(name2,true,IsAbleTask(name2),interest,label);
-			   				 ExtractGroupedTask(newTask, InteretsTasksList);
+			   				 ExtractGroupedTask(newTask, FunctionsAbleList,FunctionsNotAbleList);
 					    	 goal.addTask(newTask);  
 			   			 }
 			    	    else{

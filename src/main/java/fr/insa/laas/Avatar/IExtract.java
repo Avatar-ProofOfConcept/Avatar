@@ -9,14 +9,14 @@ public interface IExtract {
 	public double ExtractLatitude();
 	public double ExtractLongitude();
 	public ArrayList<Interest> ExtractInterests();
-	public ArrayList<Goal> ExtractGoals(ArrayList<String> InteretsTasksList);
+	public ArrayList<Goal> ExtractGoals(ArrayList<String> FunctionsAble,ArrayList<String> FunctionsNotAble);
 	public ArrayList<Service> ExtractServices(String name);
 	public boolean IsGroupedTask(String task);
-	public String ExtractInterestTask(String task,ArrayList<String> InteretsTasksList);
+	public String ExtractInterestTask(String task,ArrayList<String> FunctionsAble,ArrayList<String> FunctionsNotAble ); 
 	public String ExtractLabelTask(String task);
 	public boolean IsAbleTask(String task);
-	public void ExtractGroupedTask(Task groupedTask,ArrayList<String> InteretsTasksList);
-	public void ExtractTasks(Goal goal,ArrayList<String> InteretsTasksList);
+	public void ExtractGroupedTask(Task groupedTask,ArrayList<String> FunctionsAble,ArrayList<String> FunctionsNotAble);
+	public void ExtractTasks(Goal goal,ArrayList<String> FunctionsAble,ArrayList<String> FunctionsNotAble);
 	public boolean IsAbleTaskFriend(String taskLabel);
 	public String ExtractServiceFromLabel(String labelService);
 }
