@@ -418,5 +418,27 @@ public class KnowledgeManagement implements IExtract{
 		    	    }
 		    return name2+"&"+name3+"&"+name4;
 		}
+		/*public String ExtractMetaAvatars(ArrayList<String> interests){ 
+			String name2=null;
+			String queryString =  
+		    		"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>"+
+		    	    "PREFIX avataront: <http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#>\n"+
+		    	        "SELECT ?interest "+
+		    	        "WHERE {<"+ task + "> avataront:hasFunction ?interest ."+
+		    	        "}";
+		    	    Query query = QueryFactory.create(queryString);
+		    	    QueryExecution qe = QueryExecutionFactory.create(query, modelData);
+		    	    ResultSet results =  qe.execSelect();
+		    	    //ResultSetFormatter.out(System.out, results);
+		    	    
+		    	    while(results.hasNext()){ 
+		    	    	QuerySolution binding = results.nextSolution(); 
+		    	    	name2=binding.get("interest").toString();	
+		    	    	 
+		    	     
+		    	    }
+		    return name2;
+		}*/
+		
 
 }

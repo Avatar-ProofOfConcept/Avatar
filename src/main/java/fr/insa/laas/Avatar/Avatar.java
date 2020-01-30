@@ -40,7 +40,7 @@ public class Avatar {
 	public Avatar(int port) {
 		
 		
- 		this.kb=new KnowledgeManagement("src/main/resources/OntologyFiles/Avatar"+port+".owl");
+ 		this.kb=new KnowledgeManagement("src/main/resources/OntologyFiles/avatar"+port+".owl");
  		 long startTime = System.nanoTime();
 		 
 		
@@ -70,7 +70,7 @@ public class Avatar {
 		
 		if (port==3001){
 			 startTime = System.nanoTime();
-			cm.getSocialNetwork().socialNetworkConstruction(400);
+			cm.getSocialNetwork().socialNetworkConstruction(500);
 			 elapsedTime = System.nanoTime() - startTime;
 		     
 	        System.out.println("Total execution time in millis: "+ elapsedTime/1000000f);
