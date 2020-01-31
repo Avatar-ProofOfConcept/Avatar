@@ -8,6 +8,7 @@ import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.query.QueryFactory;
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.ResultSet;
+import org.apache.jena.query.ResultSetFormatter;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 
@@ -17,11 +18,15 @@ import org.apache.jena.rdf.model.ModelFactory;
 
 public class KnowledgeManagement implements IExtract{
 	private Model modelData;
+	private Model kb;
 	String urlKB;
  	public KnowledgeManagement(String url)
 	{    this.urlKB=url;
 		this.modelData = ModelFactory.createDefaultModel();
         this.modelData.read(this.urlKB);
+        this.kb=ModelFactory.createDefaultModel();
+        this.kb.read("src/main/resources/OntologyFiles/KB.owl");
+        
 	}
 	
 	public String ExtractName(){ 
@@ -418,27 +423,40 @@ public class KnowledgeManagement implements IExtract{
 		    	    }
 		    return name2+"&"+name3+"&"+name4;
 		}
-		/*public String ExtractMetaAvatars(ArrayList<String> interests){ 
-			String name2=null;
-			String queryString =  
+		public String ExtractMetaAvatars(ArrayList<Interest> interest){ 
+			 
+			ArrayList<MetaAvatar> metaAvatars =new ArrayList<MetaAvatar>();
+			String str="";
+			for(int i=0;i<interest.size();i++)
+			{
+				str="\""+interest.get(i).getName()+"\""+str;
+			}
+			System.out.println(str);
+			String queryString = 
 		    		"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>"+
 		    	    "PREFIX avataront: <http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#>\n"+
-		    	        "SELECT ?interest "+
-		    	        "WHERE {<"+ task + "> avataront:hasFunction ?interest ."+
+		    	        "SELECT ?avatar ?owner ?location "+
+		    	        "WHERE { "+   
+		    	         "?avatar avataront:hasInterest ?interest ."+ 
+		    	         "?avatar avataront:hasLocation ?location ."+ 
+		    	         "?avatar avataront:hasOwner ?owner ."+ 
+		    	          "FILTER ( STRBEFORE(?interest,\"/\") IN ("+str+"))"+
 		    	        "}";
 		    	    Query query = QueryFactory.create(queryString);
-		    	    QueryExecution qe = QueryExecutionFactory.create(query, modelData);
+		    	    QueryExecution qe = QueryExecutionFactory.create(query, kb);
 		    	    ResultSet results =  qe.execSelect();
 		    	    //ResultSetFormatter.out(System.out, results);
-		    	    
+		    	    System.out.println("********************");
 		    	    while(results.hasNext()){ 
 		    	    	QuerySolution binding = results.nextSolution(); 
-		    	    	name2=binding.get("interest").toString();	
-		    	    	 
-		    	     
+		    	    	metaAvatars.add(new MetaAvatar( binding.get("avatar").toString().split("#")[1],binding.get("owner").toString(), Double.parseDouble(binding.get("location").toString().split("/")[1]), Double.parseDouble(binding.get("location").toString().split("/")[0]), null, null, null, null, 0, null));
+		    	    	 	
+		    	    	System.out.println(binding.get("avatar").toString().split("#")[1]+"  "+binding.get("owner").toString()+"  "+Double.parseDouble(binding.get("location").toString().split("/")[1])+"  "+Double.parseDouble(binding.get("location").toString().split("/")[0]));	
 		    	    }
-		    return name2;
-		}*/
+		    	    
+		    	   
+		    return null;
+		}
 		
 
 }

@@ -52,11 +52,9 @@ public class Avatar {
 		this.longitude=kb.ExtractLongitude();
 		this.interestsList=kb.ExtractInterests();
  		this.goalList=kb.ExtractGoals(FunctionTasksListAble,FunctionTasksListNotAble);
- 		//System.out.println("interssssst"+FunctionTasksListAble.toString()+"   "+FunctionTasksListNotAble.toString());
-
         this.servicesList=kb.ExtractServices(this.name);
  		long elapsedTime = System.nanoTime() - startTime;
-	     
+ 		kb.ExtractMetaAvatars(this.interestsList);
         System.out.println("Total execution time in millis: "+ elapsedTime/1000000f);
  		cm=new CommunicationManagement(port,this.kb,new MetaAvatar(name, owner, latitude, longitude, interestsVector, interestsList,FunctionTasksListAble,FunctionTasksListNotAble,2,URL));
 

@@ -19,4 +19,5 @@ public interface IExtract {
 	public void ExtractTasks(Goal goal,ArrayList<String> FunctionsAble,ArrayList<String> FunctionsNotAble);
 	public boolean IsAbleTaskFriend(String taskLabel);
 	public String ExtractServiceFromLabel(String labelService);
+	public String ExtractMetaAvatars(ArrayList<Interest> interest);
 }
