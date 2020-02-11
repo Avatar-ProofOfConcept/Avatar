@@ -120,7 +120,7 @@ public class SocialNetworkCalculs {
         int ownerDistance=OwnershipSimilarity(b.getOwner(), metaAvatar.getOwner());
         double coLocDistance=CoLocSimilarity(metaAvatar.getLatitude(),metaAvatar.getLongitude(),b.getLatitude(),b.getLongitude());
         double socialDistance = alpha*coWorkDistance+ beta*(1/(coLocDistance+1))+ gama*ownerDistance;
-       // System.out.println("[SocialDist]From "+metaAvatar.getName()+" CWD= "+coWorkDistance+", OD= "+ownerDistance+", CLD= "+(1/(coLocDistance+1))+" ==> SD= "+socialDistance);
+        System.out.println("[SocialDist]From "+metaAvatar.getName()+" CWD= "+coWorkDistance+", OD= "+ownerDistance+", CLD= "+(1/(coLocDistance+1))+" ==> SD= "+socialDistance);
         return socialDistance;
   }
   

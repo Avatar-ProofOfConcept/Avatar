@@ -1,6 +1,9 @@
 package fr.insa.laas.Avatar;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryExecution;
@@ -116,8 +119,8 @@ public class KnowledgeManagement implements IExtract{
 	    	    return longitudeTmp;
 	}
 	//Get all its interests from the semantic data
-		public ArrayList<Interest> ExtractInterests(){ 
-			ArrayList<Interest> interestsListTmp=new ArrayList<Interest>();
+		public Map<String,Double> ExtractInterests(){ 
+			Map<String,Double> interestsVector=new HashMap<String, Double>();
 			String queryString = 
 		    		"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>"+
 		    	    "PREFIX avataront: <http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#>\n"+
@@ -139,17 +142,11 @@ public class KnowledgeManagement implements IExtract{
 				    	name2=binding.get("interest").toString();
 		    	    	//Name and level Interest split
 		    	    	String [] parts = name2.split("/");
-		    	    	interestsListTmp.add(new Interest(parts[0],Double.parseDouble(parts[1])));
-		    	    	//interestsVector.put(parts[0],Double.parseDouble(parts[1]));
+		    	    	 
+						interestsVector.put(parts[0],Double.parseDouble(parts[1]));
 		    	    }
-				 for(int i=0;i< interestsListTmp.size();i++)
-				 {
-						System.out.println("[EXTRACTINTERETS] "+interestsListTmp.get(i).getName());
-
-					 
-				 }
-					System.out.println("list size: "+interestsListTmp.size());
-					return interestsListTmp;
+			 
+					return interestsVector;
 		}
  
 
@@ -423,15 +420,67 @@ public class KnowledgeManagement implements IExtract{
 		    	    }
 		    return name2+"&"+name3+"&"+name4;
 		}
-		public String ExtractMetaAvatars(ArrayList<Interest> interest){ 
+		public Map<String,Double> ExtractInterestAvatar(String avatar ){ 
+			Map<String,Double> ls=new HashMap<String, Double>();
+			String queryString =  
+		    		"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>"+
+		    	    "PREFIX avataront: <http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#>\n"+
+		    	        "SELECT ?interest "+
+		    	        "WHERE {<"+ avatar + "> avataront:hasInterest ?interest ."+
+		    	        "}";
+		    	    Query query = QueryFactory.create(queryString);
+		    	    QueryExecution qe = QueryExecutionFactory.create(query, kb);
+		    	    ResultSet results =  qe.execSelect();
+		    	   // ResultSetFormatter.out(System.out, results);
+		    	    
+		    	    while(results.hasNext()){ 
+		    	    	QuerySolution binding = results.nextSolution(); 
+ 		    	    	String [] parts = binding.get("interest").toString().split("/");
+						ls.put(parts[0],Double.parseDouble(parts[1]));
+		    	    	//System.out.println(parts[0]  + "  "+Double.parseDouble(parts[1]) );
+
+		    	    	
+		    	    	 
+		    	    }
+		    	   // System.out.println(ls.keySet().toString());
+		    return ls;
+		}
+		public ArrayList<String> ExtractFunctionAvatar(String avatar ){ 
+			ArrayList<String>ls=new ArrayList<String>();
+			String queryString =  
+		    		"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>"+
+		    	    "PREFIX avataront: <http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#>\n"+
+		    	        "SELECT ?func "+
+		    	        "WHERE {<"+ avatar + "> avataront:hasFunction ?func ."+
+		    	        "}";
+		    	    Query query = QueryFactory.create(queryString);
+		    	    QueryExecution qe = QueryExecutionFactory.create(query, kb);
+		    	    ResultSet results =  qe.execSelect();
+		    	   // ResultSetFormatter.out(System.out, results);
+		    	    
+		    	    while(results.hasNext()){ 
+		    	    	QuerySolution binding = results.nextSolution(); 
+ 		    	    	ls.add(binding.get("func").toString());
+						 
+
+		    	    	
+		    	    	 
+		    	    }
+		    	   // System.out.println("functions "+ls.toString());
+		    return ls;
+		}
+		public ArrayList<MetaAvatar> ExtractMetaAvatars(Set<String> interest,String m){ 
 			 
 			ArrayList<MetaAvatar> metaAvatars =new ArrayList<MetaAvatar>();
 			String str="";
-			for(int i=0;i<interest.size();i++)
+			 
+			for(String inter : interest)
 			{
-				str="\""+interest.get(i).getName()+"\""+str;
-			}
-			System.out.println(str);
+				str="\""+inter+"\", "+str;
+
+ 			}
+			 String result = str.substring(0, str.length() - 2);
+			System.out.println(result);
 			String queryString = 
 		    		"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>"+
 		    	    "PREFIX avataront: <http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#>\n"+
@@ -440,23 +489,21 @@ public class KnowledgeManagement implements IExtract{
 		    	         "?avatar avataront:hasInterest ?interest ."+ 
 		    	         "?avatar avataront:hasLocation ?location ."+ 
 		    	         "?avatar avataront:hasOwner ?owner ."+ 
-		    	          "FILTER ( STRBEFORE(?interest,\"/\") IN ("+str+"))"+
+		    	          "FILTER ( STRBEFORE(?interest,\"/\") IN ("+result+"))"+
 		    	        "}";
 		    	    Query query = QueryFactory.create(queryString);
 		    	    QueryExecution qe = QueryExecutionFactory.create(query, kb);
 		    	    ResultSet results =  qe.execSelect();
 		    	    //ResultSetFormatter.out(System.out, results);
-		    	    System.out.println("********************");
+		    	   // System.out.println("********************");
 		    	    while(results.hasNext()){ 
-		    	    	QuerySolution binding = results.nextSolution(); 
-		    	    	metaAvatars.add(new MetaAvatar( binding.get("avatar").toString().split("#")[1],binding.get("owner").toString(), Double.parseDouble(binding.get("location").toString().split("/")[1]), Double.parseDouble(binding.get("location").toString().split("/")[0]), null, null, null, null, 0, null));
-		    	    	 	
-		    	    	System.out.println(binding.get("avatar").toString().split("#")[1]+"  "+binding.get("owner").toString()+"  "+Double.parseDouble(binding.get("location").toString().split("/")[1])+"  "+Double.parseDouble(binding.get("location").toString().split("/")[0]));	
+		    	    	QuerySolution binding = results.nextSolution();
+		    	    	if(!binding.get("avatar").toString().split("#")[1].equals( m)) metaAvatars.add(new MetaAvatar( binding.get("avatar").toString().split("#")[1],binding.get("owner").toString(), Double.parseDouble(binding.get("location").toString().split("/")[1]), Double.parseDouble(binding.get("location").toString().split("/")[0]), ExtractInterestAvatar(binding.get("avatar").toString()), ExtractFunctionAvatar(binding.get("avatar").toString()) , null, 0,"http://localhost:"+binding.get("avatar").toString().split("Avatar")[2]+"/"));
+		    	        
 		    	    }
-		    	    
+		    	return metaAvatars;    
 		    	   
-		    return null;
-		}
+ 		}
 		
 
 }

@@ -6,8 +6,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
-
  
 
  
@@ -21,8 +19,7 @@ public class Avatar {
     private String owner;
  	private double latitude=99;
 	private double longitude=99;
-	private ArrayList <Interest> interestsList =new ArrayList <Interest> ();
-	private Map<String,Double> interestsVector = new HashMap<String, Double>();	//Used to calculate the Social Distance using its vector shape
+ 	private Map<String,Double> interestsVector = new HashMap<String, Double>();	//Used to calculate the Social Distance using its vector shape
     private ArrayList <Service> servicesList = new ArrayList <Service> ();
 	private ArrayList <Goal> goalList = new ArrayList <Goal> ();
 	private CommunicationManagement cm;
@@ -50,36 +47,31 @@ public class Avatar {
         this.owner=kb.ExtractOwner();
 		this.latitude=kb.ExtractLatitude();
 		this.longitude=kb.ExtractLongitude();
-		this.interestsList=kb.ExtractInterests();
+		this.interestsVector=kb.ExtractInterests();
  		this.goalList=kb.ExtractGoals(FunctionTasksListAble,FunctionTasksListNotAble);
         this.servicesList=kb.ExtractServices(this.name);
  		long elapsedTime = System.nanoTime() - startTime;
- 		kb.ExtractMetaAvatars(this.interestsList);
+ 		//kb.ExtractMetaAvatars(this.interestsVector.keySet());
         System.out.println("Total execution time in millis: "+ elapsedTime/1000000f);
- 		cm=new CommunicationManagement(port,this.kb,new MetaAvatar(name, owner, latitude, longitude, interestsVector, interestsList,FunctionTasksListAble,FunctionTasksListNotAble,2,URL));
+ 		cm=new CommunicationManagement(port,this.kb,new MetaAvatar(name, owner, latitude, longitude, interestsVector,FunctionTasksListAble,FunctionTasksListNotAble,2,URL));
 
  		sm = new ServicesManager(this.name);
 		cmean = new FuzzyClustering();
-		/**********************************/
-		
-		
-	     
-    //this.socialNetwork.socialNetworkConstruction(metaAvatar,3);
-		
-		if (port==3001){
+		/**********************************/		
+		if (port==3001)
+		{
 			 startTime = System.nanoTime();
-			cm.getSocialNetwork().socialNetworkConstruction(500);
+			 cm.getSocialNetwork().setMetaAvatar(kb.ExtractMetaAvatars(interestsVector.keySet(),name));
+			 cm.getSocialNetwork().socialNetworkConstruction(9);
 			 elapsedTime = System.nanoTime() - startTime;
 		     
-	        System.out.println("Total execution time in millis: "+ elapsedTime/1000000f);
-
- 
-			//cluster();
+	         System.out.println("Total execution time in millis: "+ elapsedTime/1000000f);
+            //cluster();
 			//discovery();
 		 
 		}
 		else { System.out.println("je suis le 3002");}
-		try {TimeUnit.SECONDS.sleep(5);} catch (InterruptedException e) {e.printStackTrace();}
+		//try {TimeUnit.SECONDS.sleep(5);} catch (InterruptedException e) {e.printStackTrace();}
         /*FriendsResearch();
 		sm.UpdateSN(socialNetwork);
 		if (port==3001)
@@ -141,18 +133,14 @@ public class Avatar {
 
 
 
-	public ArrayList<Interest> getInterestsList() {
-		return interestsList;
-	}
+	 
 	public ArrayList<Goal> getGoalsList() {
 		return goalList;
 	}
 
 
 
-	public void setInterestsList(ArrayList<Interest> interestsList) {
-		this.interestsList = interestsList;
-	}
+	 
   public CommunicationManagement getComManager()
   {
 	  return cm;
@@ -170,6 +158,8 @@ public class Avatar {
     }
 	public void cluster ()
 	{ 
+    	System.out.println(" function to find "+this.FunctionTasksListNotAble.toString());
+
 		 
     /******Build clustering matrix**********/
     for (int i=0;i< cm.getSocialNetwork().getSocialNetwork().size();i++)
@@ -191,7 +181,7 @@ public class Avatar {
     }
 
      
-    cmean.run(FunctionTasksListNotAble.size(),cmean.data,1,1.5f,0.1,3);
+    cmean.run(FunctionTasksListNotAble.size(),cmean.data,1,2f,0.2,3);
 
     
     
@@ -200,25 +190,28 @@ public class Avatar {
 	}
 	public void discovery()
 	{
-		//1 design an elected
+		
 		HashMap<String, String> ClusteringTable=new HashMap<String, String>();
 		for(int i=0 ;i<cmean.getClusterNumber();i++)
-		{
-			ClusteringTable.put(FunctionTasksListNotAble.get(i),this.cm.getSocialNetwork().getAvatars().get(cmean.getAvatarsList().get(i).getElements()[0].getId()).getURL());
- 
-  			
+		{   //1 design an elected
+			ClusteringTable.put(FunctionTasksListNotAble.get(cmean.getAvatarsList().get(i).getFeature()),this.cm.getSocialNetwork().getAvatars().get(cmean.getAvatarsList().get(i).getElements()[0].getId()).getURL());
+            System.out.print(FunctionTasksListNotAble.get(cmean.getAvatarsList().get(i).getFeature())+"   "+this.cm.getSocialNetwork().getAvatars().get(cmean.getAvatarsList().get(i).getElements()[0].getId()).getURL());
+			//2 send cluster membership to the elected
 			try {
-				this.cm.sendClusterMember(ClusteringTable.get(FunctionTasksListNotAble.get(i)),this.cmean.getClusterMembers(i,cm.getSocialNetwork().metaAvatars));
+				this.cm.sendClusterMember(cmean.getClusterNumber(),cmean.getAvatarsList().get(i).getFeature(),ClusteringTable.get(FunctionTasksListNotAble.get(cmean.getAvatarsList().get(i).getFeature())),this.cmean.getClusterMembers(i,cm.getSocialNetwork().socialNetwork));
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+            
+           //System.out.println(ClusteringTable.get(FunctionTasksListNotAble.get(i))+"       "+this.cmean.getClusterMembers(i,cm.getSocialNetwork().socialNetwork));
 			//System.out.println("elected "+ClusteringTable[i][1]);
 
 		}
-		//2 send cluster membership to the elected
-		//3 build clustering table
-		//System.out.println("[BROWSE TASKS]"+name+": "+goalsList.get(0).getName());
+	    
+		
+		System.out.println("[BROWSE TASKS]"+name+": "+goalList.get(0).getName());
+		int cpt=0;
 				for (int s=0; s<goalList.get(0).getTasksList().size();s++){
 					//Able
 					if(goalList.get(0).getTasksList().get(s).getIsAble()){
@@ -230,18 +223,20 @@ public class Avatar {
 					}
 					//Non Able ==> Check if grouped
 					else {
+						cm.initTTL();
 						System.out.println("["+name+"] "+goalList.get(0).getTasksList().get(s).getContent()+": not Able");
  						System.out.println("	[CAN NOT DO TASK ITSELF]"+name+": "+goalList.get(0).getTasksList().get(s).getContent());
  						String function =goalList.get(0).getTasksList().get(s).getFunction();
  						System.out.println("Function "+function+" value "+ClusteringTable.get(function));
- 						Response resp=cm.ask(goalList.get(0).getTasksList().get(s).getContent()+"&"+goalList.get(0).getTasksList().get(s).getLabel()+"&"+goalList.get(0).getTasksList().get(s).getFunction(),URL,ClusteringTable.get(function)+"delegu/");
- 						if (resp.getRepresentation().isEmpty()==false)
+ 						Response resp=cm.ask(goalList.get(0).getTasksList().get(s).getContent()+"&"+goalList.get(0).getTasksList().get(s).getLabel()+"&"+goalList.get(0).getTasksList().get(s).getFunction(),URL,ClusteringTable.get(function)+"delegu/",cpt);
+ 						/*if (resp.getRepresentation().isEmpty()==false)
  						{
- 						cm.savePropositions(resp.getRepresentation(),goalList.get(0).getTasksList().get(s).getLabel());
- 						}
+ 						//cm.savePropositions(resp.getRepresentation(),goalList.get(0).getTasksList().get(s).getLabel());
+ 						}*/
+ 						cpt++;
 					}
 				}
-				cm.showPropositions();
+				//cm.showPropositions();
 		
 	}
 	public void receivePropo(String response)

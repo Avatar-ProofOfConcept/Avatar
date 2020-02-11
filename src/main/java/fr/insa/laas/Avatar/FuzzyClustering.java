@@ -30,7 +30,7 @@ import java.util.Set;
         clusterCenters = new ArrayList<>();
         avatars=new ArrayList();
         fuzziness = 2;
-        epsilon = 0.1;
+        epsilon = 0.2;
     }
     public void setDimension(int d)
     {
@@ -47,7 +47,7 @@ import java.util.Set;
     public ArrayList<String> getClusterMembers(int i,ArrayList<MetaAvatar> ls) {
 		Element [] tmp=avatars.get(i).getElements();
 		ArrayList<String> tmpls=new ArrayList<String>();
-		for (int j=0;j<tmp.length;j++)
+		for (int j=1;j<tmp.length;j++)
 		{
 			tmpls.add(ls.get(tmp[j].getId()).getURL());
 			
@@ -309,15 +309,17 @@ import java.util.Set;
     public void frequency()
     {
         int frequency[][]=new int[clusterCount][clusterCount];
-
+       // System.out.println(" start frequency");
     	for (int i=0;i<clusterCount;i++)
-    	{
+    	{System.out.println(" start frequency b1");
     		for (int k=0;k<clusterCount;k++)
     		{
+    			//System.out.println(" start frequency b2");
     			frequency[i][k]=0;
     		Element [] tmp=avatars.get(i).getElements();
     		for (int j=0;j<tmp.length;j++)
     		{
+    			//System.out.println(" start frequency b3");
     			if(data.get(tmp[j].getId()).get(k)==1) frequency[i][k]++;
     			
     		}
@@ -347,19 +349,22 @@ import java.util.Set;
         int k=0;
         while(!ok)
         {
-        	if(!exclus.contains(k)) {ok=true;max=tab[k];}
+        	 
+        	if(!exclus.contains(k)) {ok=true;max=tab[k];results=k;}
         	else k++;
         }
-        System.out.println("i0= "+max);
-    	for(int i=0;i<tab.length;i++)
+        
+     	for(int i=0;i<tab.length;i++)
     	{
     		if (max < tab[i] && !exclus.contains(i))
-    			{max=tab[i];
-    			results=i;
+    			{ 
+    			  max=tab[i];
+    			  results=i;
     			}
     	}
     	exclus.add(results);
-    	
+     	//System.out.println(" exclus = "+exclus.toString());
+
 
     	return results;
     }
@@ -403,26 +408,6 @@ import java.util.Set;
         return Math.sqrt(sum);
     }
 
-    /**
-     * write random generated data to file for visualizing
-     * @throws IOException
-     */
-    public void writeDataToFile(ArrayList<ArrayList<Integer>> inpData, String fileName) throws IOException {
 
-        FileWriter fileWriter = new FileWriter("./" + fileName + ".csv");
-        PrintWriter printWriter = new PrintWriter(fileWriter);
-
-        for (int i = 0; i < inpData.size(); i++) {
-             String res = "";
-            for (int j = 0; j < inpData.get(i).size(); j++) {
-                if(j == inpData.get(i).size() - 1)
-                    res += inpData.get(i).get(j);
-                else
-                    res += inpData.get(i).get(j) +",";
-            }
-            printWriter.println(res);
-        }
-        printWriter.close();
-    }
 
 }

@@ -861,36 +861,69 @@
         <rdfs:range rdf:resource="&DEMISA;Task"/>
     </owl:ObjectProperty>
     -->
-<owl:NamedIndividual rdf:about="http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#Avatar3001">
+<owl:NamedIndividual rdf:about="http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#Avatar3009">
 <rdf:type rdf:resource="http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#Avatar"/>
-<hasGoal rdf:resource="http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#Goal3001"/>
+<hasGoal rdf:resource="http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#Goal3009"/>
 <hasService rdf:resource="http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#Service12"/>
+<hasService rdf:resource="http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#Service28"/>
+<hasService rdf:resource="http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#Service10"/>
 <hasService rdf:resource="http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#Service21"/>
-<hasInterest rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Interest11/0.3884542004669357</hasInterest>
-<hasOwner rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Owner11</hasOwner>
-<hasLocation rdf:datatype="http://www.w3.org/2001/XMLSchema#string">1.428562062804229/43.61631949713887</hasLocation>
+<hasInterest rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Interest8/0.5175985964912309</hasInterest>
+<hasOwner rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Owner13</hasOwner>
+<hasLocation rdf:datatype="http://www.w3.org/2001/XMLSchema#string">1.46190972379937/43.59732290310701</hasLocation>
 <represents rdf:resource="http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#Left_blinking"/>
-<deployedIn rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://localhost:3001/</deployedIn>
+<deployedIn rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://localhost:3009/</deployedIn>
 <hasMobility rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</hasMobility>
 </owl:NamedIndividual>
-<owl:NamedIndividual rdf:about="http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#Goal3001">
+<owl:NamedIndividual rdf:about="http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#Goal3009">
 <rdf:type rdf:resource="http://www.semanticweb.org/kkhadir/ontologies/2019/1/DEMISA#GroupedTask"/>
-<hasLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">LabelG3001</hasLabel>
-<hasChildTask rdf:resource="http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#Task4"/>
+<hasLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">LabelG3009</hasLabel>
+<hasChildTask rdf:resource="http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#Task3009"/>
 <hasChildTask rdf:resource="http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#Task8"/>
+<hasChildTask rdf:resource="http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#Task6"/>
 <hasChildTask rdf:resource="http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#Task12"/>
-<hasChildTask rdf:resource="http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#Task25"/>
-<hasChildTask rdf:resource="http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#Task9"/>
-<hasChildTask rdf:resource="http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#Task2"/>
-<hasChildTask rdf:resource="http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#Task28"/>
-<hasChildTask rdf:resource="http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#Task5"/>
 <hasChildTask rdf:resource="http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#Task19"/>
-<DEMISA:hasGrouping rdf:resource="http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#Choice"/>
+<hasChildTask rdf:resource="http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#Task9"/>
+<hasChildTask rdf:resource="http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#Task24"/>
+<hasChildTask rdf:resource="http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#Task18"/>
+<hasChildTask rdf:resource="http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#Task29"/>
+<hasChildTask rdf:resource="http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#Task28"/>
+<hasChildTask rdf:resource="http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#Task14"/>
+<hasChildTask rdf:resource="http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#Task20"/>
+<hasChildTask rdf:resource="http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#Task26"/>
+<hasChildTask rdf:resource="http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#Task10"/>
+<hasChildTask rdf:resource="http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#Task4"/>
+<DEMISA:hasGrouping rdf:resource="http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#Parallel"/>
 </owl:NamedIndividual>
-<owl:NamedIndividual rdf:about="http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#Task4">
+<owl:NamedIndividual rdf:about="http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#Task3009">
+<rdf:type rdf:resource="http://www.semanticweb.org/kkhadir/ontologies/2019/1/DEMISA#GroupedTask"/>
+<hasLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Label3009</hasLabel>
+<hasFunction rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Function7</hasFunction>
+<hasChildTask rdf:resource="http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#Task18"/>
+<hasChildTask rdf:resource="http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#Task3"/>
+<hasChildTask rdf:resource="http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#Task27"/>
+<DEMISA:hasGrouping rdf:resource="http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#Parallel"/>
+</owl:NamedIndividual>
+<owl:NamedIndividual rdf:about="http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#Task18">
 <rdf:type rdf:resource="http://www.semanticweb.org/kkhadir/ontologies/2019/1/DEMISA#AtomicTask"/>
-<hasLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Label4</hasLabel>
-<hasFunction rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Function8</hasFunction>
+<hasLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Label18</hasLabel>
+<hasFunction rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Function18</hasFunction>
+<hasInput rdf:datatype="http://www.w3.org/2001/XMLSchema#string">x</hasInput>
+<hasOutput rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">false</hasOutput>
+<hasPrecondition rdf:datatype="http://www.w3.org/2001/XMLSchema#string">TimeExec&lt;2</hasPrecondition>
+</owl:NamedIndividual>
+<owl:NamedIndividual rdf:about="http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#Task3">
+<rdf:type rdf:resource="http://www.semanticweb.org/kkhadir/ontologies/2019/1/DEMISA#AtomicTask"/>
+<hasLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Label3</hasLabel>
+<hasFunction rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Function3</hasFunction>
+<hasInput rdf:datatype="http://www.w3.org/2001/XMLSchema#string">x</hasInput>
+<hasOutput rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">false</hasOutput>
+<hasPrecondition rdf:datatype="http://www.w3.org/2001/XMLSchema#string">TimeExec&lt;2</hasPrecondition>
+</owl:NamedIndividual>
+<owl:NamedIndividual rdf:about="http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#Task27">
+<rdf:type rdf:resource="http://www.semanticweb.org/kkhadir/ontologies/2019/1/DEMISA#AtomicTask"/>
+<hasLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Label27</hasLabel>
+<hasFunction rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Function27</hasFunction>
 <hasInput rdf:datatype="http://www.w3.org/2001/XMLSchema#string">x</hasInput>
 <hasOutput rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">false</hasOutput>
 <hasPrecondition rdf:datatype="http://www.w3.org/2001/XMLSchema#string">TimeExec&lt;2</hasPrecondition>
@@ -898,7 +931,15 @@
 <owl:NamedIndividual rdf:about="http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#Task8">
 <rdf:type rdf:resource="http://www.semanticweb.org/kkhadir/ontologies/2019/1/DEMISA#AtomicTask"/>
 <hasLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Label8</hasLabel>
-<hasFunction rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Function2</hasFunction>
+<hasFunction rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Function11</hasFunction>
+<hasInput rdf:datatype="http://www.w3.org/2001/XMLSchema#string">x</hasInput>
+<hasOutput rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">false</hasOutput>
+<hasPrecondition rdf:datatype="http://www.w3.org/2001/XMLSchema#string">TimeExec&lt;2</hasPrecondition>
+</owl:NamedIndividual>
+<owl:NamedIndividual rdf:about="http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#Task6">
+<rdf:type rdf:resource="http://www.semanticweb.org/kkhadir/ontologies/2019/1/DEMISA#AtomicTask"/>
+<hasLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Label6</hasLabel>
+<hasFunction rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Function12</hasFunction>
 <hasInput rdf:datatype="http://www.w3.org/2001/XMLSchema#string">x</hasInput>
 <hasOutput rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">false</hasOutput>
 <hasPrecondition rdf:datatype="http://www.w3.org/2001/XMLSchema#string">TimeExec&lt;2</hasPrecondition>
@@ -906,47 +947,7 @@
 <owl:NamedIndividual rdf:about="http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#Task12">
 <rdf:type rdf:resource="http://www.semanticweb.org/kkhadir/ontologies/2019/1/DEMISA#AtomicTask"/>
 <hasLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Label12</hasLabel>
-<hasFunction rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Function2</hasFunction>
-<hasInput rdf:datatype="http://www.w3.org/2001/XMLSchema#string">x</hasInput>
-<hasOutput rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">false</hasOutput>
-<hasPrecondition rdf:datatype="http://www.w3.org/2001/XMLSchema#string">TimeExec&lt;2</hasPrecondition>
-</owl:NamedIndividual>
-<owl:NamedIndividual rdf:about="http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#Task25">
-<rdf:type rdf:resource="http://www.semanticweb.org/kkhadir/ontologies/2019/1/DEMISA#AtomicTask"/>
-<hasLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Label25</hasLabel>
-<hasFunction rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Function7</hasFunction>
-<hasInput rdf:datatype="http://www.w3.org/2001/XMLSchema#string">x</hasInput>
-<hasOutput rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">false</hasOutput>
-<hasPrecondition rdf:datatype="http://www.w3.org/2001/XMLSchema#string">TimeExec&lt;2</hasPrecondition>
-</owl:NamedIndividual>
-<owl:NamedIndividual rdf:about="http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#Task9">
-<rdf:type rdf:resource="http://www.semanticweb.org/kkhadir/ontologies/2019/1/DEMISA#AtomicTask"/>
-<hasLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Label9</hasLabel>
-<hasFunction rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Function5</hasFunction>
-<hasInput rdf:datatype="http://www.w3.org/2001/XMLSchema#string">x</hasInput>
-<hasOutput rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">false</hasOutput>
-<hasPrecondition rdf:datatype="http://www.w3.org/2001/XMLSchema#string">TimeExec&lt;2</hasPrecondition>
-</owl:NamedIndividual>
-<owl:NamedIndividual rdf:about="http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#Task2">
-<rdf:type rdf:resource="http://www.semanticweb.org/kkhadir/ontologies/2019/1/DEMISA#AtomicTask"/>
-<hasLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Label2</hasLabel>
-<hasFunction rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Function12</hasFunction>
-<hasInput rdf:datatype="http://www.w3.org/2001/XMLSchema#string">x</hasInput>
-<hasOutput rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">false</hasOutput>
-<hasPrecondition rdf:datatype="http://www.w3.org/2001/XMLSchema#string">TimeExec&lt;2</hasPrecondition>
-</owl:NamedIndividual>
-<owl:NamedIndividual rdf:about="http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#Task28">
-<rdf:type rdf:resource="http://www.semanticweb.org/kkhadir/ontologies/2019/1/DEMISA#AtomicTask"/>
-<hasLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Label28</hasLabel>
-<hasFunction rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Function6</hasFunction>
-<hasInput rdf:datatype="http://www.w3.org/2001/XMLSchema#string">x</hasInput>
-<hasOutput rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">false</hasOutput>
-<hasPrecondition rdf:datatype="http://www.w3.org/2001/XMLSchema#string">TimeExec&lt;2</hasPrecondition>
-</owl:NamedIndividual>
-<owl:NamedIndividual rdf:about="http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#Task5">
-<rdf:type rdf:resource="http://www.semanticweb.org/kkhadir/ontologies/2019/1/DEMISA#AtomicTask"/>
-<hasLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Label5</hasLabel>
-<hasFunction rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Function13</hasFunction>
+<hasFunction rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Function1</hasFunction>
 <hasInput rdf:datatype="http://www.w3.org/2001/XMLSchema#string">x</hasInput>
 <hasOutput rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">false</hasOutput>
 <hasPrecondition rdf:datatype="http://www.w3.org/2001/XMLSchema#string">TimeExec&lt;2</hasPrecondition>
@@ -954,6 +955,86 @@
 <owl:NamedIndividual rdf:about="http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#Task19">
 <rdf:type rdf:resource="http://www.semanticweb.org/kkhadir/ontologies/2019/1/DEMISA#AtomicTask"/>
 <hasLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Label19</hasLabel>
+<hasFunction rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Function8</hasFunction>
+<hasInput rdf:datatype="http://www.w3.org/2001/XMLSchema#string">x</hasInput>
+<hasOutput rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">false</hasOutput>
+<hasPrecondition rdf:datatype="http://www.w3.org/2001/XMLSchema#string">TimeExec&lt;2</hasPrecondition>
+</owl:NamedIndividual>
+<owl:NamedIndividual rdf:about="http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#Task9">
+<rdf:type rdf:resource="http://www.semanticweb.org/kkhadir/ontologies/2019/1/DEMISA#AtomicTask"/>
+<hasLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Label9</hasLabel>
+<hasFunction rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Function3</hasFunction>
+<hasInput rdf:datatype="http://www.w3.org/2001/XMLSchema#string">x</hasInput>
+<hasOutput rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">false</hasOutput>
+<hasPrecondition rdf:datatype="http://www.w3.org/2001/XMLSchema#string">TimeExec&lt;2</hasPrecondition>
+</owl:NamedIndividual>
+<owl:NamedIndividual rdf:about="http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#Task24">
+<rdf:type rdf:resource="http://www.semanticweb.org/kkhadir/ontologies/2019/1/DEMISA#AtomicTask"/>
+<hasLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Label24</hasLabel>
+<hasFunction rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Function9</hasFunction>
+<hasInput rdf:datatype="http://www.w3.org/2001/XMLSchema#string">x</hasInput>
+<hasOutput rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">false</hasOutput>
+<hasPrecondition rdf:datatype="http://www.w3.org/2001/XMLSchema#string">TimeExec&lt;2</hasPrecondition>
+</owl:NamedIndividual>
+<owl:NamedIndividual rdf:about="http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#Task18">
+<rdf:type rdf:resource="http://www.semanticweb.org/kkhadir/ontologies/2019/1/DEMISA#AtomicTask"/>
+<hasLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Label18</hasLabel>
+<hasFunction rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Function8</hasFunction>
+<hasInput rdf:datatype="http://www.w3.org/2001/XMLSchema#string">x</hasInput>
+<hasOutput rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">false</hasOutput>
+<hasPrecondition rdf:datatype="http://www.w3.org/2001/XMLSchema#string">TimeExec&lt;2</hasPrecondition>
+</owl:NamedIndividual>
+<owl:NamedIndividual rdf:about="http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#Task29">
+<rdf:type rdf:resource="http://www.semanticweb.org/kkhadir/ontologies/2019/1/DEMISA#AtomicTask"/>
+<hasLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Label29</hasLabel>
+<hasFunction rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Function9</hasFunction>
+<hasInput rdf:datatype="http://www.w3.org/2001/XMLSchema#string">x</hasInput>
+<hasOutput rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">false</hasOutput>
+<hasPrecondition rdf:datatype="http://www.w3.org/2001/XMLSchema#string">TimeExec&lt;2</hasPrecondition>
+</owl:NamedIndividual>
+<owl:NamedIndividual rdf:about="http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#Task28">
+<rdf:type rdf:resource="http://www.semanticweb.org/kkhadir/ontologies/2019/1/DEMISA#AtomicTask"/>
+<hasLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Label28</hasLabel>
+<hasFunction rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Function10</hasFunction>
+<hasInput rdf:datatype="http://www.w3.org/2001/XMLSchema#string">x</hasInput>
+<hasOutput rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">false</hasOutput>
+<hasPrecondition rdf:datatype="http://www.w3.org/2001/XMLSchema#string">TimeExec&lt;2</hasPrecondition>
+</owl:NamedIndividual>
+<owl:NamedIndividual rdf:about="http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#Task14">
+<rdf:type rdf:resource="http://www.semanticweb.org/kkhadir/ontologies/2019/1/DEMISA#AtomicTask"/>
+<hasLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Label14</hasLabel>
+<hasFunction rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Function15</hasFunction>
+<hasInput rdf:datatype="http://www.w3.org/2001/XMLSchema#string">x</hasInput>
+<hasOutput rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">false</hasOutput>
+<hasPrecondition rdf:datatype="http://www.w3.org/2001/XMLSchema#string">TimeExec&lt;2</hasPrecondition>
+</owl:NamedIndividual>
+<owl:NamedIndividual rdf:about="http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#Task20">
+<rdf:type rdf:resource="http://www.semanticweb.org/kkhadir/ontologies/2019/1/DEMISA#AtomicTask"/>
+<hasLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Label20</hasLabel>
+<hasFunction rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Function7</hasFunction>
+<hasInput rdf:datatype="http://www.w3.org/2001/XMLSchema#string">x</hasInput>
+<hasOutput rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">false</hasOutput>
+<hasPrecondition rdf:datatype="http://www.w3.org/2001/XMLSchema#string">TimeExec&lt;2</hasPrecondition>
+</owl:NamedIndividual>
+<owl:NamedIndividual rdf:about="http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#Task26">
+<rdf:type rdf:resource="http://www.semanticweb.org/kkhadir/ontologies/2019/1/DEMISA#AtomicTask"/>
+<hasLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Label26</hasLabel>
+<hasFunction rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Function6</hasFunction>
+<hasInput rdf:datatype="http://www.w3.org/2001/XMLSchema#string">x</hasInput>
+<hasOutput rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">false</hasOutput>
+<hasPrecondition rdf:datatype="http://www.w3.org/2001/XMLSchema#string">TimeExec&lt;2</hasPrecondition>
+</owl:NamedIndividual>
+<owl:NamedIndividual rdf:about="http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#Task10">
+<rdf:type rdf:resource="http://www.semanticweb.org/kkhadir/ontologies/2019/1/DEMISA#AtomicTask"/>
+<hasLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Label10</hasLabel>
+<hasFunction rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Function2</hasFunction>
+<hasInput rdf:datatype="http://www.w3.org/2001/XMLSchema#string">x</hasInput>
+<hasOutput rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">false</hasOutput>
+<hasPrecondition rdf:datatype="http://www.w3.org/2001/XMLSchema#string">TimeExec&lt;2</hasPrecondition>
+</owl:NamedIndividual>
+<owl:NamedIndividual rdf:about="http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#Task4">
+<rdf:type rdf:resource="http://www.semanticweb.org/kkhadir/ontologies/2019/1/DEMISA#AtomicTask"/>
+<hasLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Label4</hasLabel>
 <hasFunction rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Function11</hasFunction>
 <hasInput rdf:datatype="http://www.w3.org/2001/XMLSchema#string">x</hasInput>
 <hasOutput rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">false</hasOutput>
@@ -976,6 +1057,50 @@
 <hasOutputMessage rdf:datatype="http://www.w3.org/2001/XMLSchema#string">OutputOFService12</hasOutputMessage>
 </owl:NamedIndividual>
 <owl:NamedIndividual rdf:about="http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#Service12_performance">
+<rdf:type rdf:resource="http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#Performance"/>
+<hasAvailability rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</hasAvailability>
+<hasExecTime rdf:datatype="http://www.w3.org/2001/XMLSchema#double">0.1</hasExecTime>
+<hasTotalCalls rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">0</hasTotalCalls>
+</owl:NamedIndividual>
+<owl:NamedIndividual rdf:about="http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#Service28">
+<rdf:type rdf:resource="http://iserve.kmi.open.ac.uk/ns/msm#Service"/>
+<hasQoS rdf:resource="http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#Service28_QoS"/>
+<msm:hasOperation rdf:resource="http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#Service28_operation"/>
+<hasLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Label28</hasLabel>
+</owl:NamedIndividual>
+<owl:NamedIndividual rdf:about="http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#Service28_QoS">
+<rdf:type rdf:resource="http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#QoS"/>
+<hasPerformance rdf:resource="http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#Service28_performance"/>
+</owl:NamedIndividual>
+<owl:NamedIndividual rdf:about="http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#Service28_operation">
+<rdf:type rdf:resource="http://iserve.kmi.open.ac.uk/ns/msm#Operation"/>
+<hasAddress rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI"></hasAddress>
+<hasMethod rdf:datatype="http://www.w3.org/2001/XMLSchema#string">GET</hasMethod>
+<hasOutputMessage rdf:datatype="http://www.w3.org/2001/XMLSchema#string">OutputOFService28</hasOutputMessage>
+</owl:NamedIndividual>
+<owl:NamedIndividual rdf:about="http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#Service28_performance">
+<rdf:type rdf:resource="http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#Performance"/>
+<hasAvailability rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</hasAvailability>
+<hasExecTime rdf:datatype="http://www.w3.org/2001/XMLSchema#double">0.1</hasExecTime>
+<hasTotalCalls rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">0</hasTotalCalls>
+</owl:NamedIndividual>
+<owl:NamedIndividual rdf:about="http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#Service10">
+<rdf:type rdf:resource="http://iserve.kmi.open.ac.uk/ns/msm#Service"/>
+<hasQoS rdf:resource="http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#Service10_QoS"/>
+<msm:hasOperation rdf:resource="http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#Service10_operation"/>
+<hasLabel rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Label10</hasLabel>
+</owl:NamedIndividual>
+<owl:NamedIndividual rdf:about="http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#Service10_QoS">
+<rdf:type rdf:resource="http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#QoS"/>
+<hasPerformance rdf:resource="http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#Service10_performance"/>
+</owl:NamedIndividual>
+<owl:NamedIndividual rdf:about="http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#Service10_operation">
+<rdf:type rdf:resource="http://iserve.kmi.open.ac.uk/ns/msm#Operation"/>
+<hasAddress rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI"></hasAddress>
+<hasMethod rdf:datatype="http://www.w3.org/2001/XMLSchema#string">GET</hasMethod>
+<hasOutputMessage rdf:datatype="http://www.w3.org/2001/XMLSchema#string">OutputOFService10</hasOutputMessage>
+</owl:NamedIndividual>
+<owl:NamedIndividual rdf:about="http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#Service10_performance">
 <rdf:type rdf:resource="http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#Performance"/>
 <hasAvailability rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</hasAvailability>
 <hasExecTime rdf:datatype="http://www.w3.org/2001/XMLSchema#double">0.1</hasExecTime>

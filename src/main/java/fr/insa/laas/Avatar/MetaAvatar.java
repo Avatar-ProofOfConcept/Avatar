@@ -14,8 +14,7 @@ public class MetaAvatar {
 		private double longitude;
 		//Interests
 		private Map<String,Double> interestsVector = new HashMap<String, Double>();			//Used to calculate the Social Distance using its vector shape
-		private ArrayList <Interest> interestsList = new ArrayList <Interest> () ;
-		private ArrayList<String> functionsAble= new ArrayList<String>();
+ 		private ArrayList<String> functionsAble= new ArrayList<String>();
 		private ArrayList<String> functionsNotAble= new ArrayList<String>();
 		//Used to iterate and to get Level interest easily for each task
 		//Social Distance with this metaAvatar
@@ -25,13 +24,12 @@ public class MetaAvatar {
 		private String URL;
 		
 		//Constructor
-		public MetaAvatar(String n, String o, double la, double lo, Map<String,Double> iv,ArrayList <Interest> il,ArrayList<String> lf,ArrayList<String> lfn, double sd, String u){
+		public MetaAvatar(String n, String o, double la, double lo, Map<String,Double> iv,ArrayList<String> lf,ArrayList<String> lfn, double sd, String u){
 			name=n;
 			owner=o;
 			latitude=la;
 			longitude=lo;
 			interestsVector=iv;
-			interestsList=il;
 			socialDistance=sd;
 			functionsAble=lf;
 			functionsNotAble=lfn;
@@ -41,12 +39,7 @@ public class MetaAvatar {
 		//Check if an avatar contains a certain interest, if YES: Return its level of interest, if FALSE: Return -1.0
 		public double ContainsInterest(String interest){
 			double res=-1.0;
-			for (int i=0; i<interestsList.size(); i++){
-				if (interestsList.get(i).getName().equals(interest)){
-					res=interestsList.get(i).getLevel();
-					break;
-				}
-			}
+			if (interestsVector.containsKey(interest)) res=interestsVector.get(interest);
 			return res;
 		}
 		public ArrayList<String> getFunctions()
@@ -55,12 +48,13 @@ public class MetaAvatar {
 		}
 		public Interest getInterest(String interest){
 			Interest res=null;
-			for (int i=0; i<interestsList.size(); i++){
-				if (interestsList.get(i).getName().equals(interest)){
-					res=interestsList.get(i);
-					break;
-				}
+			
+			if (interestsVector.containsKey(interest))
+			{
+				res= new Interest(interest, interestsVector.get(interest));
 			}
+
+			 
 			return res;
 		}
 		public String getFunction(String Function){
@@ -92,9 +86,7 @@ public class MetaAvatar {
 		public Map<String,Double> getInterestsVector(){
 			return interestsVector;
 		}
-		public ArrayList <Interest> getInterestsList(){
-			return interestsList;
-		}
+	 
 		public void putSocialDistance(double sd){
 			socialDistance=sd;
 		}

@@ -1,11 +1,8 @@
 package fr.insa.laas.Avatar;
 
 import java.io.IOException;
-import java.util.ArrayList;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.error.ErrorController;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -43,7 +40,7 @@ public class AvatarController implements ErrorController  {
 	public String getClusterMembers(@RequestBody String request) {
 		if(avatar==null) avatar=new Avatar(port);
          avatar.getComManager().getMemberList(request);
-         System.out.println("Cluster membrers "+avatar.getComManager().ls.toString());
+         //System.out.println("Cluster membrers "+avatar.getComManager().ls.toString());
         return "Cluster Member recieved";
     }
 	@RequestMapping(value="/receiveExclus/") 
@@ -67,6 +64,16 @@ public class AvatarController implements ErrorController  {
   		this.avatar.receivePropo(request);
   		System.out.println(request);
   		return "merci pour la proposition";
+  	}
+  	
+	@RequestMapping(value="/receiveFailure/")
+  	public String getFailure(@RequestBody String request)
+  	{
+  		if (this.avatar==null) System.out.println("nullllll");
+  		System.out.println("Fail to find task"+u.getXmlElement(request,"content"));
+  		this.avatar.receivePropo(request);
+  		System.out.println(request);
+  		return " :( ";
   	}
  
 
