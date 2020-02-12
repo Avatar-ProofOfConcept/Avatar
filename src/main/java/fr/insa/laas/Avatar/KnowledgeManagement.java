@@ -498,8 +498,9 @@ public class KnowledgeManagement implements IExtract{
 		    	   // System.out.println("********************");
 		    	    while(results.hasNext()){ 
 		    	    	QuerySolution binding = results.nextSolution();
-		    	    	if(!binding.get("avatar").toString().split("#")[1].equals( m)) metaAvatars.add(new MetaAvatar( binding.get("avatar").toString().split("#")[1],binding.get("owner").toString(), Double.parseDouble(binding.get("location").toString().split("/")[1]), Double.parseDouble(binding.get("location").toString().split("/")[0]), ExtractInterestAvatar(binding.get("avatar").toString()), ExtractFunctionAvatar(binding.get("avatar").toString()) , null, 0,"http://localhost:"+binding.get("avatar").toString().split("Avatar")[2]+"/"));
+		    	    	if(!binding.get("avatar").toString().split("#")[1].equals( m) && !binding.get("avatar").toString().split("#")[1].equals("Avatar3001") ) metaAvatars.add(new MetaAvatar( binding.get("avatar").toString().split("#")[1],binding.get("owner").toString(), Double.parseDouble(binding.get("location").toString().split("/")[1]), Double.parseDouble(binding.get("location").toString().split("/")[0]), ExtractInterestAvatar(binding.get("avatar").toString()), ExtractFunctionAvatar(binding.get("avatar").toString()) , null, 0,"http://localhost:"+binding.get("avatar").toString().split("Avatar")[2]+"/"));
 		    	        
+		    	    
 		    	    }
 		    	return metaAvatars;    
 		    	   

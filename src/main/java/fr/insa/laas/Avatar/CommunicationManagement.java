@@ -1,21 +1,17 @@
 package fr.insa.laas.Avatar;
-
-import java.io.File;
+ 
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.Writer;
-import java.time.Instant;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.Scanner;
-import java.util.Map.Entry;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.Map.Entry; 
 import java.util.HashMap;
-import java.util.ArrayList;;
+ 
 
 
 
@@ -23,11 +19,11 @@ public class CommunicationManagement {
 	Util u=new Util();
 	private final String ORIGINATOR = "admin:admin";
 	IExtract kb;
+	private ArrayList <MetaAvatar> friendFromRepo = new ArrayList <MetaAvatar>() ; 
 	MetaAvatar metaavatar;
  	private int nbRequestsA1;
 	ArrayList<RequestTask> ls=new ArrayList<RequestTask>();//cluster members
-	ArrayList<String> ex=new ArrayList<String>();//Exclus 
-	ClientInterface client=new Client();
+ 	ClientInterface client=new Client();
   	private SocialNetwork socialNetwork ;
   	private HashMap<String,ArrayList<String>> propositions ;
 
@@ -38,6 +34,7 @@ public class CommunicationManagement {
 	  this.metaavatar=m;
 	  this.socialNetwork=new SocialNetwork(m);
 	  this.propositions=new HashMap<String, ArrayList<String>>() ;
+	  this.friendFromRepo=kb.ExtractMetaAvatars(m.getInterestsVector().keySet(),m.getName());
 
 
 	}
@@ -67,6 +64,7 @@ public class CommunicationManagement {
 	        	String sender = u.getXmlElement(request,"sender");
 	    		String content = u.getXmlElement(request,"content");
 	    		int id=Integer.parseInt(u.getXmlElement(request,"id"));
+	    		int nbTask=Integer.parseInt(u.getXmlElement(request,"nbTask"));
 	    		
 	    		String task = content.split("&")[0];
 				String taskLabel = content.split("&")[1];
@@ -97,7 +95,7 @@ public class CommunicationManagement {
                      {
      					 
 
-                    	 resp=ask(content, sender,ls.get(id).getListeMemeber().get(i)+"askmembers/",id);
+                    	 resp=ask(content, sender,ls.get(id).getListeMemeber().get(i)+"askmembers/",id,nbTask);
                      	 if (u.getXmlElement(resp.getRepresentation(),"type").equals("propose"))
                     		 {
                      		 fail=false;
@@ -144,15 +142,25 @@ public class CommunicationManagement {
 			{
 				String sender = u.getXmlElement(request,"sender");
 	    		String content = u.getXmlElement(request,"content");
-	    		int id=Integer.parseInt(u.getXmlElement(request,"id")); 
-	    		if(updateTTL() < 6)
+	    		int id=Integer.parseInt(u.getXmlElement(request,"id"));
+	    		int nbTask=Integer.parseInt(u.getXmlElement(request,"nbTask"));
+	    		//int nbTask=Integer.parseInt(u.getXmlElement(request, "nbTask"));
+	    		System.out.println("list exclus from extended discovery method : "+list.toString());
+	    		if(incrTTL(id) < 6)
 	    		{
+	    			if (this.ls.size()==0) 
+					{   for(int i=0;i<nbTask;i++) 
+						{
+						ls.add(new RequestTask());
+						ls.get(i).setSns(new SocialNetwork(metaavatar));
+						}
+					}
  				String taskLabel = content.split("&")[1];
 				ArrayList<String> exclus=new ArrayList<String>();
 				 
 				//construction of SN without cluster member
            	 	//this.socialNetwork=new SocialNetwork();
-				ls.get(id).getSns().setMetaAvatar(kb.ExtractMetaAvatars(ls.get(id).getSns().getMetaAvatar().getInterestsVector().keySet(),ls.get(id).getSns().getMetaAvatar().getName()));
+				ls.get(id).getSns().setMetaAvatar(this.friendFromRepo);
            	    exclus=ls.get(id).getSns().socialNetworkConstruction(3,list);
            	    if(ls.get(id).getSns().getSocialNetwork().size()==0)
            	    {
@@ -169,7 +177,7 @@ public class CommunicationManagement {
                  {
  					 
 
-                	 resp=ask(content, sender,ls.get(id).getSns().getSocialNetwork().get(i).getURL()+"askmembers/",id);
+                	 resp=ask(content, sender,ls.get(id).getSns().getSocialNetwork().get(i).getURL()+"askmembers/",id,nbTask);
                  	 if (u.getXmlElement(resp.getRepresentation(),"type").equals("propose"))
                 		 {
                  		 fail=false;
@@ -196,7 +204,7 @@ public class CommunicationManagement {
            	 try {
            		 //ex.addAll(exclus);///add cluster members to exclus
            		 System.out.println("Send exclus");
-           		 if (!exclus.contains(sender))exclus.add(sender);
+           		 
            		 if(!exclus.contains(urlChosen))exclus.add(urlChosen);
            		 if(!exclus.containsAll(list)) exclus.addAll(list);
 				 sendExclusList(urlChosen, exclus,request);
@@ -304,13 +312,14 @@ public class CommunicationManagement {
  
 
 			}
-			public Response ask (String taskData,String sender,String reciever,int id)
+			public Response ask (String taskData,String sender,String reciever,int id,int nbTask)
 			{
 				String message = "<type>ask</type>";
 				Response response2 = null;
 				message = u.addXmlElement(message, "content",taskData) ;
 				message = u.addXmlElement(message, "sender", sender);
 				message = u.addXmlElement(message, "id", String.valueOf(id));
+				message = u.addXmlElement(message, "nbTask", String.valueOf(nbTask));
 				 try {
 					response2 = client.request(reciever+"?type=ask", ORIGINATOR, message);
 					//savePropositions(response2.getRepresentation(), taskData);
@@ -348,19 +357,7 @@ public class CommunicationManagement {
 
 			}
 		 
-			public void getExclusList(String response)
-			{
-				this.ex.clear();
-		    	int nbMembers=Integer.parseInt(u.getXmlElement(response, "membersNumber"));
-		    	
-		    	for (int i=0;i<nbMembers;i++)
-		    	{
-		    		ex.add(u.getXmlElement(response, "avatar"+i));
-		    	}
-		    
-
-
-			}
+			 
 			public void savePropositions (String response,String taskData)
 			{
 				if(u.getXmlElement(response,"type").equals("propose"))
@@ -394,41 +391,87 @@ public class CommunicationManagement {
 					System.out.println("Key = " + entry.getKey() + ", Value = " + entry.getValue().toString());
 				}
 			}
-			//TTL Management
-			public void initTTL()
+		 
+			public void initTTL(int size)
 			{
-				writeTTL(0);
+				OutputStream ops = null;
+		        ObjectOutputStream objOps = null;
+		        ArrayList<Integer> ls=new ArrayList<Integer>();
+		        for(int i=0;i<size;i++) ls.add(0);
+		        try {
+		            ops = new FileOutputStream("TTL.txt");
+		            objOps = new ObjectOutputStream(ops);
+		            objOps.writeObject(ls);
+		            objOps.flush();
+		        } catch (FileNotFoundException e) {
+		            e.printStackTrace();
+		        } catch (IOException e) {
+		            e.printStackTrace();
+		        } finally{
+		            try{
+		                if(objOps != null) objOps.close();
+		            } catch (Exception ex){
+		                 
+		            }
+		        }
 				
 			}
-			public int updateTTL()
+			public void showTTLs()
 			{
-				Scanner scanner;
-				int ttl=0;
-				try {
-					scanner = new Scanner(new File("TTL.txt"));
-					 
-					ttl = scanner.nextInt();
-					System.out.println("TTL = "+ttl);
-					ttl++;
-					writeTTL(ttl);
-					 
-				} catch (FileNotFoundException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				
-				return ttl;
-			}
-			public void writeTTL(int i)
+				 InputStream fileIs = null;
+			        ObjectInputStream objIs = null;
+			        try {
+			            fileIs = new FileInputStream("TTL.txt");
+			            objIs = new ObjectInputStream(fileIs);
+			            ArrayList<Integer> emp = ( ArrayList<Integer>) objIs.readObject();
+			            System.out.println(emp.toString());
+			        } catch (FileNotFoundException e) {
+			            e.printStackTrace();
+			        } catch (IOException e) {
+			            e.printStackTrace();
+			        } catch (ClassNotFoundException e) {
+			            e.printStackTrace();
+			        } finally {
+			            try {
+			                if(objIs != null) objIs.close();
+			            } catch (Exception ex){
+			                 
+			            }
+			        }
+			
+			         
+			    }
+			public int incrTTL(int index)
 			{
-				try {
-					Writer wr = new FileWriter("TTL.txt");
-					wr.write(String.valueOf(i));
-					wr.close();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				InputStream fileIs = null;
+		        ObjectInputStream objIs = null; OutputStream ops = null;
+		        ObjectOutputStream objOps = null;
+		        int ttl=0;
+		        try {
+		            fileIs = new FileInputStream("TTL.txt");
+		            objIs = new ObjectInputStream(fileIs);
+		            ArrayList<Integer> emp = ( ArrayList<Integer>) objIs.readObject();
+		            ttl=emp.get(index)+1;
+		            emp.set(index, emp.get(index)+1);
+		            ops = new FileOutputStream("TTL.txt");
+		            objOps = new ObjectOutputStream(ops);
+		            objOps.writeObject(emp);
+		            objOps.flush();
+		        } catch (FileNotFoundException e) {
+		            e.printStackTrace();
+		        } catch (IOException e) {
+		            e.printStackTrace();
+		        } catch (ClassNotFoundException e) {
+		            e.printStackTrace();
+		        } finally {
+		            try {
+		                if(objIs != null) objIs.close();
+		                if(objOps != null) objOps.close();
+		            } catch (Exception ex){
+		                 
+		            }
+		        }
+		        return ttl;
 				
 			}
 

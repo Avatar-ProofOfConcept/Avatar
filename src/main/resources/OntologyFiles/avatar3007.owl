@@ -871,7 +871,7 @@
 <hasService rdf:resource="http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#Service26"/>
 <hasService rdf:resource="http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#Service7"/>
 <hasService rdf:resource="http://www.laas-cnrs.fr/recherches/SARA/ontologies/AvatarOnt#Service21"/>
-<hasInterest rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Interest19/0.8406651187953083</hasInterest>
+<hasInterest rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Interest11/0.8406651187953083</hasInterest>
 <hasInterest rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Interest5/0.3800193476417859</hasInterest>
 <hasInterest rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Interest1/0.3754123883875854</hasInterest>
 <hasInterest rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Interest10/0.8046505673294869</hasInterest>

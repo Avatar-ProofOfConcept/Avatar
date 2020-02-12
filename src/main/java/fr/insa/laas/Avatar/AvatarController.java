@@ -1,6 +1,8 @@
 package fr.insa.laas.Avatar;
 
 import java.io.IOException;
+import java.util.ArrayList;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,19 +18,14 @@ public class AvatarController implements ErrorController  {
 	Util u=new Util();
 	@Value("${server.port}")
 	private int port;
-	
- 
- 
-    
-
-     
-	@RequestMapping(value="/init/", method=RequestMethod.GET) 
-	public String getAllAvatar() {
+@RequestMapping(value="/init/", method=RequestMethod.GET) 
+public String getAllAvatar() 
+{
     	System.out.println(port);
        avatar=new Avatar(port);
 
         return "init";
-    }
+}
 	@RequestMapping(value="/discover/") 
 	public String discover() {
 		this.avatar.cluster();
@@ -46,10 +43,17 @@ public class AvatarController implements ErrorController  {
 	@RequestMapping(value="/receiveExclus/") 
 	public String getExclus(@RequestBody String request) {
 		if(avatar==null) avatar=new Avatar(port);
-         avatar.getComManager().getExclusList(request);
-         System.out.println("Exclus "+avatar.getComManager().ex.toString()+" request ="+u.getXmlElement(request,"request"));
+         
+         ArrayList<String> ex=new ArrayList<String>();
+         int nbMembers=Integer.parseInt(u.getXmlElement(request, "membersNumber"));
+	     System.out.println("ClusterMember  :  "+nbMembers);
+	    	for (int i=0;i<nbMembers;i++)
+	    	{
+	    		ex.add(u.getXmlElement(request, "avatar"+i));
+	    	}
+         System.out.println("Exclus "+ex.toString()+" request ="+u.getXmlElement(request,"request"));
          System.out.println("Extend the discovery by th avatar"+port);
-         avatar.getComManager().extendedDiscovery(this.avatar.getComManager().ex,u.getXmlElement(request,"request"));
+         avatar.getComManager().extendedDiscovery(ex,u.getXmlElement(request,"request"));
         return "exclus  recieved";
     }
 	 
@@ -73,7 +77,7 @@ public class AvatarController implements ErrorController  {
   		System.out.println("Fail to find task"+u.getXmlElement(request,"content"));
   		this.avatar.receivePropo(request);
   		System.out.println(request);
-  		return " :( ";
+  		return " :-( ";
   	}
  
 

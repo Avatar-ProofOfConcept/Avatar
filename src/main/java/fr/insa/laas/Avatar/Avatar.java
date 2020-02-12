@@ -204,14 +204,13 @@ public class Avatar {
 				e.printStackTrace();
 			}
             
-           //System.out.println(ClusteringTable.get(FunctionTasksListNotAble.get(i))+"       "+this.cmean.getClusterMembers(i,cm.getSocialNetwork().socialNetwork));
-			//System.out.println("elected "+ClusteringTable[i][1]);
-
-		}
+           
+	}
 	    
 		
 		System.out.println("[BROWSE TASKS]"+name+": "+goalList.get(0).getName());
 		int cpt=0;
+		cm.initTTL(FunctionTasksListNotAble.size());
 				for (int s=0; s<goalList.get(0).getTasksList().size();s++){
 					//Able
 					if(goalList.get(0).getTasksList().get(s).getIsAble()){
@@ -223,12 +222,12 @@ public class Avatar {
 					}
 					//Non Able ==> Check if grouped
 					else {
-						cm.initTTL();
+						 
 						System.out.println("["+name+"] "+goalList.get(0).getTasksList().get(s).getContent()+": not Able");
  						System.out.println("	[CAN NOT DO TASK ITSELF]"+name+": "+goalList.get(0).getTasksList().get(s).getContent());
  						String function =goalList.get(0).getTasksList().get(s).getFunction();
  						System.out.println("Function "+function+" value "+ClusteringTable.get(function));
- 						Response resp=cm.ask(goalList.get(0).getTasksList().get(s).getContent()+"&"+goalList.get(0).getTasksList().get(s).getLabel()+"&"+goalList.get(0).getTasksList().get(s).getFunction(),URL,ClusteringTable.get(function)+"delegu/",cpt);
+ 						Response resp=cm.ask(goalList.get(0).getTasksList().get(s).getContent()+"&"+goalList.get(0).getTasksList().get(s).getLabel()+"&"+goalList.get(0).getTasksList().get(s).getFunction(),URL,ClusteringTable.get(function)+"delegu/",cpt,FunctionTasksListNotAble.size());
  						/*if (resp.getRepresentation().isEmpty()==false)
  						{
  						//cm.savePropositions(resp.getRepresentation(),goalList.get(0).getTasksList().get(s).getLabel());
@@ -236,6 +235,8 @@ public class Avatar {
  						cpt++;
 					}
 				}
+				cm.showTTLs();
+				
 				//cm.showPropositions();
 		
 	}

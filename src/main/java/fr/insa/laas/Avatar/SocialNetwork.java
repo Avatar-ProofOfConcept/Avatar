@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 
 public class SocialNetwork {
@@ -46,26 +48,28 @@ public class SocialNetwork {
 		public ArrayList<String> socialNetworkConstruction(int k,ArrayList<String> exclus)
 		{
 			this.size=k;
-			ArrayList<String> ls=new ArrayList<String>();
+			ArrayList<String> ls = new ArrayList<String>();
 			fr.insa.laas.Avatar.Element [] SDs=new fr.insa.laas.Avatar.Element[friendFromRepo.size()];
 			for (int i=0;i<this.friendFromRepo.size();i++)
 			{
 				SDs[i]=new fr.insa.laas.Avatar.Element(i,(float)(socialDistance.SocialDistance(metaAvatar,friendFromRepo.get(i),0.4f,0.4f,0.4f)));
 				 
-				//System.out.println(""+SDs[i].getW()+" "+SDs[i].getId());
+				System.out.println(""+SDs[i].getW()+" "+SDs[i].getId());
 			}
 			Arrays.sort(SDs,Collections.reverseOrder());
 			int cpt=0;
 			int nb=0;
 			while(cpt < friendFromRepo.size())
 			{
-				if(!exclus.contains(friendFromRepo.get(cpt).getURL()))
+				if(!exclus.contains(friendFromRepo.get(SDs[cpt].getId()).getURL()))
 				{
+					System.out.println("exclusssss from sn :"+exclus.toString());
+					System.out.println("elmmmeeent" +friendFromRepo.get(SDs[cpt].getId()).getURL());
 				if (!socialNetwork.contains(friendFromRepo.get(SDs[cpt].getId())))
 				{	
 					socialNetwork.add(friendFromRepo.get(SDs[cpt].getId()));
 					ls.add(friendFromRepo.get(SDs[cpt].getId()).getURL());
-					System.out.println(friendFromRepo.get(SDs[cpt].getId()).getName());
+					System.out.println("nammme from SN construction"+friendFromRepo.get(SDs[cpt].getId()).getName());
 				}
 				 
 		
