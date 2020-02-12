@@ -45,10 +45,10 @@ public class SocialNetwork {
 			 
 
  		}
-		public ArrayList<String> socialNetworkConstruction(int k,ArrayList<String> exclus)
+		public Set<String> socialNetworkConstruction(int k,ArrayList<String> exclus)
 		{
 			this.size=k;
-			ArrayList<String> ls = new ArrayList<String>();
+			Set<String> ls = new HashSet<String>();
 			fr.insa.laas.Avatar.Element [] SDs=new fr.insa.laas.Avatar.Element[friendFromRepo.size()];
 			for (int i=0;i<this.friendFromRepo.size();i++)
 			{
@@ -63,13 +63,12 @@ public class SocialNetwork {
 			{
 				if(!exclus.contains(friendFromRepo.get(SDs[cpt].getId()).getURL()))
 				{
-					System.out.println("exclusssss from sn :"+exclus.toString());
-					System.out.println("elmmmeeent" +friendFromRepo.get(SDs[cpt].getId()).getURL());
+					 
 				if (!socialNetwork.contains(friendFromRepo.get(SDs[cpt].getId())))
 				{	
 					socialNetwork.add(friendFromRepo.get(SDs[cpt].getId()));
 					ls.add(friendFromRepo.get(SDs[cpt].getId()).getURL());
-					System.out.println("nammme from SN construction"+friendFromRepo.get(SDs[cpt].getId()).getName());
+					System.out.println("friend numero  "+nb+" : "+friendFromRepo.get(SDs[cpt].getId()).getName());
 				}
 				 
 		

@@ -1,13 +1,10 @@
 package fr.insa.laas.Avatar;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
+ 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Random;
-import java.util.Set;
+ 
 
   public class FuzzyClustering {
     public ArrayList<ArrayList<Integer>> data;
@@ -15,20 +12,18 @@ import java.util.Set;
     private float u[][];
     private float u_pre[][];
     private int clusterCount;
-    private int iteration;
     private int dimension;
     private float fuzziness;
     private double epsilon;
     public double finalError;
     private ArrayList<Cluster> avatars;
-	private int numberOfData;
 	private int idDistance;
 	
 	 
     public FuzzyClustering(){
         data = new ArrayList<>();
         clusterCenters = new ArrayList<>();
-        avatars=new ArrayList();
+        avatars=new ArrayList<Cluster>();
         fuzziness = 2;
         epsilon = 0.2;
     }
@@ -64,23 +59,13 @@ import java.util.Set;
         showData();
         float lStartTime = System.nanoTime();
         assignInitialMembership();
-       //System.out.println("initialisation des centres");
-        int iter=0;
+      
      
         while(true) {
-        	iter++;
+        	 
         	 
         	 calculateClusterCenters();
-             
-            //3
-           // showC();
-            //2 calculate cluster centers
-        	updateMembershipValues();
-        	//  showU ();
-        	
- 
-            //4
-          
+             updateMembershipValues();
             finalError = checkConvergence();
             if(finalError <= epsilon)
                 break;
@@ -90,16 +75,16 @@ import java.util.Set;
 
 		//time elapsed
        float output = lEndTime - lStartTime;
-/*
-        System.out.println("Elapsed time in milliseconds: " + output / 1000000f);
-        System.out.println("BPC  "+ValidationIndices.bezdekPartitionCoefficient(u));
+
+        System.out.println("Clustering time in milliseconds: " + output / 1000000f);
+      /*  System.out.println("BPC  "+ValidationIndices.bezdekPartitionCoefficient(u));
         System.out.println("XB  "+ValidationIndices.compactnessAndSeparationMetric(data, u, clusterCenters, fuzziness));
         System.out.println("PE    "+ValidationIndices.partitionEntropyIndex(u));
         System.out.println("ITER    "+iter);*/
         //showU ();
         getAvatarCluster(p);
         frequency();
-        showAvatars();
+        //showAvatars();
         
     }
     public void showData ()
@@ -170,52 +155,7 @@ import java.util.Set;
     	 System.out.println();
      }
     }
-    /**
-     * in this function we generate random data with specific option
-     * @param numberOfData
-     * @param dimension
-     * @param minRange
-     * @param maxRange
-     */
-  /*  public void createRandomData(int numberOfData, int dimension, int minRange, int maxRange, int clusterCount){
-        this.dimension = dimension;
-        ArrayList<ArrayList<Integer>> centroids = new ArrayList<>();
-        centroids.add(new ArrayList<Integer>());
-        int[] numberOfDataInEachArea = new int[clusterCount];
-        int range = maxRange - minRange + 1;
-        int step = range / (clusterCount + 1);
-        for (int i = 1; i <= clusterCount; i++) {
-            centroids.get(0).add(minRange + i * step);
-        }
-
-        for (int i = 0; i < dimension - 1; i++) {
-            centroids.add((ArrayList<Integer>) centroids.get(0).clone());
-        }
-        double variance = (centroids.get(0).get(1) - centroids.get(0).get(0))/ 2.5;
-        for (int i = 0; i < dimension; i++) {
-            Collections.shuffle(centroids.get(i));
-        }
-        Random r = new Random();
-        int sum = 0;
-        for (int i = 0; i < clusterCount; i++) {
-            int rg = r.nextInt(50) + 10;
-            numberOfDataInEachArea[i] = (rg);
-            sum += rg;
-        }
-        for (int i = 0; i < clusterCount; i++)
-            numberOfDataInEachArea[i] = (int)((((double)numberOfDataInEachArea[i]) / sum) * numberOfData);
-
-        Random fRandom = new Random();
-        for (int i = 0; i < clusterCount; i++) {
-            for (int j = 0; j < numberOfDataInEachArea[i]; j++) {
-                ArrayList<F> tmp = new ArrayList<>();
-                for (int k = 0; k < dimension; k++) {
-                    tmp.add((float)(centroids.get(k).get(i) + fRandom.nextGaussian() * variance));
-                }
-                data.add(tmp);
-            }
-        }
-    }*/
+  
 
     /**
      * this function generate membership value for each data
@@ -311,7 +251,7 @@ import java.util.Set;
         int frequency[][]=new int[clusterCount][clusterCount];
        // System.out.println(" start frequency");
     	for (int i=0;i<clusterCount;i++)
-    	{System.out.println(" start frequency b1");
+    	{ 
     		for (int k=0;k<clusterCount;k++)
     		{
     			//System.out.println(" start frequency b2");
@@ -323,9 +263,9 @@ import java.util.Set;
     			if(data.get(tmp[j].getId()).get(k)==1) frequency[i][k]++;
     			
     		}
-    		System.out.print(frequency[i][k]+" ");
+    		//System.out.print(frequency[i][k]+" ");
     		}
-    		System.out.println();
+    		//System.out.println();
     		 
     	}
     	ArrayList<Integer> exclus=new ArrayList<Integer>();

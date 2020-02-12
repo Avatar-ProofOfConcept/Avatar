@@ -9,8 +9,10 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Map.Entry; 
 import java.util.HashMap;
+import java.util.Set;
  
 
 
@@ -146,7 +148,7 @@ public class CommunicationManagement {
 	    		int nbTask=Integer.parseInt(u.getXmlElement(request,"nbTask"));
 	    		//int nbTask=Integer.parseInt(u.getXmlElement(request, "nbTask"));
 	    		System.out.println("list exclus from extended discovery method : "+list.toString());
-	    		if(incrTTL(id) < 6)
+	    		if(incrTTL(id) < 6)//TTL=6
 	    		{
 	    			if (this.ls.size()==0) 
 					{   for(int i=0;i<nbTask;i++) 
@@ -156,7 +158,7 @@ public class CommunicationManagement {
 						}
 					}
  				String taskLabel = content.split("&")[1];
-				ArrayList<String> exclus=new ArrayList<String>();
+				Set<String> exclus=new HashSet<String>();
 				 
 				//construction of SN without cluster member
            	 	//this.socialNetwork=new SocialNetwork();
@@ -205,8 +207,8 @@ public class CommunicationManagement {
            		 //ex.addAll(exclus);///add cluster members to exclus
            		 System.out.println("Send exclus");
            		 
-           		 if(!exclus.contains(urlChosen))exclus.add(urlChosen);
-           		 if(!exclus.containsAll(list)) exclus.addAll(list);
+           		 exclus.add(urlChosen);
+           		 exclus.addAll(list);
 				 sendExclusList(urlChosen, exclus,request);
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
@@ -297,15 +299,19 @@ public class CommunicationManagement {
  
 
 			}
-			public void sendExclusList(String urlDelegue,ArrayList<String> members, String request) throws IOException
+			public void sendExclusList(String urlDelegue,Set<String> members, String request) throws IOException
 			{
 				String message=new String();
 				message=u.addXmlElement(message, "request", request);
 				message=u.addXmlElement(message,"membersNumber",String.valueOf(members.size()));
-				for(int i=0;i<members.size();i++)
+				int i=0;
+				for(String member : members)
 				{
-				message=u.addXmlElement(message,"avatar"+i,members.get(i));
+					message=u.addXmlElement(message,"avatar"+i,member);
+					i++;
+					   
 				}
+				 
 				 
 					Response response2 = client.request(urlDelegue+"receiveExclus/", ORIGINATOR, message);
 					System.out.println("AVATAR: HTTP RESPONSE :"+ response2.getRepresentation());		
