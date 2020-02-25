@@ -15,12 +15,25 @@ public class SocialNetwork {
 		
 		//Social Network
 		private MetaAvatar metaAvatar;
-		private int size; // SN size
+		private static int size; // SN size
 		private ArrayList <MetaAvatar> friendFromRepo = new ArrayList <MetaAvatar>() ; 
 		ArrayList <MetaAvatar> socialNetwork = new ArrayList <MetaAvatar>() ; 
  		//Social Distance Calculs
 		private SocialNetworkCalculs socialDistance = new SocialNetworkCalculs();
-		//set of data for test
+		//parameters
+		private static float a,b,c;
+		
+		public static void setSize(int s)
+		{
+			size=s;
+		}
+		public static void setParameters(float a,float b, float c)
+		{
+			SocialNetwork.a=a;
+			SocialNetwork.b=b;
+		    SocialNetwork.c=c;
+			
+		}
  		
 	   public void setMetaAvatar(ArrayList<MetaAvatar> ls)
 	   {
@@ -47,12 +60,12 @@ public class SocialNetwork {
  		}
 		public Set<String> socialNetworkConstruction(int k,ArrayList<String> exclus)
 		{
-			this.size=k;
+			//size=k;
 			Set<String> ls = new HashSet<String>();
 			fr.insa.laas.Avatar.Element [] SDs=new fr.insa.laas.Avatar.Element[friendFromRepo.size()];
 			for (int i=0;i<this.friendFromRepo.size();i++)
 			{
-				SDs[i]=new fr.insa.laas.Avatar.Element(i,(float)(socialDistance.SocialDistance(metaAvatar,friendFromRepo.get(i),0.4f,0.4f,0.4f)));
+				SDs[i]=new fr.insa.laas.Avatar.Element(i,(float)(socialDistance.SocialDistance(metaAvatar,friendFromRepo.get(i),a,b,c)));
 				 
 				System.out.println(""+SDs[i].getW()+" "+SDs[i].getId());
 			}
@@ -88,22 +101,29 @@ public class SocialNetwork {
 		}
 		public void socialNetworkConstruction(int k)
 		{
-			this.size=k;
+		    //size=k;
 			fr.insa.laas.Avatar.Element [] SDs=new fr.insa.laas.Avatar.Element[friendFromRepo.size()];
+			System.out.println("The number of avatar selected from the KB "+friendFromRepo.size());
 			for (int i=0;i<this.friendFromRepo.size();i++)
 			{
-				SDs[i]=new fr.insa.laas.Avatar.Element(i,(float)(socialDistance.SocialDistance(metaAvatar,friendFromRepo.get(i),0.4f,0.4f,0.4f)));
+				SDs[i]=new fr.insa.laas.Avatar.Element(i,(float)(socialDistance.SocialDistance(metaAvatar,friendFromRepo.get(i),a,b,c)));
 				 
 			}
 			Arrays.sort(SDs,Collections.reverseOrder());
- 
-			for(int j=0;j<Math.min(size,friendFromRepo.size());j++)
-			{
-				socialNetwork.add(friendFromRepo.get(SDs[j].getId()));
-				System.out.println(friendFromRepo.get(SDs[j].getId()).getName());
+			int j=0,cpt=0;
+			 
+				while(j<friendFromRepo.size() && cpt<size)
+				{
+					if (!socialNetwork.contains(friendFromRepo.get(SDs[j].getId())))
+					{
+						socialNetwork.add(friendFromRepo.get(SDs[j].getId()));
+						cpt++;
+						System.out.println(friendFromRepo.get(SDs[j].getId()).getName());
+					}
+					j++;
+				}
 				
-				
-			}
+			 
 		
 		}
 	 

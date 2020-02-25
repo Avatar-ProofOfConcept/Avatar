@@ -35,6 +35,8 @@ public class CommunicationManagement {
 	  this.kb=kb;
 	  this.metaavatar=m;
 	  this.socialNetwork=new SocialNetwork(m);
+	  SocialNetwork.setParameters(0.2f, 0.2f,0.6f);
+	  SocialNetwork.setSize(20);
 	  this.propositions=new HashMap<String, ArrayList<String>>() ;
 	  this.friendFromRepo=kb.ExtractMetaAvatars(m.getInterestsVector().keySet(),m.getName());
 
@@ -59,41 +61,28 @@ public class CommunicationManagement {
 	}
  
 			
-			//Ask Request (about a task) 
-			public String AskRequest(String request,String name){
+ 			public String AskRequest(String request,String name){
 	        	String res = "";
 	        	
 	        	String sender = u.getXmlElement(request,"sender");
 	    		String content = u.getXmlElement(request,"content");
 	    		int id=Integer.parseInt(u.getXmlElement(request,"id"));
 	    		int nbTask=Integer.parseInt(u.getXmlElement(request,"nbTask"));
-	    		
-	    		String task = content.split("&")[0];
 				String taskLabel = content.split("&")[1];
-				 
-	    		
-				//isAble?
-				//TBD: URGENT !! USE THE SERVICES MANAGER AS IT CONTAINS SERVICES OF FRIENDS TOO
 				if(kb.IsAbleTaskFriend(taskLabel)){
-					//PROPOSE
-					res = u.addXmlElement(res,"type","propose");
+ 					res = u.addXmlElement(res,"type","propose");
 					res = u.addXmlElement(res,"sender",name);
 					 
-					//TBD: WARNING!!! We have to see data about the Qos and all the info. about the service
-					res = u.addXmlElement(res,"content",kb.ExtractServiceFromLabel(taskLabel)+"&"+name) ;	//ServiceX & LabelX & QosX & name
+ 					res = u.addXmlElement(res,"content",kb.ExtractServiceFromLabel(taskLabel)+"&"+name) ;
 					 
-					//cptMessagesHTTP++;
-					//System.out.println("["+name+":Proposal Message to "+sender+"]: "+message.getContent()+", conversation: "+message.getConversationId()+", nbMessages="+cptMessages) ;
+					 
 				}
 				else{
-					//Answer that he can't 
-					/*res = u.addXmlElement(res,"type","failure");
-					res = u.addXmlElement(res,"sender",name);
-					res = u.addXmlElement(res,"content","No Service available for this task") ;*/
+					 
 					System.out.println(name + " Ask cluster members  "+"ls= "+ls.get(id).getListeMemeber().toString());
 					Response resp=null;
 					boolean fail=true;
-                     for(int i=1;i<ls.get(id).getListeMemeber().size();i++)
+                     for(int i=0;i<ls.get(id).getListeMemeber().size();i++)
                      {
      					 
 
@@ -109,34 +98,16 @@ public class CommunicationManagement {
 								Response resp1=client.request(sender+"ResponsePropose/",ORIGINATOR,proposition);
 								System.out.println("response from initiator   "+resp1.getRepresentation());
 								} catch (IOException e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
+ 									e.printStackTrace();
 								}
                      		 }
                      }
                      if (fail)
                      {
-                    	// ls.addAll(arg0);
-                    	 extendedDiscovery(ls.get(id).getListeMemeber(), request);
+                     	 extendedDiscovery(ls.get(id).getListeMemeber(), request);
                      }
                      
-         				/*	//Answer that he can't 
-         					res = u.addXmlElement(res,"type","failure");
-         					res = u.addXmlElement(res,"sender",name);
-         					res = u.addXmlElement(res,"content","No Service available for this task") ;
-         					 */
-         					//TBD: WARNING!!! We have to see data about the Qos and all the info. about the service
-         					//addXmlElement(res,"content",ExtractServiceFromLabel(taskLabel)+"&"+name) ;	//ServiceX & LabelX & QosX & name
-         					 
-         					//cptMessagesHTTP++;
-         					//System.out.println("["+name+": Failure Message to "+sender+"]: "+message.getContent()+", conversation: "+message.getConversationId()+"   "+message.getPerformative()+", nbMessages="+cptMessages) ;
-         				
-                     
-					//TBD: WARNING!!! We have to see data about the Qos and all the info. about the service
-					//addXmlElement(res,"content",ExtractServiceFromLabel(taskLabel)+"&"+name) ;	//ServiceX & LabelX & QosX & name
-					 
-					//cptMessagesHTTP++;
-					//System.out.println("["+name+": Failure Message to "+sender+"]: "+message.getContent()+", conversation: "+message.getConversationId()+"   "+message.getPerformative()+", nbMessages="+cptMessages) ;
+         				 
 				}
 	    		return res;
 			}
@@ -146,8 +117,7 @@ public class CommunicationManagement {
 	    		String content = u.getXmlElement(request,"content");
 	    		int id=Integer.parseInt(u.getXmlElement(request,"id"));
 	    		int nbTask=Integer.parseInt(u.getXmlElement(request,"nbTask"));
-	    		//int nbTask=Integer.parseInt(u.getXmlElement(request, "nbTask"));
-	    		System.out.println("list exclus from extended discovery method : "+list.toString());
+ 	    		System.out.println("list exclus from extended discovery method : "+list.toString());
 	    		if(incrTTL(id) < 6)//TTL=6
 	    		{
 	    			if (this.ls.size()==0) 
@@ -160,8 +130,7 @@ public class CommunicationManagement {
  				String taskLabel = content.split("&")[1];
 				Set<String> exclus=new HashSet<String>();
 				 
-				//construction of SN without cluster member
-           	 	//this.socialNetwork=new SocialNetwork();
+			 
 				ls.get(id).getSns().setMetaAvatar(this.friendFromRepo);
            	    exclus=ls.get(id).getSns().socialNetworkConstruction(3,list);
            	    if(ls.get(id).getSns().getSocialNetwork().size()==0)
@@ -204,15 +173,13 @@ public class CommunicationManagement {
            	 if (urlChosen.length()>0)
            	 {
            	 try {
-           		 //ex.addAll(exclus);///add cluster members to exclus
-           		 System.out.println("Send exclus");
-           		 
+            	 System.out.println("Send exclus");
+           		 exclus.add(this.metaavatar.getURL());
            		 exclus.add(urlChosen);
            		 exclus.addAll(list);
 				 sendExclusList(urlChosen, exclus,request);
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+ 					e.printStackTrace();
 				}
 			 }
             }
@@ -233,8 +200,7 @@ public class CommunicationManagement {
 				try {
 					Response response2 = client.request(sender+"receiveFailure/", ORIGINATOR, res);
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+ 					e.printStackTrace();
 				}
 
             }
@@ -247,30 +213,21 @@ public class CommunicationManagement {
  				String taskLabel = content.split("&")[1];
 				 
 	    		
-				//isAble?
-				//TBD: URGENT !! USE THE SERVICES MANAGER AS IT CONTAINS SERVICES OF FRIENDS TOO
+		 
 				if(kb.IsAbleTaskFriend(taskLabel)){
-					//PROPOSE
+				 
 					res = u.addXmlElement(res,"type","propose");
 					res = u.addXmlElement(res,"sender",name);
 					 
-					//TBD: WARNING!!! We have to see data about the Qos and all the info. about the service
-					res = u.addXmlElement(res,"content",kb.ExtractServiceFromLabel(taskLabel)+"&"+name) ;	//ServiceX & LabelX & QosX & name
+ 					res = u.addXmlElement(res,"content",kb.ExtractServiceFromLabel(taskLabel)+"&"+name) ;	//ServiceX & LabelX & QosX & name
 					 
-					//cptMessagesHTTP++;
-					//System.out.println("["+name+":Proposal Message to "+sender+"]: "+message.getContent()+", conversation: "+message.getConversationId()+", nbMessages="+cptMessages) ;
+					 
 				}
 				else{
 					//Answer that he can't 
 					res = u.addXmlElement(res,"type","failure");
 					res = u.addXmlElement(res,"sender",name);
 					res = u.addXmlElement(res,"content","No Service available for this task") ;
-					 
-					//TBD: WARNING!!! We have to see data about the Qos and all the info. about the service
-					//addXmlElement(res,"content",ExtractServiceFromLabel(taskLabel)+"&"+name) ;	//ServiceX & LabelX & QosX & name
-					 
-					//cptMessagesHTTP++;
-					//System.out.println("["+name+": Failure Message to "+sender+"]: "+message.getContent()+", conversation: "+message.getConversationId()+"   "+message.getPerformative()+", nbMessages="+cptMessages) ;
 				}
 	    		return res;
 			}
@@ -328,14 +285,12 @@ public class CommunicationManagement {
 				message = u.addXmlElement(message, "nbTask", String.valueOf(nbTask));
 				 try {
 					response2 = client.request(reciever+"?type=ask", ORIGINATOR, message);
-					//savePropositions(response2.getRepresentation(), taskData);
-					
+ 					
 					System.out.println("AVATAR: HTTP RESPONSE :"+ response2.getRepresentation());
 					
 
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+ 					e.printStackTrace();
 				}
 				 return response2;
 			}

@@ -90,5 +90,12 @@ public class MetaAvatar {
 		public void putSocialDistance(double sd){
 			socialDistance=sd;
 		}
+
+		@Override
+		public boolean equals(Object arg0) {
+			// TODO Auto-generated method stub
+			return this.name.equals(((MetaAvatar)arg0).getName());
+		}
+		
 				
 }

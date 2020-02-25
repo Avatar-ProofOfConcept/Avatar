@@ -19,7 +19,7 @@ public class AvatarController implements ErrorController  {
 	@Value("${server.port}")
 	private int port;
 @RequestMapping(value="/init/", method=RequestMethod.GET) 
-public String getAllAvatar() 
+public String getAvatar() 
 {
     	System.out.println(port);
        avatar=new Avatar(port);
@@ -29,7 +29,7 @@ public String getAllAvatar()
 	@RequestMapping(value="/discover/") 
 	public String discover() {
 		this.avatar.cluster();
-    	this.avatar.discovery();
+    	this.avatar.discovery(this.avatar.getGoalsList().get(0).getTasksList());
 
         return "the discovery is finished";
     }
@@ -37,8 +37,7 @@ public String getAllAvatar()
 	public String getClusterMembers(@RequestBody String request) {
 		if(avatar==null) avatar=new Avatar(port);
          avatar.getComManager().getMemberList(request);
-         //System.out.println("Cluster membrers "+avatar.getComManager().ls.toString());
-        return "Cluster Member recieved";
+         return "Cluster Member recieved";
     }
 	@RequestMapping(value="/receiveExclus/") 
 	public String getExclus(@RequestBody String request) {
@@ -63,7 +62,7 @@ public String getAllAvatar()
   	@RequestMapping(value="/ResponsePropose/")
   	public String propose(@RequestBody String request)
   	{
-  		if (this.avatar==null) System.out.println("nullllll");
+  		 
   		System.out.println("recevoir la proposition de cluster members");
   		this.avatar.receivePropo(request);
   		System.out.println(request);
@@ -73,7 +72,7 @@ public String getAllAvatar()
 	@RequestMapping(value="/receiveFailure/")
   	public String getFailure(@RequestBody String request)
   	{
-  		if (this.avatar==null) System.out.println("nullllll");
+  		 
   		System.out.println("Fail to find task"+u.getXmlElement(request,"content"));
   		this.avatar.receivePropo(request);
   		System.out.println(request);
@@ -85,16 +84,12 @@ public String getAllAvatar()
     public String TreatHTTPRequests1 (@RequestBody String request, @RequestParam("type") String type) throws IOException{
 		if(avatar==null) avatar=new Avatar(port);
 
-		String sender = u.getXmlElement(request, "sender");
-		//avatar.getComManager().IncrNbRequest();
-		System.out.println("[CONTROLLER of "+avatar.getName()+"] Received a "+type+" Request from "+sender+" total requests="+avatar.getComManager().getNbRequest());		
+ 		System.out.println("[CONTROLLER of "+avatar.getName()+"] Received a "+type+" Request : [ ] total requests="+avatar.getComManager().getNbRequest());		
 		String res=null;	
 		switch (type){
 		 
-		//Ask Request (about a certain Task)
-		case "ask":
-			//System.out.println("			RECEIVED ASK REQUEST");		
-			//res="OK REQ";
+ 		case "ask":
+			 
 			res=avatar.getComManager().AskMembers(request,avatar.getName());
 			break;
 			
@@ -118,15 +113,12 @@ public String getAllAvatar()
 		if(avatar==null) avatar=new Avatar(port);
 
 		String sender = u.getXmlElement(request, "sender");
-		//avatar.getComManager().IncrNbRequest();
-		System.out.println("[CONTROLLER of "+avatar.getName()+"] Received a "+type+" Request from "+sender+" total requests="+avatar.getComManager().getNbRequest());		
+ 		System.out.println("[CONTROLLER of "+avatar.getName()+"] Received a "+type+" Request : [ "+request+"] total requests="+avatar.getComManager().getNbRequest());		
 		String res=null;	
 		switch (type){
 		 
-		//Ask Request (about a certain Task)
-		case "ask":
-			//System.out.println("			RECEIVED ASK REQUEST");		
-			//res="OK REQ";
+ 		case "ask":
+			 
 			res=avatar.getComManager().AskRequest(request, avatar.getName());
 			break;
 			

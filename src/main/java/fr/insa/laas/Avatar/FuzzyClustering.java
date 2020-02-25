@@ -18,6 +18,7 @@ import java.util.Random;
     public double finalError;
     private ArrayList<Cluster> avatars;
 	private int idDistance;
+	private int p;
 	
 	 
     public FuzzyClustering(){
@@ -30,6 +31,14 @@ import java.util.Random;
     public void setDimension(int d)
     {
     	this.dimension=d;
+    }
+    public void setP(int p)
+    {
+    	this.p=p;
+    }
+    public int getP()
+    {
+    	return p;
     }
     public int getClusterNumber()
     {
@@ -49,13 +58,14 @@ import java.util.Random;
 		}
  		return tmpls;
 	}
-    public void run(int clusterNumber, ArrayList<ArrayList<Integer>> data,int idD,float m,double e,int p){
+    public void run(int clusterNumber, ArrayList<ArrayList<Integer>> data,int idD,float m,double e){
         this.clusterCount = clusterNumber;
         this.fuzziness=m;
         this.idDistance=idD;
         this.data = data;
         this.epsilon=e;
         this.dimension=clusterNumber;
+       
         showData();
         float lStartTime = System.nanoTime();
         assignInitialMembership();
@@ -77,14 +87,10 @@ import java.util.Random;
        float output = lEndTime - lStartTime;
 
         System.out.println("Clustering time in milliseconds: " + output / 1000000f);
-      /*  System.out.println("BPC  "+ValidationIndices.bezdekPartitionCoefficient(u));
-        System.out.println("XB  "+ValidationIndices.compactnessAndSeparationMetric(data, u, clusterCenters, fuzziness));
-        System.out.println("PE    "+ValidationIndices.partitionEntropyIndex(u));
-        System.out.println("ITER    "+iter);*/
-        //showU ();
-        getAvatarCluster(p);
+    
+        getAvatarCluster(this.p);
         frequency();
-        //showAvatars();
+    
         
     }
     public void showData ()

@@ -11,7 +11,6 @@ import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.query.QueryFactory;
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.ResultSet;
-import org.apache.jena.query.ResultSetFormatter;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 
@@ -28,7 +27,7 @@ public class KnowledgeManagement implements IExtract{
 		this.modelData = ModelFactory.createDefaultModel();
         this.modelData.read(this.urlKB);
         this.kb=ModelFactory.createDefaultModel();
-        this.kb.read("src/main/resources/OntologyFiles/KB.owl");
+        this.kb.read("KB.owl");
         
 	}
 	
@@ -46,8 +45,7 @@ public class KnowledgeManagement implements IExtract{
 	    	    Query query = QueryFactory.create(queryString);
 	    	    QueryExecution qe = QueryExecutionFactory.create(query, modelData);
 	    	    ResultSet results =  qe.execSelect();
-	    	    //ResultSetFormatter.out(System.out, results);
-	    	    while(results.hasNext()){ 
+ 	    	    while(results.hasNext()){ 
 	    	    	QuerySolution binding = results.nextSolution(); 
 	    	    	nameTmp= binding.get("avatar").toString().split("#")[1];
 	    	    }
@@ -66,12 +64,10 @@ public class KnowledgeManagement implements IExtract{
 	    	    Query query = QueryFactory.create(queryString);
 	    	    QueryExecution qe = QueryExecutionFactory.create(query, modelData);
 	    	    ResultSet results =  qe.execSelect();
-	    	    //ResultSetFormatter.out(System.out, results);
-	    	    while(results.hasNext()){ 
+ 	    	    while(results.hasNext()){ 
 	    	    	QuerySolution binding = results.nextSolution(); 
 	    	    	ownerTmp=binding.get("owner").toString();
-	    			//System.out.println("[EXTRACTOWNER] "+name+": "+owner) ;		
-	    	    }
+ 	    	    }
 	    	    return ownerTmp;
 	}
 	
@@ -89,12 +85,10 @@ public class KnowledgeManagement implements IExtract{
 	    	    Query query = QueryFactory.create(queryString);
 	    	    QueryExecution qe = QueryExecutionFactory.create(query, modelData);
 	    	    ResultSet results =  qe.execSelect();
-	    	    //ResultSetFormatter.out(System.out, results);
-	    	    while(results.hasNext()){ 
+ 	    	    while(results.hasNext()){ 
 	    	    	QuerySolution binding = results.nextSolution(); 
 	    	    	latitudeTmp = Double.parseDouble(binding.get("location").toString().split("/")[0]);
- 	    	    	//System.out.println("[EXTRACTLOC] "+name+": "+latitude+"/"+longitude) ;		
-	    	    }
+ 	    	    }
 	    	    return latitudeTmp;
 	}
 	public double ExtractLongitude(){ 
@@ -110,16 +104,13 @@ public class KnowledgeManagement implements IExtract{
 	    	    Query query = QueryFactory.create(queryString);
 	    	    QueryExecution qe = QueryExecutionFactory.create(query, modelData);
 	    	    ResultSet results =  qe.execSelect();
-	    	    //ResultSetFormatter.out(System.out, results);
-	    	    while(results.hasNext()){ 
+ 	    	    while(results.hasNext()){ 
 	    	    	QuerySolution binding = results.nextSolution(); 
 	    	    	longitudeTmp=Double.parseDouble(binding.get("location").toString().split("/")[1]);
- 	    	    	//System.out.println("[EXTRACTLOC] "+name+": "+latitude+"/"+longitude) ;		
-	    	    }
+ 	    	    }
 	    	    return longitudeTmp;
 	}
-	//Get all its interests from the semantic data
-		public Map<String,Double> ExtractInterests(){ 
+ 		public Map<String,Double> ExtractInterests(){ 
 			Map<String,Double> interestsVector=new HashMap<String, Double>();
 			String queryString = 
 		    		"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>"+
@@ -133,8 +124,7 @@ public class KnowledgeManagement implements IExtract{
 				    Query query = QueryFactory.create(queryString);
 				    QueryExecution qe = QueryExecutionFactory.create(query, modelData);
 				    ResultSet results =  qe.execSelect();
-				    //ResultSetFormatter.out(System.out, results);
-				    String name2 = null;
+ 				    String name2 = null;
 				    
 				    //For each Interest
 				    while(results.hasNext()){ 
@@ -162,8 +152,7 @@ public class KnowledgeManagement implements IExtract{
 		    	    Query query = QueryFactory.create(queryString);
 		    	    QueryExecution qe = QueryExecutionFactory.create(query, modelData);
 		    	    ResultSet results =  qe.execSelect();
-		    	    //ResultSetFormatter.out(System.out, results);
-		    	    String name = "test";
+ 		    	    String name = "test";
 		    	    
 		    	    //For each goal
 		    	    while(results.hasNext()){ 
@@ -256,12 +245,15 @@ public class KnowledgeManagement implements IExtract{
 		    	    	name2=binding.get("interest").toString();	
 		    	    	//System.out.println("[EXTRACTINTERESTTASK: ]"+name+": "+task+" has the interest: "+name2);
 		    	    	//We add this interest to the InterestsTasks List if it's not already in 
+		    	    	if (!IsGroupedTask(task))
+		    	    	{
 		    	    	System.out.println ("IsAble :"+IsAbleTask(task));
 		    	    	if(!FunctionsAble.contains(name2) && IsAbleTask(task)){
 		    	    		FunctionsAble.add(name2);
 		    	    	}
 		    	    	if(!FunctionsNotAble.contains(name2) && !IsAbleTask(task)){
 		    	    		FunctionsNotAble.add(name2);
+		    	    	}
 		    	    	}
 		    	    }
 		    return name2;
@@ -365,7 +357,9 @@ public class KnowledgeManagement implements IExtract{
 			   				 //System.out.println(name2+" :Composed");		
 				    	     Task newTask = new Task(name2,true,IsAbleTask(name2),interest,label);
 			   				 ExtractGroupedTask(newTask, FunctionsAbleList,FunctionsNotAbleList);
-					    	 goal.addTask(newTask);  
+			   				 for (int i=0;i<newTask.getTasksList().size();i++) goal.addTask(newTask.getTasksList().get(i));  
+			   					 
+					    	 
 			   			 }
 			    	    else{
 			   				 //System.out.println(name2+" :Not Composed");	    	    	

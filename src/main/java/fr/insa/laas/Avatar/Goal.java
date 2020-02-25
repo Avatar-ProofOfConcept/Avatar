@@ -5,15 +5,13 @@ import java.util.ArrayList;
  
 
 public class Goal {
-	//Attributs
-		private String name;
+ 		private String name;
 		private boolean achieved = false;	
 		private ArrayList <Task> tasksList = new ArrayList <Task>();
 		public ArrayList <String>InterestNotAble = new ArrayList <String>();		
 
 
-		//Constructor
-		public Goal(String name){
+ 		public Goal(String name){
 			this.name=name;
 		}
 
@@ -23,8 +21,7 @@ public class Goal {
 			tasksList.add(newTask);
 		}
 		
-		//Getters & Setters
-		public String getName(){
+ 		public String getName(){
 			return name;
 		}
 		
