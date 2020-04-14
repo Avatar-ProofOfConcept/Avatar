@@ -28,6 +28,7 @@ public class CommunicationManagement {
  	ClientInterface client=new Client();
   	private SocialNetwork socialNetwork ;
   	private HashMap<String,ArrayList<String>> propositions ;
+  	private ArrayList<String>listeMemberSelection=new ArrayList<String>();
 
 	
 	public CommunicationManagement (int port,IExtract kb,MetaAvatar m)
@@ -35,8 +36,8 @@ public class CommunicationManagement {
 	  this.kb=kb;
 	  this.metaavatar=m;
 	  this.socialNetwork=new SocialNetwork(m);
-	  SocialNetwork.setParameters(0.2f, 0.2f,0.6f);
-	  SocialNetwork.setSize(20);
+	  SocialNetwork.setParameters(0.4f, 0.4f,0.2f);
+	  SocialNetwork.setSize(40);
 	  this.propositions=new HashMap<String, ArrayList<String>>() ;
 	  this.friendFromRepo=kb.ExtractMetaAvatars(m.getInterestsVector().keySet(),m.getName());
 
@@ -435,5 +436,170 @@ public class CommunicationManagement {
 		        return ttl;
 				
 			}
+			/****************************Selection*******************************/
+			public String sendMembersSelection(String urlDelegue,ArrayList<String> clustermembers,int d) throws IOException
+			{
+				String message=new String();
+				message=u.addXmlElement(message,"membersNumber",String.valueOf(clustermembers.size()));
+				message=u.addXmlElement(message,"level",String.valueOf(d));
+
+ 
+
+				for(int i=0;i<clustermembers.size();i++)
+				{
+				message=u.addXmlElement(message,"avatar"+i,clustermembers.get(i));
+				}
+				 
+				Response response2 = client.request(urlDelegue+"receiveMembersSelection/", ORIGINATOR, message);
+				System.out.println("AVATAR: HTTP RESPONSE :"+ response2.getRepresentation());	
+				
+				return response2.getRepresentation();
+ 
+
+			}
+			
+			public String getMemberListSelection(String response)
+			{
+				 
+		    	int nbMembers=Integer.parseInt(u.getXmlElement(response, "membersNumber"));
+		    	int d=Integer.parseInt(u.getXmlElement(response, "level"));			
+                listeMemberSelection.clear();
+		    	System.out.println("number of Cluster members "+nbMembers);
+		    	for (int i=0;i<nbMembers;i++)
+		    	{
+		    		listeMemberSelection.add(u.getXmlElement(response, "avatar"+i));
+		    	}
+		    
+		    	System.out.println("Liste cluster member= "+this.listeMemberSelection.toString());
+		    	//resup de repo : construire une liste de cluster memeberQoS
+		    	//construire un cluster
+		    	
+		    	double [] qos5={ 82.01032,
+						0.11535,0.23347,
+						 1177.57631
+						 };
+				double []histT={ 646.45092,
+						  527.73580,
+						  498.19995,
+						  66.92103,
+						  928.72121
+						 };
+				double []histD={0.15851,
+						 0.10799,
+						 0.82196,
+						 0.19954,
+						 0.69532
+						 };
+				double []histR={
+						 0.45472,
+						 0.30162,
+						 0.65701,
+						 0.00646,
+						 0.67320
+
+				};
+				ClusterMemberQoS a5=new ClusterMemberQoS(qos5,histD,histT,histR);
+				double [] qos7={106.76806  ,
+						0.51119, 0.91815,
+						 698.33104
+						};
+				
+				
+				double []histT1={ 746.45092,
+						  527.73580,
+						  328.19995,
+						  68.92103,
+						  128.72121
+						 };
+				double []histD1={0.15851,
+						 0.10799,
+						 0.82196,
+						 0.49954,
+						 0.9532
+						 };
+				double []histR1={
+						 0.3547,
+						 0.38162,
+						 0.65701,
+						 0.10646,
+						 0.77320
+
+				};
+				ClusterMemberQoS a7=new ClusterMemberQoS(qos7,histD1,histT1,histR1);
+				double [] qos1={ 108.22717,0.71044,
+						 0.65604,
+						 1228.66591
+						};
+				ClusterMemberQoS a1=new ClusterMemberQoS(qos1,histD,histT,histR);
+				
+				double [] qos10={82.88946,0.33892,
+						 0.51071,
+						 1186.29805
+						};
+				ClusterMemberQoS a10=new ClusterMemberQoS(qos10,histD,histT,histR);
+				
+				double [] qos4={ 85.03852, 0.50077,0.66878,
+						 725.77046
+						 };
+				ClusterMemberQoS a4=new ClusterMemberQoS(qos4,histD,histT,histR);
+				
+				double [] qos6={16.85412,0.23927, 0.70881,
+						 717.45341
+						};
+				ClusterMemberQoS a6=new ClusterMemberQoS(qos6,histD,histT,histR);
+				
+				double [] qos8={ 110.16563,0.81851,0.57681,
+						 
+						 1496.13120
+						 };
+				ClusterMemberQoS a8=new ClusterMemberQoS(qos8,histD,histT,histR);
+				ArrayList<ClusterMemberQoS>a=new ArrayList<ClusterMemberQoS>();
+				a.add(a5);
+				a.add(a7);
+				a.add(a1);
+				a.add(a10);
+				a.add(a4);
+				a.add(a6);
+				a.add(a8);
+				
+				double [] w={0.4,0.3,0.2,0.1};
+				ClusterQoS c=new ClusterQoS(a,w);
+				c.getQualitLevel(4);
+				
+				double [][] utiliteToSend=new double [4][d];
+				double [][] FluctToSend=new double [4][d];
+				
+				String message=new String();
+
+				double []tab=new double[d];
+				for(int i=0; i<4;i++)
+				{
+					tab=c.getLevelTab(i);
+					for(int j=0;j<d;j++)
+					{
+						utiliteToSend[i][j]=new QualityLevel(c,i,tab[j]).p();
+						FluctToSend[i][j]=new QualityLevel(c,i,tab[j]).f();
+						System.out.println("**"+tab[j]);
+						System.out.println("utili "+i+j+"="+utiliteToSend[i][j]);
+						System.out.println("fluc "+i+j+"="+FluctToSend[i][j]);
+						message=u.addXmlElement(message,"level"+i+j,String.valueOf(tab[j])+"/"+String.valueOf(utiliteToSend[i][j])+"/"+String.valueOf(FluctToSend[i][j]));
+
+
+
+					}
+				}
+			 
+				 
+				return message;
+		    	
+
+			}
+			public void sendDataSelection(String initiator,ArrayList<String> clustermembers) throws IOException
+			{
+					
+ 
+
+			}
+			
 
 }

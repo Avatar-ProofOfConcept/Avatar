@@ -58,14 +58,37 @@ import java.util.Random;
 		}
  		return tmpls;
 	}
+    public void initData (int numberOfData,int dimension)
+    {
+        this.dimension=dimension;
+         
+        System.out.println("Data matrix");
+
+    	for(int i=0;i<numberOfData;i++)
+    	{
+            ArrayList<Integer> tmp = new ArrayList<>();
+            Random random = new Random();
+
+            
+    		for(int k=0;k<dimension;k++)
+    		{
+    			tmp.add(random.nextInt(2));
+    			System.out.print(tmp.get(k)+" ");
+
+    		}
+    		System.out.println();
+    		this.data.add(tmp);
+    	}
+    	
+    }
     public void run(int clusterNumber, ArrayList<ArrayList<Integer>> data,int idD,float m,double e){
         this.clusterCount = clusterNumber;
         this.fuzziness=m;
         this.idDistance=idD;
-        this.data = data;
+        //this.data = data;
         this.epsilon=e;
         this.dimension=clusterNumber;
-       
+        initData(data.size(), data.get(0).size());
         showData();
         float lStartTime = System.nanoTime();
         assignInitialMembership();

@@ -2,6 +2,7 @@ package fr.insa.laas.Avatar;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Scanner;
  
@@ -27,6 +28,7 @@ public class Avatar {
   	private MetaAvatar metaAvatar = null ; 		 
     private String URL;
   	private FuzzyClustering cmean ;
+  	private SelectionManager sm=new SelectionManager();
     
    
 	public Avatar(int port) {
@@ -52,10 +54,10 @@ public class Avatar {
         this.servicesList=kb.ExtractServices(this.name);
  		long elapsedTime = System.nanoTime() - startTime;
  		//kb.ExtractMetaAvatars(this.interestsVector.keySet());
- 		System.out.println("--------------------------- [NAME : "+name+" URL : "+URL+" OWNER : "+owner+"] -------------------------------");
-		System.out.println("--------------------------- [LATITUDE : "+latitude+" LONGITUDE : "+longitude+"] -------------------------------");
+ 		//System.out.println("--------------------------- [NAME : "+name+" URL : "+URL+" OWNER : "+owner+"] -------------------------------");
+		//System.out.println("--------------------------- [LATITUDE : "+latitude+" LONGITUDE : "+longitude+"] -------------------------------");
 		 
-         System.out.println("Total execution time For semantic Extraction in millis: "+ elapsedTime/1000000f+" ms");
+         //System.out.println("Total execution time For semantic Extraction in millis: "+ elapsedTime/1000000f+" ms");
         
  		cm=new CommunicationManagement(port,this.kb,new MetaAvatar(name, owner, latitude, longitude, interestsVector,FunctionTasksListAble,FunctionTasksListNotAble,2,URL));
 
@@ -65,7 +67,11 @@ public class Avatar {
 		if (port==3001)
 		{
 			System.out.println("--------------------------- [I'm the initiator  ] -------------------------------");
-			System.out.println(" functionnalities to discover "+this.FunctionTasksListNotAble.toString());
+		
+			
+			sm.sendSelectionRequest(this.cm);//level qualité as parameter
+			
+			/*System.out.println(" functionnalities to discover "+this.FunctionTasksListNotAble.toString());
 			 System.out.println("social network size");
 			 Scanner sc= new Scanner(System.in);
 		     String avatar = sc.nextLine();
@@ -86,7 +92,7 @@ public class Avatar {
 			
 			 cm.getSocialNetwork().socialNetworkConstruction(Integer.valueOf(avatar));
 			 elapsedTime = System.nanoTime() - startTime;
-		     System.out.println("Total execution time in millis: "+ elapsedTime/1000000f);
+		     System.out.println("Total execution time in millis: "+ elapsedTime/1000000f);*/
             
 		 
 		}
@@ -265,5 +271,6 @@ public class Avatar {
 	{
 		this.cm.savePropositions(response);
 	}
+
 
 }

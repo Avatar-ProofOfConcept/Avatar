@@ -1,6 +1,7 @@
 package fr.insa.laas.Avatar;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -499,6 +500,41 @@ public class KnowledgeManagement implements IExtract{
 		    	return metaAvatars;    
 		    	   
  		}
-		
+		public ClusterMemberQoS[] getQoSMembers(ArrayList<String> ls)
+		{
+			ClusterMemberQoS[] c=new ClusterMemberQoS[ls.size()];
+			double [] qos7={106.76806  ,
+					0.51119, 0.91815,
+					 698.33104
+					};
+			
+			
+			double []histT={ 646.45092,
+					  527.73580,
+					  498.19995,
+					  66.92103,
+					  928.72121
+					 };
+			double []histD={0.15851,
+					 0.10799,
+					 0.82196,
+					 0.19954,
+					 0.69532
+					 };
+			double []histR={
+					 0.45472,
+					 0.30162,
+					 0.65701,
+					 0.00646,
+					 0.67320
+
+			};
+			for(int i=0;i<ls.size();i++)
+			{
+				c[i]=new ClusterMemberQoS(qos7,histD,histT,histR);
+			}
+			return c;
+			
+		}
 
 }

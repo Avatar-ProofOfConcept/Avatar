@@ -39,6 +39,14 @@ public String getAvatar()
          avatar.getComManager().getMemberList(request);
          return "Cluster Member recieved";
     }
+ 
+	
+	@RequestMapping(value="/receiveMembersSelection/") 
+	public String getClusterMembersSelection(@RequestBody String request) {
+		if(avatar==null) avatar=new Avatar(port);
+         
+         return avatar.getComManager().getMemberListSelection(request);
+    }
 	@RequestMapping(value="/receiveExclus/") 
 	public String getExclus(@RequestBody String request) {
 		if(avatar==null) avatar=new Avatar(port);
