@@ -3,7 +3,6 @@ package fr.insa.laas.Avatar;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 
@@ -146,44 +145,43 @@ public class ClusterQoS {
 	}
 	public void getQualitLevel(int d)
 	{
-		levelCost=new double[d];
-		levelDisp=new double[d];
-		levelRep=new double[d];
 		levelTime=new double[d];
+		levelDisp=new double[d];
+		/*levelRep=new double[d];
+		levelTime=new double[d];*/
 		//fill tabs for sort
 		double[] lt=new double[avatars.size()];
 		double[] ld=new double[avatars.size()];
-		double[] lc=new double[avatars.size()];
-		double[] lr=new double[avatars.size()];
+		/*double[] lc=new double[avatars.size()];
+		double[] lr=new double[avatars.size()];*/
 		for(int i=0;i<avatars.size();i++)
 		{
 			lt[i]=avatars.get(i).getQos()[0];
 			ld[i]=avatars.get(i).getQos()[1];
-			lc[i]=avatars.get(i).getQos()[3];
-			lr[i]=avatars.get(i).getQos()[2];
+			/*lc[i]=avatars.get(i).getQos()[3];
+			lr[i]=avatars.get(i).getQos()[2];*/
 			
 		}
 		Arrays.sort(lt);
 		Arrays.sort(ld);
-		Arrays.sort(lr);
-		Arrays.sort(lc);
+		//Arrays.sort(lr);
+		//Arrays.sort(lc);
 		
 		levelTime[0]=lt[0];
 		levelDisp[0]=ld[0];
-		levelRep[0]=lr[0];
-		levelCost[0]=lc[0];
+		/*levelRep[0]=lr[0];
+		levelCost[0]=lc[0];*/
 		System.out.println("l[0]"+levelTime[0]);
 		System.out.println("l[0]"+levelDisp[0]);
-		System.out.println("l[0]"+levelRep[0]);
-		System.out.println("l[0]"+levelCost[0]);
+		/*System.out.println("l[0]"+levelRep[0]);
+		System.out.println("l[0]"+levelCost[0]);*/
 		levelTime[d-1]=lt[avatars.size()-1];
 		levelDisp[d-1]=ld[avatars.size()-1];
-		levelRep[d-1]=lr[avatars.size()-1];
-		levelCost[d-1]=lc[avatars.size()-1];
+		/*levelRep[d-1]=lr[avatars.size()-1];
+		levelCost[d-1]=lc[avatars.size()-1];*/
 		System.out.println("l["+(d-1)+"]"+levelTime[d-1]);
 		System.out.println("l["+(d-1)+"]"+levelDisp[d-1]);
-		System.out.println("l["+(d-1)+"]"+levelRep[d-1]);
-		System.out.println("l["+(d-1)+"]"+levelCost[d-1]);
+		 
 		
 		ThreadLocalRandom random = ThreadLocalRandom.current();
 		int p=0, index=1,i=1;
@@ -212,7 +210,7 @@ public class ClusterQoS {
 					index++;
 					
 				}
-		//rep
+	/*	//rep
 				System.out.println("rep");
 		 index=1;i=1;p=0;
 			while(index <d-1)
@@ -237,7 +235,7 @@ public class ClusterQoS {
 					System.out.println("l["+index+"]"+levelCost[index]);
 					index++;
 								
-		}
+		}*/
 		 
 	}
 
@@ -277,10 +275,10 @@ public class ClusterQoS {
 		seuilmaxT=avatars.get(0).getQos()[0];
 		seuilminD=avatars.get(0).getQos()[1];
 		seuilmaxD=avatars.get(0).getQos()[1];
-		seuilminR=avatars.get(0).getQos()[2];
+	/*	seuilminR=avatars.get(0).getQos()[2];
 	 	seuilmaxR=avatars.get(0).getQos()[2];
 	 	seuilminC=avatars.get(0).getQos()[3];
-	 	seuilmaxC=avatars.get(0).getQos()[3];
+	 	seuilmaxC=avatars.get(0).getQos()[3];*/
 	 	for (int i=0;i<avatars.size();i++)
 	 	{
 	 		if (this.seuilminT>avatars.get(i).getQos()[0]) seuilminT=avatars.get(i).getQos()[0];
@@ -289,11 +287,11 @@ public class ClusterQoS {
 	 		if (this.seuilminD>avatars.get(i).getQos()[1]) seuilminD=avatars.get(i).getQos()[1];
 	 		if (this.seuilmaxD<avatars.get(i).getQos()[1]) seuilmaxD=avatars.get(i).getQos()[1];
 	 		
-	 		if (this.seuilminR>avatars.get(i).getQos()[2]) seuilminR=avatars.get(i).getQos()[2];
+	 		/*if (this.seuilminR>avatars.get(i).getQos()[2]) seuilminR=avatars.get(i).getQos()[2];
 	 		if (this.seuilmaxR<avatars.get(i).getQos()[2]) seuilmaxR=avatars.get(i).getQos()[2];
 	 		
 	 		if (this.seuilminC>avatars.get(i).getQos()[3]) seuilminC=avatars.get(i).getQos()[3];
-	 		if (this.seuilmaxC<avatars.get(i).getQos()[3]) seuilmaxC=avatars.get(i).getQos()[3];
+	 		if (this.seuilmaxC<avatars.get(i).getQos()[3]) seuilmaxC=avatars.get(i).getQos()[3];*/
 		 
 	 	}
 	}
@@ -304,8 +302,8 @@ public class ClusterQoS {
 	    CVmaxT=Util.CV(avatars.get(0),0);
 	    CVminD=Util.CV(avatars.get(0),1);
 	    CVmaxD=Util.CV(avatars.get(0),1);
-	    CVminR=Util.CV(avatars.get(0),2);
-	    CVmaxR=Util.CV(avatars.get(0),2);
+	    /*CVminR=Util.CV(avatars.get(0),2);
+	    CVmaxR=Util.CV(avatars.get(0),2);*/
 	  
 	 	for (int i=0;i<avatars.size();i++)
 	 	{
@@ -315,8 +313,8 @@ public class ClusterQoS {
 	 		if (this.CVminD>Util.CV(avatars.get(i),1)) CVminD=Util.CV(avatars.get(i),1);
 	 		if (this.CVmaxD<Util.CV(avatars.get(i),1)) CVmaxD=Util.CV(avatars.get(i),1);
 	 		
-	 		if (this.CVminR>Util.CV(avatars.get(i),2)) CVminR=Util.CV(avatars.get(i),2);
-	 		if (this.CVmaxR<Util.CV(avatars.get(i),2)) CVmaxR=Util.CV(avatars.get(i),2);
+	 	/*	if (this.CVminR>Util.CV(avatars.get(i),2)) CVminR=Util.CV(avatars.get(i),2);
+	 		if (this.CVmaxR<Util.CV(avatars.get(i),2)) CVmaxR=Util.CV(avatars.get(i),2);*/
 	 	}
 	}
 	public double[] getLevelTab(int index)
@@ -325,11 +323,25 @@ public class ClusterQoS {
 		{
 		case 0: return levelTime;
 		case 1: return levelDisp;
-		case 2: return levelRep;
-		case 3: return levelCost;
+		/*case 2: return levelRep;
+		case 3: return levelCost;*/
 		default :return null;
 		}
 		
+	}
+	public ArrayList<String> getSelectedAvatars(double []cls)
+	{
+		ArrayList<String> selected=new ArrayList<String>();
+		for (int i=0; i< avatars.size();i++)
+		{
+			 
+			if (avatars.get(i).getQos()[0]<=cls[0] && avatars.get(i).getQos()[1]>=cls[1]/* && avatars.get(i).getQos()[2]>=cls[2]&& avatars.get(i).getQos()[3]<= cls[3]*/ )
+			{
+				selected.add(avatars.get(i).getUrl());
+			}
+			 
+		}
+		return selected;
 	}
 
 

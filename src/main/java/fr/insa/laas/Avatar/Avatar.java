@@ -1,4 +1,6 @@
 package fr.insa.laas.Avatar;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,6 +31,7 @@ public class Avatar {
     private String URL;
   	private FuzzyClustering cmean ;
   	private SelectionManager sm=new SelectionManager();
+  	private QoSManager q=new QoSManager();
     
    
 	public Avatar(int port) {
@@ -37,10 +40,10 @@ public class Avatar {
 		System.out.println();
 		System.out.println();
 		System.out.println();
-		System.out.println("--------------------------- [First Step : Semantic Data Extraction ] -------------------------------");
+	 
 
  		this.kb=new KnowledgeManagement("avatars/avatar"+port+".owl");
- 		long startTime = System.nanoTime();
+ 		
 		 
 		
 		this.name=kb.ExtractName();
@@ -52,12 +55,11 @@ public class Avatar {
 		this.interestsVector=kb.ExtractInterests();
  		this.goalList=kb.ExtractGoals(FunctionTasksListAble,FunctionTasksListNotAble);
         this.servicesList=kb.ExtractServices(this.name);
- 		long elapsedTime = System.nanoTime() - startTime;
+ 		
  		//kb.ExtractMetaAvatars(this.interestsVector.keySet());
  		//System.out.println("--------------------------- [NAME : "+name+" URL : "+URL+" OWNER : "+owner+"] -------------------------------");
 		//System.out.println("--------------------------- [LATITUDE : "+latitude+" LONGITUDE : "+longitude+"] -------------------------------");
 		 
-         //System.out.println("Total execution time For semantic Extraction in millis: "+ elapsedTime/1000000f+" ms");
         
  		cm=new CommunicationManagement(port,this.kb,new MetaAvatar(name, owner, latitude, longitude, interestsVector,FunctionTasksListAble,FunctionTasksListNotAble,2,URL));
 
@@ -67,9 +69,14 @@ public class Avatar {
 		if (port==3001)
 		{
 			System.out.println("--------------------------- [I'm the initiator  ] -------------------------------");
-		
-			
-			sm.sendSelectionRequest(this.cm);//level qualité as parameter
+			//this.cm.initCluster(10,port-3002);
+		     
+			//this.cm.sendCalculatedQoS(4, port-3002,10);
+			long startTime = System.nanoTime();
+			 sm.sendSelectionRequest(this.cm,10,5,4);//level qualité as parameter
+			 long elapsedTime = System.nanoTime() - startTime;
+	         System.out.println("Total execution time For service selection in millis: "+elapsedTime/1000000f+ " "+(elapsedTime/1000000f - sm.getMax())+" ms");
+
 			
 			/*System.out.println(" functionnalities to discover "+this.FunctionTasksListNotAble.toString());
 			 System.out.println("social network size");
@@ -101,6 +108,154 @@ public class Avatar {
 		 
 	}
  
+
+
+
+	public Map<String, Double> getInterestsVector() {
+		return interestsVector;
+	}
+
+
+
+
+	public void setInterestsVector(Map<String, Double> interestsVector) {
+		this.interestsVector = interestsVector;
+	}
+
+
+
+
+	public ArrayList<Goal> getGoalList() {
+		return goalList;
+	}
+
+
+
+
+	public void setGoalList(ArrayList<Goal> goalList) {
+		this.goalList = goalList;
+	}
+
+
+
+
+	public CommunicationManagement getCm() {
+		return cm;
+	}
+
+
+
+
+	public void setCm(CommunicationManagement cm) {
+		this.cm = cm;
+	}
+
+
+
+
+	public IExtract getKb() {
+		return kb;
+	}
+
+
+
+
+	public void setKb(IExtract kb) {
+		this.kb = kb;
+	}
+
+
+
+
+	public ArrayList<String> getFunctionTasksListAble() {
+		return FunctionTasksListAble;
+	}
+
+
+
+
+	public void setFunctionTasksListAble(ArrayList<String> functionTasksListAble) {
+		FunctionTasksListAble = functionTasksListAble;
+	}
+
+
+
+
+	public ArrayList<String> getFunctionTasksListNotAble() {
+		return FunctionTasksListNotAble;
+	}
+
+
+
+
+	public void setFunctionTasksListNotAble(
+			ArrayList<String> functionTasksListNotAble) {
+		FunctionTasksListNotAble = functionTasksListNotAble;
+	}
+
+
+
+
+	public String getURL() {
+		return URL;
+	}
+
+
+
+
+	public void setURL(String uRL) {
+		URL = uRL;
+	}
+
+
+
+
+	public FuzzyClustering getCmean() {
+		return cmean;
+	}
+
+
+
+
+	public void setCmean(FuzzyClustering cmean) {
+		this.cmean = cmean;
+	}
+
+
+
+
+	public SelectionManager getSm() {
+		return sm;
+	}
+
+
+
+
+	public void setSm(SelectionManager sm) {
+		this.sm = sm;
+	}
+
+
+
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+
+
+
+	public void setOwner(String owner) {
+		this.owner = owner;
+	}
+
+
+
+
+	public void setServicesList(ArrayList<Service> servicesList) {
+		this.servicesList = servicesList;
+	}
+
 
 
 

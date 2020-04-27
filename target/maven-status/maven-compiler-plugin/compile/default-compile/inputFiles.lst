@@ -11,11 +11,14 @@
 /home/amel/Desktop/Avatar-Based/gitDirectory/Avatar/src/main/java/fr/insa/laas/Avatar/Task.java
 /home/amel/Desktop/Avatar-Based/gitDirectory/Avatar/src/main/java/fr/insa/laas/Avatar/CommunicationManagement.java
 /home/amel/Desktop/Avatar-Based/gitDirectory/Avatar/src/main/java/fr/insa/laas/Avatar/Function.java
+/home/amel/Desktop/Avatar-Based/gitDirectory/Avatar/src/main/java/fr/insa/laas/Avatar/GetThread.java
 /home/amel/Desktop/Avatar-Based/gitDirectory/Avatar/src/main/java/fr/insa/laas/Avatar/Response.java
 /home/amel/Desktop/Avatar-Based/gitDirectory/Avatar/src/main/java/fr/insa/laas/Avatar/SelectionManager.java
+/home/amel/Desktop/Avatar-Based/gitDirectory/Avatar/src/main/java/fr/insa/laas/Avatar/QoSManager.java
 /home/amel/Desktop/Avatar-Based/gitDirectory/Avatar/src/main/java/fr/insa/laas/Avatar/ServiceOperation.java
 /home/amel/Desktop/Avatar-Based/gitDirectory/Avatar/src/main/java/fr/insa/laas/Avatar/QualityLevel.java
 /home/amel/Desktop/Avatar-Based/gitDirectory/Avatar/src/main/java/fr/insa/laas/Avatar/ClientInterface.java
+/home/amel/Desktop/Avatar-Based/gitDirectory/Avatar/src/main/java/fr/insa/laas/Avatar/LevelResponse.java
 /home/amel/Desktop/Avatar-Based/gitDirectory/Avatar/src/main/java/fr/insa/laas/Avatar/Avatar.java
 /home/amel/Desktop/Avatar-Based/gitDirectory/Avatar/src/main/java/fr/insa/laas/Avatar/ClusterQoS.java
 /home/amel/Desktop/Avatar-Based/gitDirectory/Avatar/src/main/java/fr/insa/laas/Avatar/SocialNetworkCalculs.java

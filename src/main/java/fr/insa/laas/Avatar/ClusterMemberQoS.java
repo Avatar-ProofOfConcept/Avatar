@@ -14,6 +14,7 @@ public class ClusterMemberQoS
 	private double CVt;
 	private double CVd;
 	private double CVr;
+	private String Url;
 
 	public double[] getQos() {
 		return qos;
@@ -22,18 +23,26 @@ public class ClusterMemberQoS
 	{
 		this.qos=qos;
 	}
-	public ClusterMemberQoS (double [] qos,double [] histD,double [] histT,double [] histR)
+	public ClusterMemberQoS (double [] qos,double [] histD,double [] histT,String Url)
 	{
 		this.qos=qos;
 		this.histD=histD;
 		this.histR=histR;
+		this.Url=Url;
 		this.histT=histT;
 		this.CVt=Util.CV(this,0);
 		//System.out.println(CVt);
 		this.CVd=Util.CV(this,1);
 		//System.out.println(CVd);
-		this.CVr=Util.CV(this,2);
+		//this.CVr=Util.CV(this,2);
+		//
 		//System.out.println(CVr);
+	}
+	public String getUrl() {
+		return Url;
+	}
+	public void setUrl(String url) {
+		Url = url;
 	}
 	public double getCVt() {
 		return CVt;
@@ -85,8 +94,8 @@ public class ClusterMemberQoS
 			return getHistT();
 		case 1 :
 			return getHistD();
-		case 2 :
-			return getHistR();
+		/*case 2 :
+			return getHistR();*/
 		default :
 			return null;
 		}

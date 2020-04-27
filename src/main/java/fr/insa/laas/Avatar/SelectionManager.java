@@ -11,46 +11,65 @@ import java.util.Map;
 
 
 public class SelectionManager {
-	private int nbCluster=2;
+	private int nbCluster;
 	private int nbAvatars;
-	private int d=3;
+	private int d;
 	private String srlevel;
 	private String sru;
 	private String srf;
+	private double [][] cl;
+	private double [][] qualityLevel;
+	private double [][] utilities;
+	private double [][] fluctuations;
+	private float max;
 	
-	private double [][] qualityLevel=new double[d][4*nbCluster];
-	private double [][] utilities=new double[d][4*nbCluster];
-	private double [][] fluctuations=new double[d][4*nbCluster];
-	
+	public float getMax() {
+		return max;
+	}
+	public void setMax(float max) {
+		this.max = max;
+	}
+
 	private Util u=new Util();
   	private HashMap<String, ArrayList<String>> selectionresult=new HashMap<String, ArrayList<String>>();
 
-	public void sendSelectionRequest(CommunicationManagement cm)
+	public void sendSelectionRequest(CommunicationManagement cm, int nbAvatar, int nbCluster, int d)
 	{
 		//selection Test
+		this.nbCluster=nbCluster;
+		this.d=d;
+	    cl=new double [2][nbCluster];
+		qualityLevel=new double[d][2*nbCluster];
+		utilities=new double[d][2*nbCluster];
+		fluctuations=new double[d][2*nbCluster];
 		ArrayList<String> ls =new ArrayList<String>();
-		ls.add("3003");ls.add("3004");
-		selectionresult.put("http://localhost:3002/", ls);
-		selectionresult.put("http://localhost:3003/", ls);
-		String mssge="";
-        Iterator hmIterator = selectionresult.entrySet().iterator();
-        int k=0;
-        while (hmIterator.hasNext()) { 
-            Map.Entry mapElement = (Map.Entry)hmIterator.next(); 
-            try {
-				mssge=cm.sendMembersSelection((String)mapElement.getKey(),(ArrayList<String>)mapElement.getValue(),d);
-				getDataFromXML(mssge,k);k++;
-				
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-        } 
+		for(int i=0;i<nbAvatar;i++)
+		{
+			ls.add("3003");
+		}
+		for(int i=2;i<nbCluster+2;i++)
+		{
+		selectionresult.put("http://localhost:300"+i+"/", ls);
+		}
+		
 		 
-        toJuliaArray(mssge);
-        executeSelectionSolver();
-	}
+        cm.sendAsynTest(nbCluster,nbAvatar, d,this);
+        launchSelection(cm);
+      
 	
+	}
+	public void launchSelection(CommunicationManagement cm)
+	{
+		toJuliaArray();
+        executeSelectionSolver();
+        try {
+			cm.sendLocalConstraint(selectionresult.keySet(), cl);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
 	public int getNbCluster() {
 		return nbCluster;
 	}
@@ -143,8 +162,9 @@ public class SelectionManager {
 	public void getDataFromXML(String message,int idCluster)
 	{
 		String sr="";
+		 
 	 
-		for(int i=0; i<4;i++)
+		for(int i=0; i<2;i++)
 		{
 			 
 			for(int j=0;j<d;j++)
@@ -160,7 +180,7 @@ public class SelectionManager {
 		}
  
 	}
-	public void toJuliaArray(String message)
+	public void toJuliaArray()
 	{
 		srlevel="";
 		sru="";
@@ -169,31 +189,34 @@ public class SelectionManager {
 		 
 		for (int i=0;i<d;i++)
 		{
-			for (int j=0;j<4*nbCluster;j++)
+			for (int j=0;j<2*nbCluster;j++)
 			{
 				srlevel=srlevel+qualityLevel[i][j]+" ";
 				sru=sru+utilities[i][j]+" ";
 				srf=srf+fluctuations[i][j]+" ";
 			}
+			srlevel = srlevel.substring(0, srlevel.length() - 1);
 			srlevel=srlevel+";";
+			sru = sru.substring(0, sru.length() - 1);
 			sru=sru+";";
+			srf = srf.substring(0, srf.length() - 1);
 			srf=srf+";";
 		}
 		
-		System.out.println("julia tabs");
+		 
 		srlevel = srlevel.substring(0, srlevel.length() - 1);
-		System.out.println("l"+srlevel);
+	 
 		sru = sru.substring(0, sru.length() - 1);
-		System.out.println("u"+sru);
+		 
 		srf = srf.substring(0, srf.length() - 1);
-		System.out.println("f"+srf);
+		 
 		
 	}
 	public void show()
 	{
 		for (int i=0;i<d;i++)
 		{
-			for (int j=0;j<4*nbCluster;j++)
+			for (int j=0;j<2*nbCluster;j++)
 			{
 				System.out.println("quality"+qualityLevel[i][j]);
 				System.out.println("utilities"+utilities[i][j]);
@@ -228,15 +251,47 @@ public class SelectionManager {
 	    				new InputStreamReader(process.getInputStream()));
 
 	    		String line;
+	    		String linesave = null;
+	    		 
 	    		while ((line = reader.readLine()) != null) {
-	    			output.append(line + "\n");
+	    			//output.append(line + "\n");
+	    			linesave=line;
+	    			 
 	    		}
 
 	    		int exitVal = process.waitFor();
 	    		if (exitVal == 0) {
-	    			System.out.println("Success!");
-	    			System.out.println(output);
-	    			//System.exit(0);
+	    			 
+	    			//convert to 2d array
+	    			System.out.println(linesave);
+	    			line=linesave.substring(1,linesave.length()-1);
+	    			//System.out.println(line);
+	    			//System.out.println(line.split(";")[0]);
+	    			String [] arr=line.split(";");
+	    			 
+	    			int j=0,k=0;
+	    			float [][] cl=new float [arr.length][nbCluster*2];
+	     			for(int i=0;i<arr.length;i++)
+	    			{
+	     				String[] arrc=arr[i].split(" ");
+	    				
+	    				while(j<arrc.length)
+	    				{
+	    					if(!arrc[j].isEmpty())
+	    						{
+	    						
+	    						cl[i][k]=Float.valueOf(arrc[j]);
+	    						System.out.print(cl[i][k] +" ");
+	    						k++;
+	    						}
+	    					j++;
+	    				}
+	    				j=0;
+	    				k=0;
+	    				
+	    				System.out.println();
+	    			}
+	     			getLocalConstraint(cl);
 	    		} else {
 	    			//abnormal...
 	    		}
@@ -249,6 +304,36 @@ public class SelectionManager {
 
 	    
 
+	}
+	public void getLocalConstraint(float[][] in)
+	{
+		
+		int k=0;
+		
+	for(int l=0;l<2;l++)
+	{
+		for(int i=0;i<d;i++)
+		{
+			k=0;
+			for(int j=l*nbCluster;j<(l+1)*nbCluster;j++)
+			{
+				
+				if(in[i][j]==1.0f) 
+					{cl[l][k]=qualityLevel[i][j];System.out.println(cl[l][k]);k++;}
+			}
+		}
+	}
+		
+ 
+	}
+
+	public double[][] getCl()
+	{
+		return cl;
+	}
+
+	public void setCl(double[][] cl) {
+		this.cl = cl;
 	}
 
 }

@@ -2,7 +2,6 @@ package fr.insa.laas.Avatar;
 
 import java.io.IOException;
 import java.util.ArrayList;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,15 +15,27 @@ import org.springframework.web.bind.annotation.RestController;
 public class AvatarController implements ErrorController  {
 	Avatar avatar;
 	Util u=new Util();
+	int cpt=0;
 	@Value("${server.port}")
 	private int port;
+ 
 @RequestMapping(value="/init/", method=RequestMethod.GET) 
 public String getAvatar() 
+{
+    	 
+       avatar=new Avatar(port);
+       //avatar.getComManager().initDeleguates(5);
+       return ("fin");
+
+        
+}
+@RequestMapping(value="/initD/") 
+public void getAvatarD() 
 {
     	System.out.println(port);
        avatar=new Avatar(port);
 
-        return "init";
+        
 }
 	@RequestMapping(value="/discover/") 
 	public String discover() {
@@ -41,11 +52,19 @@ public String getAvatar()
     }
  
 	
+	
 	@RequestMapping(value="/receiveMembersSelection/") 
 	public String getClusterMembersSelection(@RequestBody String request) {
 		if(avatar==null) avatar=new Avatar(port);
-         
-         return avatar.getComManager().getMemberListSelection(request);
+        return avatar.getComManager().getMemberListSelection(request);
+    }
+	 
+	@RequestMapping(value="/receiveCL/") 
+	public String getLOcalConstarint(@RequestBody String request) {
+		if(avatar==null) avatar=new Avatar(port);
+         System.out.println(request);
+      
+         return avatar.getComManager().getC().getSelectedAvatars(u.getCls(request)).toString();
     }
 	@RequestMapping(value="/receiveExclus/") 
 	public String getExclus(@RequestBody String request) {

@@ -63,7 +63,7 @@ public class QualityLevel
 					cpt++;
 				}
 				break;
-			case 2://reputation
+			/*case 2://reputation
 				if (c.getAvatars().get(i).getQos()[2]>=valueQoS)
 				{
 					if(c.getUtilities().get(i)> max)max=c.getUtilities().get(i);
@@ -78,7 +78,7 @@ public class QualityLevel
 					if(c.getFluctuations().get(i)<min)min=c.getFluctuations().get(i);
 					cpt++;
 				}
-				break;
+				break;*/
 			
 			
 			}
@@ -95,11 +95,7 @@ public class QualityLevel
 	}
 	public double f()
 	{
-		System.out.println("fluctuation");
-		System.out.println("long"+l);
-		System.out.println("fmin"+fmin);
-		System.out.println("fmin level"+this.c.minFluctuation());
-		System.out.println("cluster size"+this.c.getAvatars().size());
+	
 		return (((double)l/(double)this.c.getAvatars().size())*(this.c.minFluctuation()/fmin));
 	}
 }

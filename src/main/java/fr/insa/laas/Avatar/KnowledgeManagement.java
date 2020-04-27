@@ -500,7 +500,7 @@ public class KnowledgeManagement implements IExtract{
 		    	return metaAvatars;    
 		    	   
  		}
-		public ClusterMemberQoS[] getQoSMembers(ArrayList<String> ls)
+	/*	public ClusterMemberQoS[] getQoSMembers(ArrayList<String> ls)
 		{
 			ClusterMemberQoS[] c=new ClusterMemberQoS[ls.size()];
 			double [] qos7={106.76806  ,
@@ -535,6 +535,6 @@ public class KnowledgeManagement implements IExtract{
 			}
 			return c;
 			
-		}
+		}*/
 
 }
