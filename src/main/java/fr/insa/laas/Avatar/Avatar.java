@@ -32,6 +32,7 @@ public class Avatar {
   	private FuzzyClustering cmean ;
   	private SelectionManager sm=new SelectionManager();
   	private QoSManager q=new QoSManager();
+  
     
    
 	public Avatar(int port) {
@@ -42,7 +43,7 @@ public class Avatar {
 		System.out.println();
 	 
 
- 		this.kb=new KnowledgeManagement("avatars/avatar"+port+".owl");
+ 		/*this.kb=new KnowledgeManagement("avatars/avatar"+port+".owl");
  		
 		 
 		
@@ -60,7 +61,7 @@ public class Avatar {
  		//System.out.println("--------------------------- [NAME : "+name+" URL : "+URL+" OWNER : "+owner+"] -------------------------------");
 		//System.out.println("--------------------------- [LATITUDE : "+latitude+" LONGITUDE : "+longitude+"] -------------------------------");
 		 
-        
+        */
  		cm=new CommunicationManagement(port,this.kb,new MetaAvatar(name, owner, latitude, longitude, interestsVector,FunctionTasksListAble,FunctionTasksListNotAble,2,URL));
 
  		 
@@ -72,10 +73,20 @@ public class Avatar {
 			//this.cm.initCluster(10,port-3002);
 		     
 			//this.cm.sendCalculatedQoS(4, port-3002,10);
-			long startTime = System.nanoTime();
-			 sm.sendSelectionRequest(this.cm,10,5,4);//level qualité as parameter
+			cm.opt=0;
+			 Scanner sc= new Scanner(System.in);
+			 System.out.println("nb clusters");
+		     String nbc = sc.nextLine();
+		     System.out.println("nb Avatars");
+		     String nba = sc.nextLine();
+		     System.out.println("nb levels");
+		     String d = sc.nextLine();
+			 long startTime = System.nanoTime();
+			 sm.centralizeSelection(Integer.valueOf(nbc),Integer.valueOf(nba),Integer.valueOf(d));
+			 //sm.sendSelectionRequest(this.cm,Integer.valueOf(nba),Integer.valueOf(nbc),Integer.valueOf(d));//level qualité as parameter
 			 long elapsedTime = System.nanoTime() - startTime;
-	         System.out.println("Total execution time For service selection in millis: "+elapsedTime/1000000f+ " "+(elapsedTime/1000000f - sm.getMax())+" ms");
+	       //  System.out.println("Total execution time For service selection in millis:  "+(elapsedTime/c - sm.getMax())+" ms");
+	       //  System.out.println("optimalite = "+cm.opt);
 
 			
 			/*System.out.println(" functionnalities to discover "+this.FunctionTasksListNotAble.toString());
@@ -422,6 +433,7 @@ public class Avatar {
 				cm.showPropositions();
 		
 	}
+	
 	public void receivePropo(String response)
 	{
 		this.cm.savePropositions(response);

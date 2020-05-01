@@ -32,6 +32,7 @@ public class SelectionManager {
 
 	private Util u=new Util();
   	private HashMap<String, ArrayList<String>> selectionresult=new HashMap<String, ArrayList<String>>();
+  	private ArrayList<String> list;
 
 	public void sendSelectionRequest(CommunicationManagement cm, int nbAvatar, int nbCluster, int d)
 	{
@@ -42,6 +43,7 @@ public class SelectionManager {
 		qualityLevel=new double[d][2*nbCluster];
 		utilities=new double[d][2*nbCluster];
 		fluctuations=new double[d][2*nbCluster];
+		list=new ArrayList<String>();
 		ArrayList<String> ls =new ArrayList<String>();
 		for(int i=0;i<nbAvatar;i++)
 		{
@@ -50,6 +52,7 @@ public class SelectionManager {
 		for(int i=2;i<nbCluster+2;i++)
 		{
 		selectionresult.put("http://localhost:300"+i+"/", ls);
+		list.add("http://localhost:300"+i+"/");
 		}
 		
 		 
@@ -58,12 +61,46 @@ public class SelectionManager {
       
 	
 	}
+	public void centralizeSelection(int nbc,int nba,int d)
+	{
+		this.nbCluster=nbc;
+		this.d=d;
+	    cl=new double [2][nbCluster];
+		qualityLevel=new double[d][2*nbCluster];
+		utilities=new double[d][2*nbCluster];
+		fluctuations=new double[d][2*nbCluster];
+		ClusterQoS c[]=new ClusterQoS[nbc];
+		double [] w={0.4,0.3};
+		
+		for (int i=0;i<nbc;i++)
+		{
+			c[i]=new ClusterQoS(new QoSManager().fillClusterData(nba, i), w);
+			 
+		}
+		 System.out.println("fin data fill");
+		long startTime = System.nanoTime();
+		for (int i=0;i<nbc;i++)
+		{
+ 			c[i].getQualitLevel(d);
+		}
+		getDataFromTab(c);
+		toJuliaArray();
+        executeSelectionSolver();
+        for (int i=0;i<nbc;i++)
+		{
+        	double []t={cl[0][i],cl[1][i]};
+			System.out.println("optim c"+i+" "+c[i].getSelectedAvatars(t));
+			
+		}
+        long elapsedTime = System.nanoTime() - startTime;
+		 System.out.println("selectionTime "+elapsedTime/1000000f);
+	}
 	public void launchSelection(CommunicationManagement cm)
 	{
 		toJuliaArray();
         executeSelectionSolver();
         try {
-			cm.sendLocalConstraint(selectionresult.keySet(), cl);
+			cm.sendLocalConstraint(list, cl);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -180,6 +217,30 @@ public class SelectionManager {
 		}
  
 	}
+	public void getDataFromTab(ClusterQoS []c)
+	{
+	 
+		double []tab=new double[d];
+		 
+	    for(int k=0;k<c.length;k++)
+	    {
+		for(int i=0; i<2;i++)
+		{
+			tab=c[k].getLevelTab(i);
+			for(int j=0;j<d;j++)
+			{
+				
+				 
+				qualityLevel[j][i*nbCluster+k]=tab[j];
+				utilities[j][i*nbCluster+k]=new QualityLevel(c[k],i,tab[j]).p();
+				fluctuations[j][i*nbCluster+k]=new QualityLevel(c[k],i,tab[j]).f();
+
+
+			}
+		}
+	    }
+ 
+	}
 	public void toJuliaArray()
 	{
 		srlevel="";
@@ -243,7 +304,7 @@ public class SelectionManager {
 
 	    		//Run a bat file
 	    		 
-	    		String[] cmd = { "bash", "-c", "/home/amel/hello.jl \""+srlevel+"\" \""+sru+"\" \""+srf+"\"" };
+	    		String[] cmd = { "bash", "-c", "./hello.jl \""+srlevel+"\" \""+sru+"\" \""+srf+"\"" };
 	    		Process process = Runtime.getRuntime().exec(cmd);
 	    		StringBuilder output = new StringBuilder();
 
@@ -252,20 +313,22 @@ public class SelectionManager {
 
 	    		String line;
 	    		String linesave = null;
-	    		 
+	    		ArrayList<String> tab=new ArrayList<String>();
 	    		while ((line = reader.readLine()) != null) {
 	    			//output.append(line + "\n");
-	    			linesave=line;
+	    			tab.add(line);
 	    			 
 	    		}
-
+	    		
+	    		 
 	    		int exitVal = process.waitFor();
 	    		if (exitVal == 0) {
 	    			 
 	    			//convert to 2d array
+	    			linesave=tab.get(tab.size()/2);
 	    			System.out.println(linesave);
 	    			line=linesave.substring(1,linesave.length()-1);
-	    			//System.out.println(line);
+	    			System.out.println(line);
 	    			//System.out.println(line.split(";")[0]);
 	    			String [] arr=line.split(";");
 	    			 
@@ -310,21 +373,41 @@ public class SelectionManager {
 		
 		int k=0;
 		
-	for(int l=0;l<2;l++)
-	{
+      
 		for(int i=0;i<d;i++)
 		{
-			k=0;
-			for(int j=l*nbCluster;j<(l+1)*nbCluster;j++)
+			 
+			for(int j=0;j<nbCluster;j++)
 			{
 				
 				if(in[i][j]==1.0f) 
-					{cl[l][k]=qualityLevel[i][j];System.out.println(cl[l][k]);k++;}
+					{cl[0][j]=qualityLevel[i][j];System.out.println(cl[0][j]);}
 			}
 		}
-	}
+		
+		for(int i=0;i<d;i++)
+		{
+			 
+			for(int j=nbCluster;j<(2)*nbCluster;j++)
+			{
+				
+				if(in[i][j]==1.0f) 
+					{cl[1][j-nbCluster]=qualityLevel[i][j];System.out.println(cl[1][j-nbCluster]);}
+			}
+		}
+     
+     	showcl();
 		
  
+	}
+	public void showcl()
+	{
+		for(int i=0;i<2;i++)
+		{
+			for(int j=0;j<nbCluster;j++) System.out.print(cl[i][j]+" ");
+			System.out.println();
+				
+		}
 	}
 
 	public double[][] getCl()

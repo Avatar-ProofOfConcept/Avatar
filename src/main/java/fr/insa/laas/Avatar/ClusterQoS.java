@@ -329,19 +329,22 @@ public class ClusterQoS {
 		}
 		
 	}
-	public ArrayList<String> getSelectedAvatars(double []cls)
+	public String getSelectedAvatars(double []cls)
 	{
-		ArrayList<String> selected=new ArrayList<String>();
+		//ArrayList<String> selected=new ArrayList<String>();
+		double opt=0;
 		for (int i=0; i< avatars.size();i++)
 		{
 			 
 			if (avatars.get(i).getQos()[0]<=cls[0] && avatars.get(i).getQos()[1]>=cls[1]/* && avatars.get(i).getQos()[2]>=cls[2]&& avatars.get(i).getQos()[3]<= cls[3]*/ )
 			{
-				selected.add(avatars.get(i).getUrl());
+				//selected.add(avatars.get(i).getUrl());
+				if (opt < (utilities.get(i)-fluctuations.get(i))) opt=utilities.get(i)-fluctuations.get(i);
 			}
 			 
 		}
-		return selected;
+		//selected.add(String.valueOf(opt));
+		return String.valueOf(opt);
 	}
 
 

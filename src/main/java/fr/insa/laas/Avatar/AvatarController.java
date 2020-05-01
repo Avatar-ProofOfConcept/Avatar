@@ -63,7 +63,6 @@ public void getAvatarD()
 	public String getLOcalConstarint(@RequestBody String request) {
 		if(avatar==null) avatar=new Avatar(port);
          System.out.println(request);
-      
          return avatar.getComManager().getC().getSelectedAvatars(u.getCls(request)).toString();
     }
 	@RequestMapping(value="/receiveExclus/") 

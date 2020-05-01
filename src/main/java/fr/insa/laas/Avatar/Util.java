@@ -33,12 +33,12 @@ public class Util {
 				switch(i)
 				{
 				case 0:
-					 System.out.println(" temps  cv "+a.getCVt()+"cvmax= "+c.getCVmaxT()+"cvmin= "+c.getCVminT());
+					// System.out.println(" temps  cv "+a.getCVt()+"cvmax= "+c.getCVmaxT()+"cvmin= "+c.getCVminT());
 					tmp=w[i]*((c.getCVmaxT()-a.getCVt())/(c.getCVmaxT()-c.getCVminT()));
 				break;
 				
 				case 1:
-					System.out.println(" DISPO  cv "+a.getCVt()+"cvmax= "+c.getCVmaxD()+"cvmin= "+c.getCVminD());
+					//System.out.println(" DISPO  cv "+a.getCVt()+"cvmax= "+c.getCVmaxD()+"cvmin= "+c.getCVminD());
 					tmp=w[i]*((c.getCVmaxD()-a.getCVd())/(c.getCVmaxD()-c.getCVminD()));
 			    break;
 			    
@@ -97,12 +97,12 @@ public class Util {
 			switch(i)
 			{
 			case 0:
-				System.out.println("maxt= "+c.getSeuilmaxT()+" mint= "+c.getSeuilminT());
+				//System.out.println("maxt= "+c.getSeuilmaxT()+" mint= "+c.getSeuilminT());
 				tmp=w[i]*((c.getSeuilmaxT()-a.getQos()[i])/(c.getSeuilmaxT()-c.getSeuilminT()));
 			break;
 			
 			case 1: 
-				System.out.println("maxt= "+c.getSeuilmaxD()+" mint= "+c.getSeuilminD());
+				//System.out.println("maxt= "+c.getSeuilmaxD()+" mint= "+c.getSeuilminD());
 
 				tmp=w[i]*((a.getQos()[i]-c.getSeuilminD())/(c.getSeuilmaxD()-c.getSeuilminD()));
 		    break;
@@ -124,7 +124,7 @@ public class Util {
 		  u=u+tmp;
 			 
 		}
-	 System.out.println("U(a7)= "+u);
+	// System.out.println("U(a7)= "+u);
 		
 		return u;
 	}
@@ -134,6 +134,7 @@ public class Util {
 	 for (int i=0;i<2;i++)
 	 {
 		 cl[i]=Double.parseDouble(getXmlElement(request, "cl"+i));
+		 System.out.println(" cl "+i+" "+cl[i]);
 	 }
 	 return cl;
 	 

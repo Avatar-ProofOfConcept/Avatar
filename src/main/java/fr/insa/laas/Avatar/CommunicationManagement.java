@@ -32,6 +32,7 @@ public class CommunicationManagement {
   	private ArrayList<String>listeMemberSelection=new ArrayList<String>();
   	private ClusterQoS c;
   	private QoSManager q=new QoSManager();
+	double opt=0;
   	
 	
 	public ClusterQoS getC() {
@@ -50,7 +51,7 @@ public class CommunicationManagement {
 	  SocialNetwork.setParameters(0.4f, 0.4f,0.2f);
 	  SocialNetwork.setSize(40);
 	  this.propositions=new HashMap<String, ArrayList<String>>() ;
-	  this.friendFromRepo=kb.ExtractMetaAvatars(m.getInterestsVector().keySet(),m.getName());
+	  //this.friendFromRepo=kb.ExtractMetaAvatars(m.getInterestsVector().keySet(),m.getName());
 
 
 	}
@@ -616,21 +617,24 @@ public class CommunicationManagement {
 				System.out.println("AVATAR: HTTP RESPONSE :"+ response2.getRepresentation());	
 				
 			}
-			public void sendLocalConstraint(Set<String> urlDelegue,double [][] cl) throws IOException
+			public void sendLocalConstraint(ArrayList<String> urlDelegue,double [][] cl) throws IOException
 			{
 				String message=new String();
-				Iterator<String> it = urlDelegue.iterator();
-				int k=0;
-			     while(it.hasNext())
+				 
+			     for(int k=0;k<urlDelegue.size();k++)
 			     {
 			    	 
 			    	 for(int i=0;i<2;i++)
 						{
 				    	 message=u.addXmlElement(message,"cl"+i,String.valueOf(cl[i][k]));
+				    	 
 
 						}
-			    	 k++;
-			    		Response response2 = client.request(it.next()+"receiveCL/", ORIGINATOR, message);
+			    	 
+			    	  
+			     
+			    		Response response2 = client.request(urlDelegue.get(k)+"receiveCL/", ORIGINATOR, message);
+			    		opt=opt+Double.valueOf(response2.getRepresentation());
 						System.out.println("AVATAR: HTTP RESPONSE :"+ response2.getRepresentation());	
 						message=new String();
 			     }
