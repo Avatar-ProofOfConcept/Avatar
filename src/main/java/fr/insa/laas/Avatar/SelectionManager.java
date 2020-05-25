@@ -8,6 +8,21 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import jmetal.CMOEAs.Utils;
+import jmetal.core.Algorithm;
+import jmetal.core.Operator;
+import jmetal.core.Problem;
+import jmetal.core.Solution;
+import jmetal.core.SolutionSet;
+import jmetal.encodings.variable.ArrayInt;
+import jmetal.operators.crossover.CrossoverFactory;
+import jmetal.operators.mutation.MutationFactory;
+import jmetal.operators.selection.SelectionFactory;
+import jmetal.problems.Exemple;
+import jmetal.qualityIndicator.QualityIndicator;
+import jmetal.util.FileUtils;
+import jmetal.util.NonDominatedSolutionList;
+
 
 
 public class SelectionManager {
@@ -21,7 +36,12 @@ public class SelectionManager {
 	private double [][] qualityLevel;
 	private double [][] utilities;
 	private double [][] fluctuations;
+	///solver
+	private double [][] qualityLevelS;
+	private double [][] utilitiesS;
+	private double [][] fluctuationsS;
 	private float max;
+	private SolutionSet sl= new NonDominatedSolutionList();
 	
 	public float getMax() {
 		return max;
@@ -43,6 +63,10 @@ public class SelectionManager {
 		qualityLevel=new double[d][2*nbCluster];
 		utilities=new double[d][2*nbCluster];
 		fluctuations=new double[d][2*nbCluster];
+		
+		qualityLevelS=new double[d][2*nbCluster];
+		utilitiesS=new double[d][2*nbCluster];
+		fluctuationsS=new double[d][2*nbCluster];
 		list=new ArrayList<String>();
 		ArrayList<String> ls =new ArrayList<String>();
 		for(int i=0;i<nbAvatar;i++)
@@ -72,18 +96,16 @@ public class SelectionManager {
 		ClusterQoS c[]=new ClusterQoS[nbc];
 		double [] w={0.4,0.3};
 		
-		for (int i=0;i<nbc;i++)
-		{
-			c[i]=new ClusterQoS(new QoSManager().fillClusterData(nba, i), w);
+	 
+			c[0]=new ClusterQoS(new QoSManager().fillClusterData(nba, 0), w);
 			 
-		}
+	 
 		 System.out.println("fin data fill");
 		long startTime = System.nanoTime();
-		for (int i=0;i<nbc;i++)
-		{
- 			c[i].getQualitLevel(d);
-		}
-		getDataFromTab(c);
+		 
+ 			c[0].getQualitLevel(d);
+		 
+		/*getDataFromTab(c);
 		toJuliaArray();
         executeSelectionSolver();
         for (int i=0;i<nbc;i++)
@@ -91,21 +113,34 @@ public class SelectionManager {
         	double []t={cl[0][i],cl[1][i]};
 			System.out.println("optim c"+i+" "+c[i].getSelectedAvatars(t));
 			
-		}
+		}*/
         long elapsedTime = System.nanoTime() - startTime;
-		 System.out.println("selectionTime "+elapsedTime/1000000f);
+		System.out.println("selectionTime "+elapsedTime/1000000f);
 	}
 	public void launchSelection(CommunicationManagement cm)
 	{
 		toJuliaArray();
-        executeSelectionSolver();
-        try {
+		executeSelectionSolver();
+	
+       try {
 			cm.sendLocalConstraint(list, cl);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+   	cl=new double [2][nbCluster];
+   	Double opt=cm.opt;
+   	cm.opt=0;
+    executeGenetic(100000, 0.0001);
+    try {
+		cm.sendLocalConstraint(list, cl);
+	} catch (IOException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+    System.out.println("optimalite exacte = "+opt);
+    System.out.println("optimalite genetic = "+cm.opt);
+    System.out.println("optimalite = "+cm.opt/opt);
 	}
 	public int getNbCluster() {
 		return nbCluster;
@@ -208,9 +243,30 @@ public class SelectionManager {
 			{
 				
 				sr=u.getXmlElement(message,"level"+i+j);
-				qualityLevel[j][i*nbCluster+idCluster]=Double.parseDouble(sr.split("/")[0]);
-				utilities[j][i*nbCluster+idCluster]=Double.parseDouble(sr.split("/")[1]);
-				fluctuations[j][i*nbCluster+idCluster]=Double.parseDouble(sr.split("/")[2]);
+				qualityLevelS[j][i*nbCluster+idCluster]=Double.parseDouble(sr.split("/")[0]);
+				utilitiesS[j][i*nbCluster+idCluster]=Double.parseDouble(sr.split("/")[1]);
+				fluctuationsS[j][i*nbCluster+idCluster]=Double.parseDouble(sr.split("/")[2]);
+
+
+			}
+		}
+ 
+	}
+	public void getDataFromXMLGenetic(String message,int idCluster)
+	{
+		String sr="";
+		 
+	 
+		for(int i=0; i<2;i++)
+		{
+			 
+			for(int j=0;j<d;j++)
+			{
+				
+				sr=u.getXmlElement(message,"level"+i+j);
+				qualityLevel[j][2*idCluster+i]=Double.parseDouble(sr.split("/")[0]);
+				utilities[j][2*idCluster+i]=Double.parseDouble(sr.split("/")[1]);
+				fluctuations[j][2*idCluster+i]=Double.parseDouble(sr.split("/")[2]);
 
 
 			}
@@ -287,7 +343,8 @@ public class SelectionManager {
 	}
 	public void executeSelectionSolver()
 	{
-		 try {
+		
+ 		 try {
 
 	    		// -- Linux --
 	    		
@@ -303,11 +360,15 @@ public class SelectionManager {
 	    		//Process process = Runtime.getRuntime().exec("cmd /c dir C:\\Users\\mkyong");
 
 	    		//Run a bat file
-	    		 
+			  
+			  
 	    		String[] cmd = { "bash", "-c", "./hello.jl \""+srlevel+"\" \""+sru+"\" \""+srf+"\"" };
+	    		long initTime = System.currentTimeMillis();
+               
 	    		Process process = Runtime.getRuntime().exec(cmd);
-	    		StringBuilder output = new StringBuilder();
-
+	    		  
+	       
+ 	    		 
 	    		BufferedReader reader = new BufferedReader(
 	    				new InputStreamReader(process.getInputStream()));
 
@@ -317,19 +378,29 @@ public class SelectionManager {
 	    		while ((line = reader.readLine()) != null) {
 	    			//output.append(line + "\n");
 	    			tab.add(line);
+	    			//System.out.println("line "+line);
 	    			 
 	    		}
 	    		
 	    		 
 	    		int exitVal = process.waitFor();
 	    		if (exitVal == 0) {
-	    			 
-	    			//convert to 2d array
-	    			linesave=tab.get(tab.size()/2);
-	    			System.out.println(linesave);
-	    			line=linesave.substring(1,linesave.length()-1);
-	    			System.out.println(line);
-	    			//System.out.println(line.split(";")[0]);
+	    			/*Solution s;
+	    			
+	    			for(int i=0;i<tab.size();i++)
+	    			{
+	 	    			line=tab.get(i).substring(1,tab.get(i).length()-1);
+	 	    			s=new Solution(2);
+	 	    			s.setObjective(0, Double.valueOf(line.split(", ")[0]));
+	 	    			s.setObjective(1, Double.valueOf(line.split(", ")[1]));
+	 	    			//sl.add(s);
+ 	 	    		
+	    				
+	    			}*/
+ 	    			//convert to 2d array
+ 	    			linesave=tab.get(tab.size()/2);
+ 	    			line=linesave.substring(1,linesave.length()-1);
+ 	    			System.out.println(line.split(";")[0]);
 	    			String [] arr=line.split(";");
 	    			 
 	    			int j=0,k=0;
@@ -354,6 +425,9 @@ public class SelectionManager {
 	    				
 	    				System.out.println();
 	    			}
+	     			 long estimatedTime = System.currentTimeMillis() - initTime;
+	 	            
+	 	            System.out.println("exact execution time"+estimatedTime);
 	     			getLocalConstraint(cl);
 	    		} else {
 	    			//abnormal...
@@ -370,10 +444,7 @@ public class SelectionManager {
 	}
 	public void getLocalConstraint(float[][] in)
 	{
-		
-		int k=0;
-		
-      
+ 
 		for(int i=0;i<d;i++)
 		{
 			 
@@ -404,7 +475,7 @@ public class SelectionManager {
 	{
 		for(int i=0;i<2;i++)
 		{
-			for(int j=0;j<nbCluster;j++) System.out.print(cl[i][j]+" ");
+			for(int j=0;j<2;j++) System.out.print(cl[i][j]+" ");
 			System.out.println();
 				
 		}
@@ -418,5 +489,132 @@ public class SelectionManager {
 	public void setCl(double[][] cl) {
 		this.cl = cl;
 	}
+	public void executeGenetic(double ctm , double ctr)
+	{
+		int crossoverMethod = 1;  // 0 represents for DE, 1 represents for SBX
+        //batchRun(new String[]{"MOEAD_IEpsilon","MOEAD_Epsilon","MOEAD_SR","MOEAD_CDP","C_MOEAD"},crossoverMethod);
+
+        try {
+ 			singleRun("MOEAD_IEpsilon",crossoverMethod, ctm, ctr); 
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+
+	    private  void singleRun(String algorithmName, int crossMethod,double ctm , double ctr) throws Exception {
+	        Problem problem;                // The problem to solve
+	        Algorithm algorithm;            // The algorithm to use
+	        Operator crossover;            // Crossover operator
+	        Operator mutation;             // Mutation operator
+	        Operator selection;            // Selection operator
+	        HashMap parameters;           // Operator parameters
+
+	/////////////////////////////////////////// parameter setting //////////////////////////////////
+
+	        int popSize = 300;
+	        int neighborSize = (int) (0.1 * popSize);
+	        int maxFES = 3000;
+	        int updateNumber = 2;
+	        double deDelta = 0.9;
+	        double DeCrossRate = 1.0;
+	        double DeFactor = 0.5;
+
+	        double tao = 0.1;
+	        double alpha = 0.9;
+
+	        String AlgorithmName = algorithmName;
+
+
+	        String mainPath = System.getProperty("user.dir");
+	        String weightPath = mainPath + "/weight";
+	        int runtime = 1;
+	        Boolean isDisplay = false;
+	        int plotFlag = 0; // 0 for the working population; 1 for the external archive
+
+
+	        // MOEAD_SR parameters
+	        double srFactor = 0.05;
+
+
+  
+
+
+
+	//////////////////////////////////////// End parameter setting //////////////////////////////////
+	        
+	    
+	            problem = new Exemple(nbCluster,ctm,ctr,qualityLevel, utilities,  fluctuations,d);
+	            Object[] algorithmParams = {problem};
+	            algorithm = (new Utils()).getAlgorithm(AlgorithmName, algorithmParams);
+
+	            //define pareto file path
+	            String paretoPath = mainPath + "/pf_data/Exemple.pf";
+	            // Algorithm parameters
+	            algorithm.setInputParameter("AlgorithmName", AlgorithmName);
+	            algorithm.setInputParameter("populationSize", popSize);
+	            algorithm.setInputParameter("maxEvaluations", maxFES);
+	            algorithm.setInputParameter("dataDirectory", weightPath);
+	            algorithm.setInputParameter("T", neighborSize);
+	            algorithm.setInputParameter("delta", deDelta);
+	            algorithm.setInputParameter("nr", updateNumber);
+	            algorithm.setInputParameter("isDisplay", isDisplay);
+	            algorithm.setInputParameter("plotFlag", plotFlag);
+	            algorithm.setInputParameter("paretoPath", paretoPath);
+	            algorithm.setInputParameter("srFactor", srFactor);
+	            algorithm.setInputParameter("tao", tao);
+	            algorithm.setInputParameter("alpha", alpha);
+	            algorithm.setInputParameter("pr", 0.8);
+
+	            // Crossover operator
+	            if (crossMethod == 0)
+	            {                      // DE operator
+	                parameters = new HashMap();
+	                parameters.put("CR", DeCrossRate);
+	                parameters.put("F", DeFactor);
+	                crossover = CrossoverFactory.getCrossoverOperator(
+	                        "DifferentialEvolutionCrossover", parameters);
+	                algorithm.addOperator("crossover", crossover);
+	            }
+	            else if (crossMethod == 1) {                // SBX operator
+	                parameters = new HashMap();
+	                parameters.put("probability", 1.0);
+	                //parameters.put("distributionIndex", 20.0);
+	                crossover = CrossoverFactory.getCrossoverOperator("BlocCrossover",
+	                        parameters);
+	                algorithm.addOperator("crossover", crossover);
+	            }
+
+	            // Mutation operator
+	            parameters = new HashMap();
+	            parameters.put("probability", 1.0 / problem.getNumberOfVariables());
+	            mutation = MutationFactory.getMutationOperator("MyMutation", parameters);
+	            algorithm.addOperator("mutation", mutation);
+
+	            // Selection Operator
+	            parameters = null;
+	            selection = SelectionFactory.getSelectionOperator("BinaryTournament2", parameters);
+	            algorithm.addOperator("selection", selection);
+	            long initTime = System.currentTimeMillis();
+                SolutionSet pop = algorithm.execute();
+                long estimatedTime = System.currentTimeMillis() - initTime;
+                System.out.println("genetic execution time: " + estimatedTime + "ms");
+                getLocalFromChromo(pop.get(pop.size()/2));
+                
+	        }
+	   public void getLocalFromChromo(Solution solution)
+	   {
+
+		  for(int i=0;i<2;i++)
+		  {
+			  for(int j=0;j<nbCluster;j++)
+			  {
+				  cl[i][j]=qualityLevel[((ArrayInt)(solution.getDecisionVariables()[j])).array_[i]][2*j+i];
+			  }
+		  }
+		   
+	   }
+
 
 }

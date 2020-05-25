@@ -119,7 +119,9 @@ public class Client implements ClientInterface {
 	 
 	   for (GetThread thread : Gthreads)
 	    {
+		   sm.getDataFromXMLGenetic(thread.getValue(),Integer.valueOf(new Util().getXmlElement(thread.getValue(), "id")));
 		   sm.getDataFromXML(thread.getValue(),Integer.valueOf(new Util().getXmlElement(thread.getValue(), "id")));
+
 		   if (time<Float.valueOf(new Util().getXmlElement(thread.getValue(), "time")))
 			   time=Float.valueOf(new Util().getXmlElement(thread.getValue(), "time"));
 		   

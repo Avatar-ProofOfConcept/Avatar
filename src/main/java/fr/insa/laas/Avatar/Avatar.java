@@ -73,7 +73,8 @@ public class Avatar {
 			//this.cm.initCluster(10,port-3002);
 		     
 			//this.cm.sendCalculatedQoS(4, port-3002,10);
-			cm.opt=0;
+			 cm.opt=0;
+			// sm.executeGenetic(10000,0.001);
 			 Scanner sc= new Scanner(System.in);
 			 System.out.println("nb clusters");
 		     String nbc = sc.nextLine();
@@ -81,12 +82,63 @@ public class Avatar {
 		     String nba = sc.nextLine();
 		     System.out.println("nb levels");
 		     String d = sc.nextLine();
-			 long startTime = System.nanoTime();
-			 sm.centralizeSelection(Integer.valueOf(nbc),Integer.valueOf(nba),Integer.valueOf(d));
-			 //sm.sendSelectionRequest(this.cm,Integer.valueOf(nba),Integer.valueOf(nbc),Integer.valueOf(d));//level qualité as parameter
-			 long elapsedTime = System.nanoTime() - startTime;
-	       //  System.out.println("Total execution time For service selection in millis:  "+(elapsedTime/c - sm.getMax())+" ms");
-	       //  System.out.println("optimalite = "+cm.opt);
+			 
+			/*double [] w={0.6,0.4};
+			 
+			 
+			 System.out.println("quality levels");
+			 ArrayList<ClusterQoS> c=new ArrayList<ClusterQoS>();
+			 c.add(new ClusterQoS(q.fillUseCase(0), w));
+			 c.add(new ClusterQoS(q.fillUseCase(1), w));
+			 c.add(new ClusterQoS(q.fillUseCase(2), w));
+			 c.add(new ClusterQoS(q.fillUseCase(3), w));
+			 c.add(new ClusterQoS(q.fillUseCase(4), w));
+			 int id=0;
+			 double t[]={38.42, 44.14, 49.57, 52.71, 70.57};
+			 c.get(id).levelTime=t;
+			 double d[]={2.42, 3.57, 5.42, 7.28, 8.57};
+			 c.get(id).levelDisp=d;
+			 double []tab=new double[5];
+			 for(int i=0; i<2;i++)
+				{
+					tab=c.get(id).getLevelTab(i);
+					for(int j=0;j<5;j++)
+					{
+						System.out.println("u"+new QualityLevel(c.get(id),i,tab[j]).p());
+						System.out.println("f"+new QualityLevel(c.get(id),i,tab[j]).f());
+
+
+
+					}
+				}
+			 /*
+			 
+			 
+			double []tab=new double[5];
+			for(int k=0;k<5;k++)
+			{
+			 System.out.println("***********");
+			 c.get(k).getQualitLevel(5);
+			 for(int i=0; i<2;i++)
+				{
+					tab=c.get(k).getLevelTab(i);
+					for(int j=0;j<3;j++)
+					{
+						System.out.println("u"+new QualityLevel(c.get(k),i,tab[j]).p());
+						System.out.println("f"+new QualityLevel(c.get(k),i,tab[j]).f());
+ 
+
+
+					}
+				}
+			}
+			// sm.executeSelectionSolver();*/
+			// long startTime = System.nanoTime();
+			 //sm.centralizeSelection(Integer.valueOf(nbc),Integer.valueOf(nba),Integer.valueOf(d));
+			 sm.sendSelectionRequest(this.cm,Integer.valueOf(nba),Integer.valueOf(nbc),Integer.valueOf(d));//level qualité as parameter
+			 //long elapsedTime = System.nanoTime() - startTime;
+	         //System.out.println("Total execution time For service selection in millis:  "+(elapsedTime/1000000f - sm.getMax())+" ms");
+	         
 
 			
 			/*System.out.println(" functionnalities to discover "+this.FunctionTasksListNotAble.toString());

@@ -55,7 +55,7 @@ public class Util {
 			  f=f+tmp;	
 			
 		}
-		 System.out.println("F(a7)= "+f);
+		 System.out.println("F(a)= "+f);
 		return f;
 	}
 		
@@ -124,7 +124,7 @@ public class Util {
 		  u=u+tmp;
 			 
 		}
-	// System.out.println("U(a7)= "+u);
+	 System.out.println("U(a)= "+u);
 		
 		return u;
 	}

@@ -95,7 +95,8 @@ public class QualityLevel
 	}
 	public double f()
 	{
-	
-		return (((double)l/(double)this.c.getAvatars().size())*(this.c.minFluctuation()/fmin));
+	   if(fmin!=0) return (((double)l/(double)this.c.getAvatars().size())*(this.c.minFluctuation()/fmin));
+	   else return 0;
+	   
 	}
 }

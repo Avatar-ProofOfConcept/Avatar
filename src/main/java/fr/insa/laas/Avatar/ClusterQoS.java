@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.concurrent.ThreadLocalRandom;
 
-
  
 
 public class ClusterQoS {
@@ -34,8 +33,8 @@ public class ClusterQoS {
 
 	private ArrayList<Double> utilities;
 	private ArrayList<Double> fluctuations;
-	private double levelTime[];
-	private double levelDisp[];
+	 double levelTime[];
+	  double levelDisp[];
 	private double levelCost[];
 	private double levelRep[];
 
@@ -171,34 +170,38 @@ public class ClusterQoS {
 		levelDisp[0]=ld[0];
 		/*levelRep[0]=lr[0];
 		levelCost[0]=lc[0];*/
-		System.out.println("l[0]"+levelTime[0]);
-		System.out.println("l[0]"+levelDisp[0]);
+		
+	
 		/*System.out.println("l[0]"+levelRep[0]);
 		System.out.println("l[0]"+levelCost[0]);*/
 		levelTime[d-1]=lt[avatars.size()-1];
 		levelDisp[d-1]=ld[avatars.size()-1];
 		/*levelRep[d-1]=lr[avatars.size()-1];
 		levelCost[d-1]=lc[avatars.size()-1];*/
-		System.out.println("l["+(d-1)+"]"+levelTime[d-1]);
-		System.out.println("l["+(d-1)+"]"+levelDisp[d-1]);
+		
+
 		 
 		
 		ThreadLocalRandom random = ThreadLocalRandom.current();
 		int p=0, index=1,i=1;
 		//TIME
 		System.out.println("temps");
+		System.out.println(levelTime[0]);
 		while(index <d-1)
 		{
 			if (i+(avatars.size()-2)/(d-2) > avatars.size()-2) p=random.nextInt(i, avatars.size()-1);
 			else p=random.nextInt(i, i+(avatars.size()-2)/(d-2));
 			i=i+(avatars.size()-2)/(d-2);
 			levelTime[index]=lt[p];
-			System.out.println("l["+index+"]"+levelTime[index]);
+			System.out.println( levelTime[index]);
 			index++;
 			
 		}
+		
+		System.out.println(levelTime[d-1]);
 		//DISP
 		System.out.println("dispo");
+		System.out.println(levelDisp[0]);
 		index=1;i=1;p=0;
 				while(index <d-1)
 				{
@@ -206,10 +209,11 @@ public class ClusterQoS {
 					else p=random.nextInt(i, i+(avatars.size()-2)/(d-2));
 					i=i+(avatars.size()-2)/(d-2);
 					levelDisp[index]=ld[p];
-					System.out.println("l["+index+"]"+levelDisp[index]);
+					System.out.println(levelDisp[index]);
 					index++;
 					
 				}
+				System.out.println(levelDisp[d-1]);
 	/*	//rep
 				System.out.println("rep");
 		 index=1;i=1;p=0;

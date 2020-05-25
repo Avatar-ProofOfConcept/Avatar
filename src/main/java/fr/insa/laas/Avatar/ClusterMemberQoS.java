@@ -27,7 +27,6 @@ public class ClusterMemberQoS
 	{
 		this.qos=qos;
 		this.histD=histD;
-		this.histR=histR;
 		this.Url=Url;
 		this.histT=histT;
 		this.CVt=Util.CV(this,0);
