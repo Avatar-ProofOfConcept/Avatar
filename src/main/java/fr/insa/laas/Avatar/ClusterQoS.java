@@ -142,6 +142,106 @@ public class ClusterQoS {
 		calcule(w);
 		
 	}
+	/*public void getQualitLevel(int d)
+	{
+		levelTime=new double[d];
+		levelDisp=new double[d];
+		/*levelRep=new double[d];
+		levelTime=new double[d];*/
+		//fill tabs for sort
+		//double[] lt=new double[avatars.size()];
+		//double[] ld=new double[avatars.size()];
+		/*double[] lc=new double[avatars.size()];
+		double[] lr=new double[avatars.size()];*/
+		/*for(int i=0;i<avatars.size();i++)
+		{
+			lt[i]=avatars.get(i).getQos()[0];
+			ld[i]=avatars.get(i).getQos()[1];
+			/*lc[i]=avatars.get(i).getQos()[3];
+			lr[i]=avatars.get(i).getQos()[2];*/
+			
+		/*}
+		Arrays.sort(lt);
+		Arrays.sort(ld);*/
+		//Arrays.sort(lr);
+		//Arrays.sort(lc);
+		
+		/*levelTime[0]=lt[0];
+		levelDisp[0]=ld[0];
+		/*levelRep[0]=lr[0];
+		levelCost[0]=lc[0];*/
+		
+	
+		/*System.out.println("l[0]"+levelRep[0]);
+		System.out.println("l[0]"+levelCost[0]);*/
+		/*levelTime[d-1]=lt[avatars.size()-1];
+		levelDisp[d-1]=ld[avatars.size()-1];
+		/*levelRep[d-1]=lr[avatars.size()-1];
+		levelCost[d-1]=lc[avatars.size()-1];*/
+		
+
+		 
+		
+		//ThreadLocalRandom random = ThreadLocalRandom.current();
+		//int p=0, index=0,i=0;
+		//TIME
+		/*System.out.println("temps");
+		 
+		while(index <d)
+		{
+			if (i+(avatars.size())/(d) > avatars.size()) p=random.nextInt(i, avatars.size());
+			else p=random.nextInt(i, i+(avatars.size())/(d));
+			i=i+(avatars.size())/(d);
+			levelTime[index]=lt[p];
+			System.out.println( levelTime[index]);
+			index++;
+			
+		}
+		
+ 
+		//DISP
+		System.out.println("dispo");
+	 
+		index=0;p=0;i=0;
+				while(index <d)
+				{
+					if (i+(avatars.size())/(d) > avatars.size()) p=random.nextInt(i, avatars.size());
+					else p=random.nextInt(i, i+(avatars.size())/(d));
+					i=i+(avatars.size())/(d);
+					levelDisp[index]=ld[p];
+					System.out.println(levelDisp[index]);
+					index++;
+					
+				}*/
+				 
+	/*	//rep
+				System.out.println("rep");
+		 index=1;i=1;p=0;
+			while(index <d-1)
+			{
+				if (i+(avatars.size()-2)/(d-2) > avatars.size()-2) p=random.nextInt(i, avatars.size()-1);
+				else p=random.nextInt(i, i+(avatars.size()-2)/(d-2));
+				i=i+(avatars.size()-2)/(d-2);
+				levelRep[index]=lr[p];
+				System.out.println("l["+index+"]"+levelRep[index]);
+				index++;
+							
+			}
+		//cost
+			System.out.println("cost");
+		index=1;i=1;p=0;
+		while(index <d-1)
+		{
+					if (i+(avatars.size()-2)/(d-2) > avatars.size()-2) p=random.nextInt(i, avatars.size()-1);
+					else p=random.nextInt(i, i+(avatars.size()-2)/(d-2));
+					i=i+(avatars.size()-2)/(d-2);
+					levelCost[index]=lc[p];
+					System.out.println("l["+index+"]"+levelCost[index]);
+					index++;
+								
+		}*/
+		 
+	//}
 	public void getQualitLevel(int d)
 	{
 		levelTime=new double[d];
@@ -242,7 +342,6 @@ public class ClusterQoS {
 		}*/
 		 
 	}
-
 	public void calcule(double [] w)
 	{
 		for(int i=0; i<avatars.size();i++)

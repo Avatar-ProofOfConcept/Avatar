@@ -1,10 +1,8 @@
 package fr.insa.laas.Avatar;
-import java.io.File;
-import java.io.FileNotFoundException;
+ 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Scanner;
  
@@ -71,10 +69,30 @@ public class Avatar {
 		{
 			System.out.println("--------------------------- [I'm the initiator  ] -------------------------------");
 			//this.cm.initCluster(10,port-3002);
-		     
+			/* ArrayList<ClusterQoS> c= q.fillCluster();
+		 
+			 int l=4;
+			 
+			 //System.out.println("Cluster "+k);
+			 double []tab=new double[l];
+			 c.get(0).getQualitLevel(l);
+			 for(int i=0; i<2;i++)
+				{
+					tab=c.get(0).getLevelTab(i);
+					for(int j=0;j<l;j++)
+					{
+						System.out.println("u"+new QualityLevel(c.get(0),i,tab[j]).p());
+						System.out.println("f"+new QualityLevel(c.get(0),i,tab[j]).f());
+
+
+
+					}
+				}
+			 
 			//this.cm.sendCalculatedQoS(4, port-3002,10);
+			
+			// sm.executeGenetic(10000,0.001);*/
 			 cm.opt=0;
-			// sm.executeGenetic(10000,0.001);
 			 Scanner sc= new Scanner(System.in);
 			 System.out.println("nb clusters");
 		     String nbc = sc.nextLine();
@@ -82,6 +100,7 @@ public class Avatar {
 		     String nba = sc.nextLine();
 		     System.out.println("nb levels");
 		     String d = sc.nextLine();
+		     sm.optimalityEvaluation(Integer.valueOf(nbc),Integer.valueOf(nba),Integer.valueOf(d));
 			 
 			/*double [] w={0.6,0.4};
 			 
@@ -135,7 +154,7 @@ public class Avatar {
 			// sm.executeSelectionSolver();*/
 			// long startTime = System.nanoTime();
 			 //sm.centralizeSelection(Integer.valueOf(nbc),Integer.valueOf(nba),Integer.valueOf(d));
-			 sm.sendSelectionRequest(this.cm,Integer.valueOf(nba),Integer.valueOf(nbc),Integer.valueOf(d));//level qualité as parameter
+			// sm.sendSelectionRequest(this.cm,Integer.valueOf(nba),Integer.valueOf(nbc),Integer.valueOf(d));//level qualité as parameter
 			 //long elapsedTime = System.nanoTime() - startTime;
 	         //System.out.println("Total execution time For service selection in millis:  "+(elapsedTime/1000000f - sm.getMax())+" ms");
 	         

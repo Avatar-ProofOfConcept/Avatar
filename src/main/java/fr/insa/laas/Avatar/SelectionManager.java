@@ -32,6 +32,16 @@ public class SelectionManager {
 	private String srlevel;
 	private String sru;
 	private String srf;
+	
+	
+	private String srtm;
+	private String srtr;
+	private String su;
+	private String sf;
+	private double [][] utilitiesE;
+	private double [][] fluctuationsE;
+	private double [][] c;
+	
 	private double [][] cl;
 	private double [][] qualityLevel;
 	private double [][] utilities;
@@ -95,12 +105,8 @@ public class SelectionManager {
 		fluctuations=new double[d][2*nbCluster];
 		ClusterQoS c[]=new ClusterQoS[nbc];
 		double [] w={0.4,0.3};
-		
-	 
-			c[0]=new ClusterQoS(new QoSManager().fillClusterData(nba, 0), w);
-			 
-	 
-		 System.out.println("fin data fill");
+		c[0]=new ClusterQoS(new QoSManager().fillClusterData(nba, 0), w);
+		System.out.println("fin data fill");
 		long startTime = System.nanoTime();
 		 
  			c[0].getQualitLevel(d);
@@ -122,17 +128,17 @@ public class SelectionManager {
 		toJuliaArray();
 		executeSelectionSolver();
 	
-       try {
+      /* try {
 			cm.sendLocalConstraint(list, cl);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}*/
    	cl=new double [2][nbCluster];
    	Double opt=cm.opt;
    	cm.opt=0;
     executeGenetic(100000, 0.0001);
-    try {
+   /* try {
 		cm.sendLocalConstraint(list, cl);
 	} catch (IOException e) {
 		// TODO Auto-generated catch block
@@ -140,7 +146,7 @@ public class SelectionManager {
 	}
     System.out.println("optimalite exacte = "+opt);
     System.out.println("optimalite genetic = "+cm.opt);
-    System.out.println("optimalite = "+cm.opt/opt);
+    System.out.println("optimalite = "+cm.opt/opt);*/
 	}
 	public int getNbCluster() {
 		return nbCluster;
@@ -287,15 +293,78 @@ public class SelectionManager {
 			{
 				
 				 
-				qualityLevel[j][i*nbCluster+k]=tab[j];
-				utilities[j][i*nbCluster+k]=new QualityLevel(c[k],i,tab[j]).p();
-				fluctuations[j][i*nbCluster+k]=new QualityLevel(c[k],i,tab[j]).f();
+				qualityLevelS[j][i*nbCluster+k]=tab[j];
+				utilitiesS[j][i*nbCluster+k]=new QualityLevel(c[k],i,tab[j]).p();
+				fluctuationsS[j][i*nbCluster+k]=new QualityLevel(c[k],i,tab[j]).f();
+
+
+			}
+		  }
+	    }
+ 
+	}
+	public void getDataFromTabGenetic(ClusterQoS []c)
+	{
+	 
+		double []tab=new double[d];
+		 
+	    for(int k=0;k<c.length;k++)
+	    {
+		for(int i=0; i<2;i++)
+		{
+			tab=c[k].getLevelTab(i);
+			for(int j=0;j<d;j++)
+			{
+				
+				 
+				qualityLevel[j][2*k+i]=tab[j];
+				utilities[j][2*k+i]=new QualityLevel(c[k],i,tab[j]).p();
+				fluctuations[j][2*k+i]=new QualityLevel(c[k],i,tab[j]).f();
 
 
 			}
 		}
 	    }
  
+	}
+	public void buildDataExaustive(ClusterQoS []c)
+	{
+		//build utility matrix
+		System.out.println(c[0].getAvatars().size());
+		System.out.println(c.length);
+		  su="";
+		  sf="";
+	      srtm="";
+		  srtr="";
+		for(int i=0;i<c[0].getAvatars().size();i++)
+		{
+			for(int j=0;j<c.length;j++)
+			{
+				su=su+c[j].getUtilities().get(i)+" ";
+				utilitiesE[i][j]=c[j].getUtilities().get(i);
+				sf=sf+c[j].getFluctuations().get(i)+" ";
+				fluctuationsE[i][j]=c[j].getFluctuations().get(i);
+				srtm=srtm+c[j].getAvatars().get(i).getQos()[0]+" ";
+				srtr=srtr+c[j].getAvatars().get(i).getQos()[1]+" ";
+				
+			}
+			su=su.substring(0,su.length()-2);
+			sf=sf.substring(0,sf.length()-2);
+			srtm=srtm.substring(0,srtm.length()-2);
+			srtr=srtr.substring(0,srtr.length()-2);
+			  su=su+";";
+			  sf=sf+";";
+		      srtm=srtm+";";
+			  srtr=srtr+";";
+		}
+		su=su.substring(0,su.length()-2);
+		sf=sf.substring(0,sf.length()-2);
+		srtm=srtm.substring(0,srtm.length()-2);
+		srtr=srtr.substring(0,srtr.length()-2);
+		 System.out.println(su);
+		 System.out.println(sf);
+		 System.out.println(srtm);
+		 System.out.println(srtr);
 	}
 	public void toJuliaArray()
 	{
@@ -393,7 +462,7 @@ public class SelectionManager {
 	 	    			s=new Solution(2);
 	 	    			s.setObjective(0, Double.valueOf(line.split(", ")[0]));
 	 	    			s.setObjective(1, Double.valueOf(line.split(", ")[1]));
-	 	    			//sl.add(s);
+	 	    			sl.add(s);
  	 	    		
 	    				
 	    			}*/
@@ -427,7 +496,7 @@ public class SelectionManager {
 	    			}
 	     			 long estimatedTime = System.currentTimeMillis() - initTime;
 	 	            
-	 	            System.out.println("exact execution time"+estimatedTime);
+	 	            //System.out.println("exact execution time"+estimatedTime);
 	     			getLocalConstraint(cl);
 	    		} else {
 	    			//abnormal...
@@ -444,7 +513,7 @@ public class SelectionManager {
 	}
 	public void getLocalConstraint(float[][] in)
 	{
- 
+        double opt=0;
 		for(int i=0;i<d;i++)
 		{
 			 
@@ -452,7 +521,7 @@ public class SelectionManager {
 			{
 				
 				if(in[i][j]==1.0f) 
-					{cl[0][j]=qualityLevel[i][j];System.out.println(cl[0][j]);}
+					{cl[0][j]=qualityLevelS[i][j];System.out.println(cl[0][j]);opt=opt+utilitiesS[i][j]-fluctuationsS[i][j];}
 			}
 		}
 		
@@ -463,10 +532,10 @@ public class SelectionManager {
 			{
 				
 				if(in[i][j]==1.0f) 
-					{cl[1][j-nbCluster]=qualityLevel[i][j];System.out.println(cl[1][j-nbCluster]);}
+					{cl[1][j-nbCluster]=qualityLevelS[i][j];System.out.println(cl[1][j-nbCluster]);opt=opt+utilitiesS[i][j]-fluctuationsS[i][j];}
 			}
 		}
-     
+        System.out.println("optimality exacte ="+opt);
      	showcl();
 		
  
@@ -591,30 +660,322 @@ public class SelectionManager {
 	            parameters.put("probability", 1.0 / problem.getNumberOfVariables());
 	            mutation = MutationFactory.getMutationOperator("MyMutation", parameters);
 	            algorithm.addOperator("mutation", mutation);
-
+                //QualityIndicator q=new QualityIndicator(problem, sl);
 	            // Selection Operator
 	            parameters = null;
 	            selection = SelectionFactory.getSelectionOperator("BinaryTournament2", parameters);
 	            algorithm.addOperator("selection", selection);
-	            long initTime = System.currentTimeMillis();
+	            //long initTime = System.currentTimeMillis();
+	             
                 SolutionSet pop = algorithm.execute();
-                long estimatedTime = System.currentTimeMillis() - initTime;
-                System.out.println("genetic execution time: " + estimatedTime + "ms");
                 getLocalFromChromo(pop.get(pop.size()/2));
+                //System.out.println("genetic quality :"+(q.getHypervolume(pop)+1/q.getIGD(pop)));
+               /* 
+                
+                algorithm.setInputParameter("maxEvaluations", 5000);
+	            algorithm.setInputParameter("nr", 4);
+                pop = algorithm.execute();
+                System.out.println("genetic quality :"+(q.getHypervolume(pop)+1/q.getIGD(pop)));
+                
+                
+                
+                algorithm.setInputParameter("maxEvaluations", 5000);
+	            algorithm.setInputParameter("nr", 6);
+                pop = algorithm.execute();
+                System.out.println("genetic quality :"+(q.getHypervolume(pop)+1/q.getIGD(pop)));
+                
+                
+                
+                algorithm.setInputParameter("maxEvaluations", 5000);
+	            algorithm.setInputParameter("nr", 8);
+                pop = algorithm.execute();
+                System.out.println("genetic quality :"+(q.getHypervolume(pop)+1/q.getIGD(pop)));
+                
+                algorithm.setInputParameter("maxEvaluations",10000);
+	            algorithm.setInputParameter("nr", 2);
+                pop = algorithm.execute();
+                System.out.println("genetic quality :"+(q.getHypervolume(pop)+1/q.getIGD(pop)));
+                
+                
+                algorithm.setInputParameter("maxEvaluations",10000);
+	            algorithm.setInputParameter("nr", 4);
+                pop = algorithm.execute();
+                System.out.println("genetic quality :"+(q.getHypervolume(pop)+1/q.getIGD(pop)));
+                
+                
+                
+                algorithm.setInputParameter("maxEvaluations", 10000);
+	            algorithm.setInputParameter("nr", 6);
+                pop = algorithm.execute();
+                System.out.println("genetic quality :"+(q.getHypervolume(pop)+1/q.getIGD(pop)));
+                
+                
+                
+                algorithm.setInputParameter("maxEvaluations", 10000);
+	            algorithm.setInputParameter("nr", 8);
+                pop = algorithm.execute();
+                System.out.println("genetic quality :"+(q.getHypervolume(pop)+1/q.getIGD(pop)));
+                
+                
+                algorithm.setInputParameter("maxEvaluations",20000);
+	            algorithm.setInputParameter("nr", 2);
+                pop = algorithm.execute();
+                System.out.println("genetic quality :"+(q.getHypervolume(pop)+1/q.getIGD(pop)));
+                
+                
+                algorithm.setInputParameter("maxEvaluations",20000);
+	            algorithm.setInputParameter("nr", 4);
+                pop = algorithm.execute();
+                System.out.println("genetic quality :"+(q.getHypervolume(pop)+1/q.getIGD(pop)));
+                
+                
+                
+                algorithm.setInputParameter("maxEvaluations", 20000);
+	            algorithm.setInputParameter("nr", 6);
+                pop = algorithm.execute();
+                System.out.println("genetic quality :"+(q.getHypervolume(pop)+1/q.getIGD(pop)));
+                
+                
+                
+                algorithm.setInputParameter("maxEvaluations", 20000);
+	            algorithm.setInputParameter("nr", 8);
+                pop = algorithm.execute();
+                System.out.println("genetic quality :"+(q.getHypervolume(pop)+1/q.getIGD(pop)));
+                
+                
+                algorithm.setInputParameter("maxEvaluations",30000);
+	            algorithm.setInputParameter("nr", 2);
+                pop = algorithm.execute();
+                System.out.println("genetic quality :"+(q.getHypervolume(pop)+1/q.getIGD(pop)));
+                
+                
+                algorithm.setInputParameter("maxEvaluations",30000);
+	            algorithm.setInputParameter("nr", 4);
+                pop = algorithm.execute();
+                System.out.println("genetic quality :"+(q.getHypervolume(pop)+1/q.getIGD(pop)));
+                
+                
+                
+                algorithm.setInputParameter("maxEvaluations", 30000);
+	            algorithm.setInputParameter("nr", 6);
+                pop = algorithm.execute();
+                System.out.println("genetic quality :"+(q.getHypervolume(pop)+1/q.getIGD(pop)));
+                
+                
+                
+                algorithm.setInputParameter("maxEvaluations", 30000);
+	            algorithm.setInputParameter("nr", 8);
+                pop = algorithm.execute();
+                System.out.println("genetic quality :"+(q.getHypervolume(pop)+1/q.getIGD(pop)));
+                /*algorithm.setInputParameter("maxEvaluations", maxFES);
+	            algorithm.setInputParameter("nr", 10);
+                 pop = algorithm.execute();
+                System.out.println("genetic quality :"+(q.getHypervolume(pop)+1/q.getIGD(pop)));
+                */
+              //  long estimatedTime = System.currentTimeMillis() - initTime;
+              //  System.out.println("genetic execution time: " + estimatedTime + "ms");
+                //getLocalFromChromo(pop.get(pop.size()/2));
                 
 	        }
 	   public void getLocalFromChromo(Solution solution)
 	   {
-
+          double opt=0;
 		  for(int i=0;i<2;i++)
 		  {
 			  for(int j=0;j<nbCluster;j++)
 			  {
 				  cl[i][j]=qualityLevel[((ArrayInt)(solution.getDecisionVariables()[j])).array_[i]][2*j+i];
+				  opt=opt+utilities[((ArrayInt)(solution.getDecisionVariables()[j])).array_[i]][2*j+i]-fluctuations[((ArrayInt)(solution.getDecisionVariables()[j])).array_[i]][2*j+i];
 			  }
 		  }
+		  System.out.println("optimality decomp genetic = "+opt);
+	   }
+	   
+	   public double getOpt()
+	   {
+		  double opt=0;
+		  System.out.println(utilitiesE.length);
+		  for(int i=0;i<utilitiesE.length;i++)
+		  {
+			  for(int j=0;j<nbCluster;j++)
+			  {
+				  opt=(utilitiesE[i][j]-fluctuationsE[i][j])*c[i][j]+opt;
+			  }
+		  }
+		  return opt;
+	   }
+	   
+	   
+	   
+	   public void optimalityEvaluation(int nbc,int nba,int d)
+		{
+			this.nbCluster=nbc;
+			this.d=d;
+		    cl=new double [2][nbCluster];
+			qualityLevel=new double[d][2*nbCluster];
+			utilities=new double[d][2*nbCluster];
+			fluctuations=new double[d][2*nbCluster];
+			
+			qualityLevelS=new double[d][2*nbCluster];
+			utilitiesS=new double[d][2*nbCluster];
+			fluctuationsS=new double[d][2*nbCluster];
+			utilitiesE=new double[nba][nbCluster];
+			fluctuationsE=new double[nba][nbCluster];
+			
+			ClusterQoS c[]=new ClusterQoS[nbc];
+			double [] w={0.4,0.3};
+			for(int i=0;i<nbc;i++)
+			{
+				c[i]=new ClusterQoS(new QoSManager().fillClusterData(nba, i), w);
+				c[i].getQualitLevel(d);
+			}
+			getDataFromTabGenetic(c);
+			buildDataExaustive(c);
+			executeExauSolver();
+			System.out.println("End data fill and quality level calculation");
+			double opt=0;
+			getDataFromTab(c);
+			toJuliaArray();
+			executeSelectionSolver();
+		
+			 for (int i=0;i<nbc;i++)
+		 	{
+		         	double []t={cl[0][i],cl[1][i]};
+		 			opt=Double.valueOf(c[i].getSelectedAvatars(t))+opt;
+		 			
+		 	}
+			 System.out.println("optimality exact= "+opt);
+	   	     cl=new double [2][nbCluster];
+	   	     opt=0;
+	         executeGenetic(100000, 0.0001);
+	         for (int i=0;i<nbc;i++)
+	 		{
+	         	double []t={cl[0][i],cl[1][i]};
+	         	opt=Double.valueOf(c[i].getSelectedAvatars(t))+opt;	 			
+	 		}
+	         System.out.println("optimality genetic= "+opt);
+	    
+			/*long startTime = System.nanoTime();
+			//exact method
+			getDataFromTab(c);
+			toJuliaArray();
+	        executeSelectionSolver();
+	        for (int i=0;i<nbc;i++)
+			{
+	        	double []t={cl[0][i],cl[1][i]};
+				System.out.println("optim c"+i+" "+c[i].getSelectedAvatars(t));
+				
+			}
+	        long elapsedTime = System.nanoTime() - startTime;
+			System.out.println("selectionTime "+elapsedTime/1000000f);*/
+			//genetic method
+			//exaustive method
+			
+		   
 		   
 	   }
+	   
+	   public void executeExauSolver()
+		{
+			
+	 		 try {
+
+		    		// -- Linux --
+		    		
+		    		// Run a shell command
+		    		// Process process = Runtime.getRuntime().exec("ls /home/mkyong/");
+
+		    		// Run a shell script
+		    		// Process process = Runtime.getRuntime().exec("path/to/hello.sh");
+
+		    		// -- Windows --
+		    		
+		    		// Run a command
+		    		//Process process = Runtime.getRuntime().exec("cmd /c dir C:\\Users\\mkyong");
+
+		    		//Run a bat file
+				  
+				  
+		    		String[] cmd = { "bash", "-c", "./exaustive.jl \""+srtm+"\" \""+srtr+"\" \""+su+"\" \""+sf+"\"" };
+		    		long initTime = System.currentTimeMillis();
+	               
+		    		Process process = Runtime.getRuntime().exec(cmd);
+		    		  
+		       
+	 	    		 
+		    		BufferedReader reader = new BufferedReader(
+		    				new InputStreamReader(process.getInputStream()));
+
+		    		String line;
+		    		String linesave = null;
+		    		ArrayList<String> tab=new ArrayList<String>();
+		    		while ((line = reader.readLine()) != null) {
+		    			//output.append(line + "\n");
+		    			tab.add(line);
+		    			//System.out.println("line "+line);
+		    			 
+		    		}
+		    		
+		    		 
+		    		int exitVal = process.waitFor();
+		    		if (exitVal == 0) {
+		    			/*Solution s;
+		    			
+		    			for(int i=0;i<tab.size();i++)
+		    			{
+		 	    			line=tab.get(i).substring(1,tab.get(i).length()-1);
+		 	    			s=new Solution(2);
+		 	    			s.setObjective(0, Double.valueOf(line.split(", ")[0]));
+		 	    			s.setObjective(1, Double.valueOf(line.split(", ")[1]));
+		 	    			sl.add(s);
+	 	 	    		
+		    				
+		    			}*/
+	 	    			//convert to 2d array
+	 	    			linesave=tab.get(tab.size()/2);
+	 	    			line=linesave.substring(1,linesave.length()-1);
+	 	    			 
+		    			String [] arr=line.split(";");
+		    			 
+		    			int j=0,k=0;
+		    			c=new double [arr.length][nbCluster];
+		     			for(int i=0;i<arr.length;i++)
+		    			{
+		     				String[] arrc=arr[i].split(" ");
+		    				
+		    				while(j<arrc.length)
+		    				{
+		    					if(!arrc[j].isEmpty())
+		    						{
+		    						
+		    						c[i][k]=Float.valueOf(arrc[j]);
+		    						System.out.print(c[i][k] +" ");
+		    						k++;
+		    						}
+		    					j++;
+		    				}
+		    				j=0;
+		    				k=0;
+		    				
+		    				System.out.println();
+		    			}
+		     			 long estimatedTime = System.currentTimeMillis() - initTime;
+		 	            
+		 	            System.out.println("optimality ="+getOpt());
+		     		 
+		    		} else {
+		    			//abnormal...
+		    		}
+
+		    	} catch (IOException e) {
+		    		e.printStackTrace();
+		    	} catch (InterruptedException e) {
+		    		e.printStackTrace();
+		    	}
+
+		    
+
+		}
 
 
 }

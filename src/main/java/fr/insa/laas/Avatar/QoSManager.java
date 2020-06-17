@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
  import java.util.Scanner;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class QoSManager 
 {
@@ -325,5 +326,67 @@ public class QoSManager
          }
  
          return result;
+     }
+     public ArrayList<ClusterQoS> fillCluster()
+     {
+    	 ThreadLocalRandom random = ThreadLocalRandom.current();
+    	 double [] w={0.6,0.4};
+    	 ArrayList<ClusterQoS> result=new ArrayList<ClusterQoS>();
+    	
+    	 
+    		 ArrayList<ClusterMemberQoS> ls=new ArrayList<ClusterMemberQoS>(); 
+    		 System.out.println("Cluster ");
+         	  
+        	 for(int i=0;i<9;i++)
+        	 {
+        		 System.out.println("avatar "+i);
+        		 histd=new double[7];
+            	 histt=new double[7];
+            	 System.out.println("historique ");
+            	 for(int k=0;k<7;k++)
+            	 {
+            		 histt[k]=random.nextInt(0,100);
+            		 histd[k]=random.nextInt(0,30);
+            		 
+            	 }
+            	 showHist();
+        		 //1.get data from dataset
+        		 
+        			//System.out.println("A"+j+" "+i);
+    				double qos[]={average(histt),average(histd)};
+    				 System.out.println(qos[0]+"  "+qos[1]);
+    		    	 
+    				//System.out.println(tabtIME[i+j*9]+" "+tabTROU[i+j*9]);
+    			//2. fill history
+    				//getRandomHistory(new File("QoS_Data/tpMatrix.txt"),new File("QoS_Data/rt2Matrix.txt"),i+j*9);
+    				ClusterMemberQoS a=new ClusterMemberQoS(qos,histd,histt,null);
+    				 
+    				ls.add(a);
+    				
+    			 
+        		 
+        		 
+        	 
+        	 
+    	 }
+	     
+         result.add(new ClusterQoS(ls, w));
+
+    	 return result;
+    	 
+    	 
+    	 
+     }
+     
+     public double average(double tab [])
+     {
+    	 double sum=0;
+    	 for(int i=0;i<tab.length;i++)
+    	 {
+    		 sum=sum+tab[i];
+    	 }
+    	 return (sum/tab.length);
+    	 
+    	 
      }
 }

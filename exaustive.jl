@@ -7,17 +7,16 @@ m = vModel(solver = GLPKSolverMIP())
 # using CPLEX
 # m = vModel(solver = CplexSolver())
 
-#Exemple 03 niveaux par clusters - 2 Clusters - Process séquentiel
-#Niveaux de qualité temps-Cluster1 temps-Cluster2 Dispo-Cluster1 Dispo-Cluster2 Cout-Cluster1 Cout-Cluster2 Rep-Cluster1 Rep-Cluster2
-le =readdlm(IOBuffer(ARGS[1]),' ',';')
+time =readdlm(IOBuffer(ARGS[1]),' ',';')
+
+throughput=readdlm(IOBuffer(ARGS[2]),' ',';')
 
 #Utilités p
-u =readdlm(IOBuffer(ARGS[2]),' ',';') 
+u =readdlm(IOBuffer(ARGS[3]),' ',';') 
   
 
 #Fluctuation f
-f =readdlm(IOBuffer(ARGS[3]),' ',';')
-limit=Int(size(f, 2)/2)
+f =readdlm(IOBuffer(ARGS[4]),' ',';')
 
 #Contraintes
 et=1000
@@ -28,9 +27,11 @@ ed=0.001
 @variable(m, x[1:size(f, 1),1:size(f, 2)], Bin)
 @addobjective(m, Min, sum((-1)*x[i,j]*u[i,j] for i=1:size(f, 1),j=1:size(f, 2)))
 @addobjective(m, Min,sum(x[i,j]*f[i,j] for i=1:size(f, 1),j=1:size(f, 2)))
+
 @constraint(m, rows1[j=1:size(f, 2)],sum(x[i,j] for i=1:size(f, 1))==1)
-@constraint(m,sum(x[i,j]*le[i,j] for i=1:size(f, 1),j=1:limit) <= et)
-@constraint(m,sum(x[i,j]*log(le[i,j]) for i=1:size(f, 1),j=(limit+1):size(f, 2)) >= log(ed))
+
+@constraint(m,sum(x[i,j]*time[i,j] for i=1:size(f, 1),j=1:size(f, 2)) <= et)
+@constraint(m,sum(x[i,j]*log(throughput[i,j]) for i=1:size(f, 1),j=1:size(f, 2)) >= log(ed))
 
  
 solve(m, method=:dichotomy)

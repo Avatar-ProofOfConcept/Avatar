@@ -27,13 +27,9 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="/home/amel/selection_Qos/Improved_epsilon_codes/lib/jama-1.0.3.jar"/>
-	<classpathentry kind="lib" path="/home/amel/selection_Qos/Improved_epsilon_codes/lib/JMathArray-1.0.jar"/>
-	<classpathentry kind="lib" path="/home/amel/selection_Qos/Improved_epsilon_codes/lib/JMathIO-1.0.jar"/>
-	<classpathentry kind="lib" path="/home/amel/selection_Qos/Improved_epsilon_codes/lib/jmathplot.jar"/>
-	<classpathentry kind="lib" path="/home/amel/selection_Qos/Improved_epsilon_codes/lib/JMathPlot-1.0.1.jar"/>
-	<classpathentry kind="lib" path="/home/amel/selection_Qos/Improved_epsilon_codes/lib/junit-4.10.jar"/>
-	<classpathentry kind="lib" path="/home/amel/selection_Qos/Improved_epsilon_codes/lib/log4j.jar"/>
-	<classpathentry kind="lib" path="/home/amel/selection_Qos/Improved_epsilon_codes/lib/sqlite-jdbc-3.8.10.1.jar"/>
+	<classpathentry kind="lib" path="/home/amal/MyWork/Avatar/libs/jama-1.0.3.jar"/>
+	<classpathentry kind="lib" path="/home/amal/MyWork/Avatar/libs/JMathArray-1.0.jar"/>
+	<classpathentry kind="lib" path="/home/amal/MyWork/Avatar/libs/JMathIO-1.0.jar"/>
+	<classpathentry kind="lib" path="/home/amal/MyWork/Avatar/libs/JMathPlot-1.0.1.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

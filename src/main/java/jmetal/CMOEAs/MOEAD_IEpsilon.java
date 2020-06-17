@@ -170,7 +170,8 @@ public class MOEAD_IEpsilon extends Algorithm {
                 int n = permutation[i]; // or int n = i;
                 //int n = i ; // or int n = i;
                 int type;
-                double rnd = PseudoRandom.randDouble();opt
+                double rnd = PseudoRandom.randDouble();
+                
 
                 // STEP 2.1. Mating selection based on probability
                 if (rnd < delta_) // if (rnd < realb)
