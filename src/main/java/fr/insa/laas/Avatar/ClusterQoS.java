@@ -285,23 +285,23 @@ public class ClusterQoS {
 		ThreadLocalRandom random = ThreadLocalRandom.current();
 		int p=0, index=1,i=1;
 		//TIME
-		System.out.println("temps");
-		System.out.println(levelTime[0]);
+		/*System.out.println("temps");
+		System.out.println(levelTime[0]);*/
 		while(index <d-1)
 		{
 			if (i+(avatars.size()-2)/(d-2) > avatars.size()-2) p=random.nextInt(i, avatars.size()-1);
 			else p=random.nextInt(i, i+(avatars.size()-2)/(d-2));
 			i=i+(avatars.size()-2)/(d-2);
 			levelTime[index]=lt[p];
-			System.out.println( levelTime[index]);
+		//	System.out.println( levelTime[index]);
 			index++;
 			
 		}
 		
-		System.out.println(levelTime[d-1]);
+		/*System.out.println(levelTime[d-1]);
 		//DISP
 		System.out.println("dispo");
-		System.out.println(levelDisp[0]);
+		System.out.println(levelDisp[0]);*/
 		index=1;i=1;p=0;
 				while(index <d-1)
 				{
@@ -309,11 +309,11 @@ public class ClusterQoS {
 					else p=random.nextInt(i, i+(avatars.size()-2)/(d-2));
 					i=i+(avatars.size()-2)/(d-2);
 					levelDisp[index]=ld[p];
-					System.out.println(levelDisp[index]);
+					//System.out.println(levelDisp[index]);
 					index++;
 					
 				}
-				System.out.println(levelDisp[d-1]);
+				//System.out.println(levelDisp[d-1]);
 	/*	//rep
 				System.out.println("rep");
 		 index=1;i=1;p=0;

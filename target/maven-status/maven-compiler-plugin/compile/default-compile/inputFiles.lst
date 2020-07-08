@@ -96,6 +96,7 @@
 /home/amal/MyWork/Avatar/src/main/java/fr/insa/laas/Avatar/AvatarApplication.java
 /home/amal/MyWork/Avatar/src/main/java/jmetal/util/comparators/NumberOfViolatedConstraintComparator.java
 /home/amal/MyWork/Avatar/src/main/java/jmetal/qualityIndicator/util/ValueComparator.java
+/home/amal/MyWork/Avatar/src/main/java/fr/insa/laas/Avatar/SVMManager.java
 /home/amal/MyWork/Avatar/src/main/java/jmetal/qualityIndicator/InvertedGenerationalDistance.java
 /home/amal/MyWork/Avatar/src/main/java/jmetal/operators/crossover/SinglePointCrossover.java
 /home/amal/MyWork/Avatar/src/main/java/jmetal/experiments/util/Friedman.java
@@ -201,4 +202,5 @@
 /home/amal/MyWork/Avatar/src/main/java/jmetal/util/comparators/SolutionComparator.java
 /home/amal/MyWork/Avatar/src/main/java/jmetal/util/RandomGenerator.java
 /home/amal/MyWork/Avatar/src/main/java/jmetal/util/comparators/DominanceComparator_M_Add_One.java
+/home/amal/MyWork/Avatar/src/main/java/fr/insa/laas/Avatar/Main.java
 /home/amal/MyWork/Avatar/src/main/java/jmetal/util/offspring/Offspring.java

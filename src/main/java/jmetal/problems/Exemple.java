@@ -41,7 +41,7 @@ public class Exemple extends Problem {
                    Integer numberOfObjectives) throws ClassNotFoundException {
         numberOfVariables_ = numberOfVariables;
         numberOfObjectives_ = numberOfObjectives;
-        numberOfConstraints_ = 4;
+        numberOfConstraints_ = 2;
         problemName_ = "Exemple";
 
         lowerLimit_ = new double[numberOfVariables_];
@@ -57,7 +57,7 @@ public class Exemple extends Problem {
     public Exemple(Integer nbCluster,double cntTime, double ctTro, double [][]le,double [][] u, double [][] fl,int d) throws ClassNotFoundException {
         numberOfVariables_ = nbCluster;
         numberOfObjectives_ = 2;
-        numberOfConstraints_ =2;//to review
+        numberOfConstraints_ =4;//to review
         problemName_ = "Exemple";
         le_=le;
         u_=u;
@@ -120,9 +120,9 @@ public class Exemple extends Problem {
     public void evaluateConstraints(Solution solution) throws JMException {
 
         double[] constraint = new double[4];
-        double g_1, g_2;
+        double g_1, g_21,g_22,g_23;
 
-        g_1 = g_2=0.0 ;
+        g_1 = g_21=g_22=g_23=0.0 ;
         int nx = numberOfVariables_;
         double[] x = new double[numberOfVariables_];
         //Time
@@ -134,14 +134,23 @@ public class Exemple extends Problem {
         //dispo
         for(int j=0;j<nbCluster_;j++)
         {
-            g_2=g_2+ le_[((ArrayInt)(solution.getDecisionVariables()[1])).array_[j]][1+(j)*2];
+            g_21=g_21+ le_[((ArrayInt)(solution.getDecisionVariables()[1])).array_[j]][1+(j)*2];
         }
+        
 
+        //g_21=le_[((ArrayInt)(solution.getDecisionVariables()[1])).array_[0]][1+(0)*2];
+       // g_22=le_[((ArrayInt)(solution.getDecisionVariables()[1])).array_[1]][1+(1)*2];
+        //g_23=le_[((ArrayInt)(solution.getDecisionVariables()[1])).array_[2]][1+(2)*2];
 
-
-
+        //constraint[0] =cntTime_-g_1;
+       /* constraint[0]=cntTime_-le_[((ArrayInt)(solution.getDecisionVariables()[0])).array_[0]][0+(0)*2];
+        constraint[1]=cntTime_-le_[((ArrayInt)(solution.getDecisionVariables()[0])).array_[1]][0+(1)*2];*/
+        
+      
         constraint[0] =cntTime_-g_1;
-        constraint[1] =g_2-ctTro_;
+        constraint[1] =g_21-ctTro_;
+      //  constraint[2] =g_22-ctTro_;
+       
 
 
         double total = 0.0;

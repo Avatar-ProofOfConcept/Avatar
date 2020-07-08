@@ -1,8 +1,10 @@
 package fr.insa.laas.Avatar;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -53,13 +55,27 @@ public class SelectionManager {
 	private float max;
 	private SolutionSet sl= new NonDominatedSolutionList();
 	
+	
 	public float getMax() {
 		return max;
 	}
 	public void setMax(float max) {
 		this.max = max;
 	}
-
+	 public SelectionManager()
+	 {
+		 
+	 }
+	 
+    public SelectionManager(int nbc,int d) 
+    {
+    	this.nbCluster=nbc;
+		this.d=d;
+	    cl=new double [2][nbCluster];
+		qualityLevel=new double[d][2*nbCluster];
+		utilities=new double[d][2*nbCluster];
+		fluctuations=new double[d][2*nbCluster];
+    }
 	private Util u=new Util();
   	private HashMap<String, ArrayList<String>> selectionresult=new HashMap<String, ArrayList<String>>();
   	private ArrayList<String> list;
@@ -106,7 +122,7 @@ public class SelectionManager {
 		ClusterQoS c[]=new ClusterQoS[nbc];
 		double [] w={0.4,0.3};
 		c[0]=new ClusterQoS(new QoSManager().fillClusterData(nba, 0), w);
-		System.out.println("fin data fill");
+		//System.out.println("fin data fill");
 		long startTime = System.nanoTime();
 		 
  			c[0].getQualitLevel(d);
@@ -327,11 +343,266 @@ public class SelectionManager {
 	    }
  
 	}
+	public void fillDataUseCaseGenetic ()
+	{
+		d=4;
+		nbCluster=2;
+		qualityLevel=new double[d][2*nbCluster];
+		utilities=new double[d][2*nbCluster];
+		fluctuations=new double[d][2*nbCluster];
+		cl=new double [2][nbCluster];
+		//fill ql
+		/*qualityLevel[0][0]=31.85;
+		qualityLevel[0][1]=5;
+		qualityLevel[0][2]=61.62;
+		qualityLevel[0][3]=4.28;
+		qualityLevel[0][4]=41.42;
+		qualityLevel[0][5]=11.71;
+		
+		qualityLevel[1][0]=47.14;
+		qualityLevel[1][1]=11.14;
+		qualityLevel[1][2]=79.49;
+		qualityLevel[1][3]=5;
+		qualityLevel[1][4]=44.57;
+		qualityLevel[1][5]=12.57;
+		
+		qualityLevel[2][0]=48.57;
+		qualityLevel[2][1]=14.85;
+		qualityLevel[2][2]=92.7;
+		qualityLevel[2][3]=7.57;
+		qualityLevel[2][4]=50.42;
+		qualityLevel[2][5]=13.42;
+		
+		qualityLevel[3][0]=69.57;
+		qualityLevel[3][1]=16.57;
+		qualityLevel[3][2]=94.85;
+		qualityLevel[3][3]=9.57;
+		qualityLevel[3][4]=53.71;
+		qualityLevel[3][5]=16.14;
+		
+		//fill f
+		fluctuations[0][0]=0.1;
+		fluctuations[0][1]=1;
+		fluctuations[0][2]=0.16;
+		fluctuations[0][3]=1;
+		fluctuations[0][4]=0.07;
+		fluctuations[0][5]=0.88;
+		
+		fluctuations[1][0]=0.2;
+		fluctuations[1][1]=0.31;
+		fluctuations[1][2]=0.33;
+		fluctuations[1][3]=0.58;
+		fluctuations[1][4]=0.31;
+		fluctuations[1][5]=0.77;
+		
+		fluctuations[2][0]=0.41;
+		fluctuations[2][1]=0.26;
+		fluctuations[2][2]=0.42;
+		fluctuations[2][3]=0.42;
+		fluctuations[2][4]=0.39;
+		fluctuations[2][5]=0.39;
+		
+		fluctuations[3][0]=0.88;
+		fluctuations[3][1]=0.15;
+		fluctuations[3][2]=0.88;
+		fluctuations[3][3]=0.25;
+		fluctuations[3][4]=0.77;
+		fluctuations[3][5]=0.23;
+		
+		//fill u
+		
+		utilities[0][0]=0.22;
+		utilities[0][1]=1;
+		utilities[0][2]=0.11;
+		utilities[0][3]=0.88;
+		utilities[0][4]=0.11;
+		utilities[0][5]=0.88;
+		
+		utilities[1][0]=0.44;
+		utilities[1][1]=0.66;
+		utilities[1][2]=0.44;
+		utilities[1][3]=0.77;
+		utilities[1][4]=0.44;
+		utilities[1][5]=0.77;
+		
+		utilities[2][0]=0.55;
+		utilities[2][1]=0.55;
+		utilities[2][2]=0.55;
+		utilities[2][3]=0.44;
+		utilities[2][4]=0.55;
+		utilities[2][5]=0.55;
+		
+		utilities[3][0]=0.88;
+		utilities[3][1]=0.33;
+		utilities[3][2]=0.77;
+		utilities[3][3]=0.22;
+		utilities[3][4]=0.77;
+		utilities[3][5]=0.33;
+		*/
+		/////////////////////////////////////////////////////
+		//decompo2
+		//fill ql
+			/*	qualityLevel[0][0]=61.42;
+				qualityLevel[0][1]=4.28;
+				qualityLevel[0][2]=46.85;
+				qualityLevel[0][3]=7.42;
+				 
+				
+				qualityLevel[1][0]=79.42;
+				qualityLevel[1][1]=5;
+				qualityLevel[1][2]=48.42;
+				qualityLevel[1][3]=12.14;
+			 
+				
+				qualityLevel[2][0]=92.7;
+				qualityLevel[2][1]=7.57;
+				qualityLevel[2][2]=48.71;
+				qualityLevel[2][3]=12.85;
+				 
+				
+				qualityLevel[3][0]=94.85;
+				qualityLevel[3][1]=9.57;
+				qualityLevel[3][2]=51.28;
+				qualityLevel[3][3]=14;
+			 
+		//fill f
+				fluctuations[0][0]=0.04;
+				fluctuations[0][1]=1;
+				fluctuations[0][2]=0.16;
+				fluctuations[0][3]=1;
+				 
+				
+				fluctuations[1][0]=0.25;
+				fluctuations[1][1]=0.44;
+				fluctuations[1][2]=0.33;
+				fluctuations[1][3]=0.58;
+				 
+				
+				fluctuations[2][0]=0.38;
+				fluctuations[2][1]=0.31;
+				fluctuations[2][2]=0.42;
+				fluctuations[2][3]=0.42;
+			 
+				
+				fluctuations[3][0]=0.88;
+				fluctuations[3][1]=0.13;
+				fluctuations[3][2]=0.88;
+				fluctuations[3][3]=0.25;
+				//u
+				 
+		utilities[0][0]=0.11;
+		utilities[0][1]=0.88;
+		utilities[0][2]=0.22;
+		utilities[0][3]=1;
+		 
+		
+		utilities[1][0]=0.44;
+		utilities[1][1]=0.77;
+		utilities[1][2]=0.44;
+		utilities[1][3]=0.77;
+		 
+		
+		utilities[2][0]=0.66;
+		utilities[2][1]=0.44;
+		utilities[2][2]=0.55;
+		utilities[2][3]=0.55;
+	 
+		
+		utilities[3][0]=0.77;
+		utilities[3][1]=0.22;
+		utilities[3][2]=0.88;
+		utilities[3][3]=0.33;*/
+	 
+		
+		
+		
+		
+		
+		///
+/////////////////////////////////////////////////////
+//decompo3
+//fill ql
+qualityLevel[0][0]=28.14;
+qualityLevel[0][1]=4.28;
+qualityLevel[0][2]=32.28;
+qualityLevel[0][3]=9;
+
+
+qualityLevel[1][0]=37.42;
+qualityLevel[1][1]=5;
+qualityLevel[1][2]=42;
+qualityLevel[1][3]=12;
+
+
+qualityLevel[2][0]=41.28;
+qualityLevel[2][1]=7.57;
+qualityLevel[2][2]=51.42;
+qualityLevel[2][3]=18.85;
+
+
+qualityLevel[3][0]=42.28;
+qualityLevel[3][1]=9.57;
+qualityLevel[3][2]=52.57;
+qualityLevel[3][3]=19;
+
+//fill f
+fluctuations[0][0]=0.01;
+fluctuations[0][1]=0.55;
+fluctuations[0][2]=0.04;
+fluctuations[0][3]=1;
+
+
+fluctuations[1][0]=0.25;
+fluctuations[1][1]=0.44;
+fluctuations[1][2]=0.17;
+fluctuations[1][3]=0.3;
+
+
+fluctuations[2][0]=0.38;
+fluctuations[2][1]=0.31;
+fluctuations[2][2]=0.26;
+fluctuations[2][3]=0.17;
+
+
+fluctuations[3][0]=0.88;
+fluctuations[3][1]=0.05;
+fluctuations[3][2]=0.77;
+fluctuations[3][3]=0.13;
+//u
+
+utilities[0][0]=0.11;
+utilities[0][1]=0.88;
+utilities[0][2]=0.11;
+utilities[0][3]=1;
+
+
+utilities[1][0]=0.44;
+utilities[1][1]=0.77;
+utilities[1][2]=0.44;
+utilities[1][3]=0.77;
+
+
+utilities[2][0]=0.66;
+utilities[2][1]=0.55;
+utilities[2][2]=0.66;
+utilities[2][3]=0.44;
+
+
+utilities[3][0]=0.88;
+utilities[3][1]=0.22;
+utilities[3][2]=0.77;
+utilities[3][3]=0.33;
+		
+		executeGenetic(79.49, 7.57);
+		
+		
+	}
+	
+	
 	public void buildDataExaustive(ClusterQoS []c)
 	{
 		//build utility matrix
-		System.out.println(c[0].getAvatars().size());
-		System.out.println(c.length);
+	 
 		  su="";
 		  sf="";
 	      srtm="";
@@ -361,10 +632,10 @@ public class SelectionManager {
 		sf=sf.substring(0,sf.length()-2);
 		srtm=srtm.substring(0,srtm.length()-2);
 		srtr=srtr.substring(0,srtr.length()-2);
-		 System.out.println(su);
+		 /*System.out.println(su);
 		 System.out.println(sf);
 		 System.out.println(srtm);
-		 System.out.println(srtr);
+		 System.out.println(srtr);*/
 	}
 	public void toJuliaArray()
 	{
@@ -469,7 +740,7 @@ public class SelectionManager {
  	    			//convert to 2d array
  	    			linesave=tab.get(tab.size()/2);
  	    			line=linesave.substring(1,linesave.length()-1);
- 	    			System.out.println(line.split(";")[0]);
+ 	    			//System.out.println(line.split(";")[0]);
 	    			String [] arr=line.split(";");
 	    			 
 	    			int j=0,k=0;
@@ -484,7 +755,7 @@ public class SelectionManager {
 	    						{
 	    						
 	    						cl[i][k]=Float.valueOf(arrc[j]);
-	    						System.out.print(cl[i][k] +" ");
+	    						//System.out.print(cl[i][k] +" ");
 	    						k++;
 	    						}
 	    					j++;
@@ -492,12 +763,12 @@ public class SelectionManager {
 	    				j=0;
 	    				k=0;
 	    				
-	    				System.out.println();
+	    				//System.out.println();
 	    			}
 	     			 long estimatedTime = System.currentTimeMillis() - initTime;
-	 	            
-	 	            //System.out.println("exact execution time"+estimatedTime);
 	     			getLocalConstraint(cl);
+	 	            System.out.println("exact execution time"+estimatedTime);
+	     			
 	    		} else {
 	    			//abnormal...
 	    		}
@@ -521,7 +792,7 @@ public class SelectionManager {
 			{
 				
 				if(in[i][j]==1.0f) 
-					{cl[0][j]=qualityLevelS[i][j];System.out.println(cl[0][j]);opt=opt+utilitiesS[i][j]-fluctuationsS[i][j];}
+					{cl[0][j]=qualityLevelS[i][j];opt=opt+utilitiesS[i][j]-fluctuationsS[i][j];}
 			}
 		}
 		
@@ -532,11 +803,11 @@ public class SelectionManager {
 			{
 				
 				if(in[i][j]==1.0f) 
-					{cl[1][j-nbCluster]=qualityLevelS[i][j];System.out.println(cl[1][j-nbCluster]);opt=opt+utilitiesS[i][j]-fluctuationsS[i][j];}
+					{cl[1][j-nbCluster]=qualityLevelS[i][j];opt=opt+utilitiesS[i][j]-fluctuationsS[i][j];}
 			}
 		}
-        System.out.println("optimality exacte ="+opt);
-     	showcl();
+        System.out.println("optimality decompo exacte ="+opt);
+     	//showcl();
 		
  
 	}
@@ -665,10 +936,12 @@ public class SelectionManager {
 	            parameters = null;
 	            selection = SelectionFactory.getSelectionOperator("BinaryTournament2", parameters);
 	            algorithm.addOperator("selection", selection);
-	            //long initTime = System.currentTimeMillis();
+	            long initTime = System.currentTimeMillis();
 	             
                 SolutionSet pop = algorithm.execute();
                 getLocalFromChromo(pop.get(pop.size()/2));
+                long elapsedTime = System.currentTimeMillis() - initTime;
+    			System.out.println("genetic Time "+elapsedTime);
                 //System.out.println("genetic quality :"+(q.getHypervolume(pop)+1/q.getIGD(pop)));
                /* 
                 
@@ -782,9 +1055,11 @@ public class SelectionManager {
           double opt=0;
 		  for(int i=0;i<2;i++)
 		  {
+			  System.out.println("#########");
 			  for(int j=0;j<nbCluster;j++)
 			  {
 				  cl[i][j]=qualityLevel[((ArrayInt)(solution.getDecisionVariables()[j])).array_[i]][2*j+i];
+				  System.out.println("cluster "+j+"  "+cl[i][j]);
 				  opt=opt+utilities[((ArrayInt)(solution.getDecisionVariables()[j])).array_[i]][2*j+i]-fluctuations[((ArrayInt)(solution.getDecisionVariables()[j])).array_[i]][2*j+i];
 			  }
 		  }
@@ -821,21 +1096,25 @@ public class SelectionManager {
 			fluctuationsS=new double[d][2*nbCluster];
 			utilitiesE=new double[nba][nbCluster];
 			fluctuationsE=new double[nba][nbCluster];
-			
-			ClusterQoS c[]=new ClusterQoS[nbc];
+		 
+			 
+			ClusterQoS c[]=new QoSManager().fillCluster(nba, nbc);
 			double [] w={0.4,0.3};
 			for(int i=0;i<nbc;i++)
 			{
-				c[i]=new ClusterQoS(new QoSManager().fillClusterData(nba, i), w);
+				//c[i]=new ClusterQoS(new QoSManager().fillClusterData(nba, i), w);
 				c[i].getQualitLevel(d);
 			}
 			getDataFromTabGenetic(c);
 			buildDataExaustive(c);
+			//System.out.println("\""+srtm+"\" \""+srtr+"\" \""+su+"\" \""+sf+"\"");
 			executeExauSolver();
-			System.out.println("End data fill and quality level calculation");
+			//System.out.println("End data fill and quality level calculation");
 			double opt=0;
 			getDataFromTab(c);
 			toJuliaArray();
+			//System.out.println("\""+srlevel+"\" \""+sru+"\" \""+srf+"\" \"");
+
 			executeSelectionSolver();
 		
 			 for (int i=0;i<nbc;i++)
@@ -844,8 +1123,10 @@ public class SelectionManager {
 		 			opt=Double.valueOf(c[i].getSelectedAvatars(t))+opt;
 		 			
 		 	}
-			 System.out.println("optimality exact= "+opt);
-	   	     cl=new double [2][nbCluster];
+			System.out.println("optimality exact= "+opt/getOpt());
+	            
+
+	   	   /*  cl=new double [2][nbCluster];
 	   	     opt=0;
 	         executeGenetic(100000, 0.0001);
 	         for (int i=0;i<nbc;i++)
@@ -853,7 +1134,7 @@ public class SelectionManager {
 	         	double []t={cl[0][i],cl[1][i]};
 	         	opt=Double.valueOf(c[i].getSelectedAvatars(t))+opt;	 			
 	 		}
-	         System.out.println("optimality genetic= "+opt);
+	         System.out.println("optimality genetic= "+opt);*/
 	    
 			/*long startTime = System.nanoTime();
 			//exact method
@@ -877,6 +1158,7 @@ public class SelectionManager {
 	   
 	   public void executeExauSolver()
 		{
+		  // System.out.println("\""+srtm+"\" \""+srtr+"\" \""+su+"\" \""+sf+"\"");
 			
 	 		 try {
 
@@ -949,7 +1231,7 @@ public class SelectionManager {
 		    						{
 		    						
 		    						c[i][k]=Float.valueOf(arrc[j]);
-		    						System.out.print(c[i][k] +" ");
+		    						//System.out.print(c[i][k] +" ");
 		    						k++;
 		    						}
 		    					j++;
@@ -960,8 +1242,8 @@ public class SelectionManager {
 		    				System.out.println();
 		    			}
 		     			 long estimatedTime = System.currentTimeMillis() - initTime;
-		 	            
-		 	            System.out.println("optimality ="+getOpt());
+		     			 System.out.println("exaustive method time = "+estimatedTime);
+		 	            System.out.println("optimality exaustive ="+getOpt());
 		     		 
 		    		} else {
 		    			//abnormal...

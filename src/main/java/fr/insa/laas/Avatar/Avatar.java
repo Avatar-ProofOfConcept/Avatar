@@ -68,6 +68,9 @@ public class Avatar {
 		if (port==3001)
 		{
 			System.out.println("--------------------------- [I'm the initiator  ] -------------------------------");
+			
+			SVMManager svm=new SVMManager(5,100,3);
+	        svm.buildCases();
 			//this.cm.initCluster(10,port-3002);
 			/* ArrayList<ClusterQoS> c= q.fillCluster();
 		 
@@ -92,7 +95,8 @@ public class Avatar {
 			//this.cm.sendCalculatedQoS(4, port-3002,10);
 			
 			// sm.executeGenetic(10000,0.001);*/
-			 cm.opt=0;
+			//sm.fillDataUseCaseGenetic();
+			/* cm.opt=0;
 			 Scanner sc= new Scanner(System.in);
 			 System.out.println("nb clusters");
 		     String nbc = sc.nextLine();
@@ -102,7 +106,7 @@ public class Avatar {
 		     String d = sc.nextLine();
 		     sm.optimalityEvaluation(Integer.valueOf(nbc),Integer.valueOf(nba),Integer.valueOf(d));
 			 
-			/*double [] w={0.6,0.4};
+			double [] w={0.6,0.4};
 			 
 			 
 			 System.out.println("quality levels");

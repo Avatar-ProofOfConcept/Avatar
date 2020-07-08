@@ -327,34 +327,37 @@ public class QoSManager
  
          return result;
      }
-     public ArrayList<ClusterQoS> fillCluster()
+     
+     
+     public ClusterQoS[] fillCluster(int nba,int nbc)
      {
     	 ThreadLocalRandom random = ThreadLocalRandom.current();
     	 double [] w={0.6,0.4};
-    	 ArrayList<ClusterQoS> result=new ArrayList<ClusterQoS>();
+    	 ClusterQoS[] result=new ClusterQoS[nbc];
     	
-    	 
+    	 for (int l=0; l<nbc;l++)
+    	 {
     		 ArrayList<ClusterMemberQoS> ls=new ArrayList<ClusterMemberQoS>(); 
-    		 System.out.println("Cluster ");
+    		// System.out.println("Cluster ");
          	  
-        	 for(int i=0;i<9;i++)
+        	 for(int i=0;i<nba;i++)
         	 {
-        		 System.out.println("avatar "+i);
-        		 histd=new double[7];
-            	 histt=new double[7];
-            	 System.out.println("historique ");
-            	 for(int k=0;k<7;k++)
+        		// System.out.println("avatar "+i);
+        		 histd=new double[20];
+            	 histt=new double[20];
+            	 //System.out.println("historique ");
+            	 for(int k=0;k<20;k++)
             	 {
             		 histt[k]=random.nextInt(0,100);
             		 histd[k]=random.nextInt(0,30);
             		 
             	 }
-            	 showHist();
+            	// showHist();
         		 //1.get data from dataset
         		 
         			//System.out.println("A"+j+" "+i);
     				double qos[]={average(histt),average(histd)};
-    				 System.out.println(qos[0]+"  "+qos[1]);
+    				// System.out.println(qos[0]+"  "+qos[1]);
     		    	 
     				//System.out.println(tabtIME[i+j*9]+" "+tabTROU[i+j*9]);
     			//2. fill history
@@ -370,8 +373,8 @@ public class QoSManager
         	 
     	 }
 	     
-         result.add(new ClusterQoS(ls, w));
-
+         result[l]=new ClusterQoS(ls, w);
+    	 }
     	 return result;
     	 
     	 

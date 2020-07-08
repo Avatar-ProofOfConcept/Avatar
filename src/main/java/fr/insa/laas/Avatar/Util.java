@@ -55,7 +55,7 @@ public class Util {
 			  f=f+tmp;	
 			
 		}
-		 System.out.println("F(a)= "+f);
+		  
 		return f;
 	}
 		
@@ -124,7 +124,7 @@ public class Util {
 		  u=u+tmp;
 			 
 		}
-	 System.out.println("U(a)= "+u);
+	 
 		
 		return u;
 	}
@@ -134,7 +134,7 @@ public class Util {
 	 for (int i=0;i<2;i++)
 	 {
 		 cl[i]=Double.parseDouble(getXmlElement(request, "cl"+i));
-		 System.out.println(" cl "+i+" "+cl[i]);
+		// System.out.println(" cl "+i+" "+cl[i]);
 	 }
 	 return cl;
 	 
