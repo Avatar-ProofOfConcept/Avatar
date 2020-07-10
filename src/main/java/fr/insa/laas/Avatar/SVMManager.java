@@ -87,7 +87,8 @@ public class SVMManager
 			caseLine=""+tab[j][windowsSize-1];
 			for (int l=0;l<windowsSize;l++)
 			{
-				caseLine=caseLine+" "+(l+1)+":"+tab[j][l];
+				//caseLine=caseLine+" "+(l+1)+":"+tab[j][l]; for libsvm
+				caseLine=caseLine+","+tab[j][l];
 			}
 			 System.out.println(caseLine);
 			switch(k)

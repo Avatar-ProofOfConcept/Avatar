@@ -69,7 +69,7 @@ public class Avatar {
 		{
 			System.out.println("--------------------------- [I'm the initiator  ] -------------------------------");
 			
-			SVMManager svm=new SVMManager(5,100,3);
+			SVMManager svm=new SVMManager(10,1000,20);
 	        svm.buildCases();
 			//this.cm.initCluster(10,port-3002);
 			/* ArrayList<ClusterQoS> c= q.fillCluster();
