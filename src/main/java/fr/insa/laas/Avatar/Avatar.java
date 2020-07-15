@@ -1,5 +1,6 @@
 package fr.insa.laas.Avatar;
  
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -68,9 +69,12 @@ public class Avatar {
 		if (port==3001)
 		{
 			System.out.println("--------------------------- [I'm the initiator  ] -------------------------------");
-			
-			SVMManager svm=new SVMManager(10,1000,20);
-	        svm.buildCases();
+			sm.predictionSelection(5);
+			//SVMManager svm=new SVMManager(10,1000,20);
+	        //svm.buildCases();
+			/*SVMManager svm=new SVMManager(10,100,5);
+			//svm.buildCases();
+			svm.buildModels();*/
 			//this.cm.initCluster(10,port-3002);
 			/* ArrayList<ClusterQoS> c= q.fillCluster();
 		 

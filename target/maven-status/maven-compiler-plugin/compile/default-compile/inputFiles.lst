@@ -25,6 +25,7 @@
 /home/amal/MyWork/Avatar/src/main/java/jmetal/encodings/solutionType/ArrayRealAndBinarySolutionType.java
 /home/amal/MyWork/Avatar/src/main/java/jmetal/core/SolutionType.java
 /home/amal/MyWork/Avatar/src/main/java/jmetal/operators/mutation/SwapMutation.java
+/home/amal/MyWork/Avatar/src/main/java/fr/insa/laas/Avatar/Model.java
 /home/amal/MyWork/Avatar/src/main/java/jmetal/operators/selection/RankingAndCrowdingSelection.java
 /home/amal/MyWork/Avatar/src/main/java/jmetal/operators/selection/WorstSolutionSelection.java
 /home/amal/MyWork/Avatar/src/main/java/fr/insa/laas/Avatar/ClientInterface.java

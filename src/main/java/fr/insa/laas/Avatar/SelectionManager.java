@@ -1258,6 +1258,69 @@ utilities[3][3]=0.33;
 		    
 
 		}
+	   public void predictionSelection(int windowsSize)
+	   {
+		   nbAvatars=100;
+		   nbCluster=10;
+		   utilitiesE=new double[nbAvatars][nbCluster];
+			fluctuationsE=new double[nbAvatars][nbCluster];
+		  double[][][] cases=new double[2][10][windowsSize];
+		  cases[0][0]=new double[] {44.85,41.0,47.4,41.45,50.8};
+		  cases[0][1]=new double[] {58.2,43.85,49.9,51.35,51.8};
+		  cases[0][2]=new double[] {54.2,43.35,38.3,54.9,40.0};
+		  cases[0][3]=new double[] {54.7,54.95,48.6,43.5,51.4};
+		  cases[0][4]=new double[] {48.05,52.45,46.55,55.05,53.9};
+		  cases[0][5]=new double[] {25.95,57.75,49.65,48.45,50.25};
+		  cases[0][6]=new double[] {51.6,47.75,57.5,45.2,50.6};
+		  cases[0][7]=new double[] {48.95,56.1,51.7,47.05,58.1};
+		  cases[0][8]=new double[] {47.0,45.7,47.6,49.75,48.8};
+		  cases[0][9]=new double[] {48.45,49.05,48.45,50.9,50.95};
+		  
+		  cases[1][0]=new double[] {11.0,15.25,13.1,16.65,13.85};
+		  cases[1][1]=new double[] {14.25,14.0,14.35,15.15,13.85};
+		  cases[1][2]=new double[] {15.45,14.95,11.5,15.45,13.6};
+		  cases[1][3]=new double[] {15.3,15.5,14.15,15.7,14.55};
+		  cases[1][4]=new double[] {10.1,16.65,14.9,12.25,13.55};
+		  cases[1][5]=new double[] {16.75,14.8,14.85,13.55,12.9};
+		  cases[1][6]=new double[] {16.3,14.45,11.55,16.3,14.75};
+		  cases[1][7]=new double[] {13.2,14.05,14.75,13.4,11.3};
+		  cases[1][8]=new double[] {12.6,13.9,12.95,15.65,14.25};
+		  cases[1][9]=new double[] {15.95,16.35,14.85,16.0,15.65};
+		  
+		  
+		   
+		   ClusterQoS c[]=new QoSManager().fillCluster(100, 10);
+		   buildDataExaustive(c);
+			//System.out.println("\""+srtm+"\" \""+srtr+"\" \""+su+"\" \""+sf+"\"");
+			executeExauSolver();
+		   SVMManager svm=new SVMManager(10,1000,20);
+		   //svm.buildCases();
+		   svm.buildModels();
+		   cl=new double [2][10];
+		   long initTime=System.currentTimeMillis();
+		    for(int i=0;i<2;i++)
+		    {
+		    	for(int j=0;j<10;j++)
+		    	{
+		    		cl[i][j]=svm.predict(svm.getModel(i,j), cases[i][j]);
+		    		
+		    	}
+		    }
+		   
+		    long estimatedTime = System.currentTimeMillis() - initTime;
+			 System.out.println("prediction method time = "+estimatedTime);
+			
+	   	     double opt=0;
+	         
+	         for (int i=0;i<10;i++)
+	 		{
+	         	double []t={cl[0][i],cl[1][i]};
+	         	opt=Double.valueOf(c[i].getSelectedAvatars(t))+opt;	 			
+	 		}
+	         System.out.println("optimality prediction = "+opt);
+		   
+	   }
+	   
 
 
 }
